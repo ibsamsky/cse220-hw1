@@ -18,8 +18,6 @@
     printf(STR);                                                               \
   }
 
-#pragma region debug
-
 #ifdef HW1_DEBUG
 #define debug_assert(...) assert(__VA_ARGS__)
 #define LOG_LEVEL 0
@@ -59,8 +57,6 @@
 #define l_debug(fmt, ...) _LOG(stderr, LL_DEBUG, fmt, ##__VA_ARGS__)
 #define l_info(fmt, ...) _LOG(stderr, LL_INFO, fmt, ##__VA_ARGS__)
 #define edbg(fmt, x) l_debug(ESTR(x) "=" fmt, x)
-
-#pragma endregion debug
 
 #define ERROR(...) do { fprintf(stderr, "[          ] [ ERR  ] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); fflush(stderr); } while (0)
 #define INFO(...) do { fprintf(stderr, "[          ] [ INFO ] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); fflush(stderr); } while (0)
