@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #ifndef __HW1_H
 #define __HW1_H
 
@@ -70,6 +72,14 @@ int solve(const char *initial_state, const char *keys, int size);
 
 // p1
 void print_board();
+
+bool strnmatch(int n, const char *str, bool (*const pred)(char));
+bool read_int_range(int *out, int low, int high);
+bool parse_int_range(int *dst, const char *src, int low, int high);
+bool valid_state(char test);
+bool valid_key(char test);
+bool row_dup(int row, char c);
+bool col_dup(int col, char c);
 
 /* Hints from our solution (feel free to use or ignore):
 

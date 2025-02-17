@@ -15,7 +15,7 @@ char board[MAX_LENGTH][MAX_LENGTH] = {0};
 
 int length = 5;
 
-static int itopos(const int n, const int cols) {
+int itopos(const int n, const int cols) {
   debug_assert(n < cols * cols);
 
   //                         rrrrcccc
@@ -24,7 +24,7 @@ static int itopos(const int n, const int cols) {
   return (n / cols) << 4 | (n % cols);
 }
 
-static bool strnmatch(const int n, const char *str, bool (*const pred)(char)) {
+bool strnmatch(const int n, const char *str, bool (*const pred)(char)) {
   for (const char *p = str; (p - str) < n; p++) {
     if (!pred(*p))
       return false;
@@ -32,16 +32,30 @@ static bool strnmatch(const int n, const char *str, bool (*const pred)(char)) {
   return true;
 }
 
-static bool char_in_range(const char test, const char low, const char high) {
+bool char_in_range(const char test, const char low, const char high) {
   return (test >= low && test <= high);
 }
 
-static bool valid_state(char test) {
+bool valid_state(char test) {
   return test == '-' || char_in_range(test, '1', '0' + length);
 }
 
-static bool valid_key(char test) {
+bool valid_key(char test) {
   return char_in_range(test, '0', '0' + length);
+}
+
+bool row_dup(int row, char c) {
+  for (int i = 0; i < length; i ++) {
+    if (c == board[row][i]) return true;
+  }
+  return false;
+}
+
+bool col_dup(int col, char c) {
+  for (int i = 0; i < length; i ++) {
+    if (c == board[i][col]) return true;
+  }
+  return false;
 }
 
 void print_board() {
@@ -67,8 +81,8 @@ int initialize_board(const char *initial_state, const char *keys, int size) {
 #define die() do { printf("Invalid initial board state.\n"); return 0; } while (0)
   length = size;
 
-  debug_assert(size < MAX_LENGTH);
-  // debug_assert(4 < size);
+  debug_assert(size <= MAX_LENGTH);
+  debug_assert(0 < size);
 
   if (!strnmatch(size * size, initial_state, valid_state))
     die();
