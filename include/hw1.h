@@ -1,17 +1,79 @@
 #ifndef __HW1_H
 #define __HW1_H
 
-#define INFO(...) do {fprintf(stderr, "[          ] [ INFO ] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); fflush(stderr);} while(0)
-#define ERROR(...) do {fprintf(stderr, "[          ] [ ERR  ] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); fflush(stderr);} while(0) 
+// FIXME: debug, remove for grading
+#define HW1_DEBUG
+// #define HW1_COLOR
 
+#define STR(x) #x
+#define ESTR(x) STR(x)
+
+#define print_arr(FMT, ARR, LEN)                                               \
+  for (int __i = 0; __i < LEN; __i++) {                                        \
+    printf(FMT, ARR[__i]);                                                     \
+  }
+
+#define print_repeat(STR, LEN)                                                 \
+  for (int __i = 0; __i < LEN; __i++) {                                        \
+    printf(STR);                                                               \
+  }
+
+#pragma region debug
+
+#ifdef HW1_DEBUG
+#define debug_assert(...) assert(__VA_ARGS__)
+#define LOG_LEVEL 0
+#else
+#define LOG_LEVEL 4
+#define debug_assert(...)
+#endif
+
+#define LL_STR ((const char *[]){"DEBUG", "INFO", "WARN", "ERROR"})
+
+#ifdef HW1_COLOR
+#define s_RESET "\x1b[0m"
+#define s_GRAY "\x1b[90m"
+#define LL_COLOR ((const char *[]){"\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m"})
+#else
+#define s_RESET ""
+#define s_GRAY ""
+#define LL_COLOR ((const char *[]){"", "", "", ""})
+#endif // HW1_COLOR
+
+#define LL_DEBUG 0
+#define LL_INFO 1
+#define LL_WARN 2
+#define LL_ERROR 3
+
+#define _LOG(FILE, LL, fmt, ...)                                               \
+  do {                                                                         \
+    if (LOG_LEVEL <= LL) {                                                     \
+      fprintf(FILE, "[ %s%-5s" s_RESET " ] " s_GRAY "%s:%d:" s_RESET " ",      \
+              LL_COLOR[LL], LL_STR[LL], __FILE__, __LINE__);                   \
+      fprintf(FILE, fmt, ##__VA_ARGS__);                                       \
+      fprintf(FILE, "\n");                                                     \
+      fflush(FILE);                                                            \
+    }                                                                          \
+  } while (0)
+
+#define l_debug(fmt, ...) _LOG(stderr, LL_DEBUG, fmt, ##__VA_ARGS__)
+#define l_info(fmt, ...) _LOG(stderr, LL_INFO, fmt, ##__VA_ARGS__)
+#define edbg(fmt, x) l_debug(ESTR(x) "=" fmt, x)
+
+#pragma endregion debug
+
+#define ERROR(...) do { fprintf(stderr, "[          ] [ ERR  ] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); fflush(stderr); } while (0)
+#define INFO(...) do { fprintf(stderr, "[          ] [ INFO ] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); fflush(stderr); } while (0)
 
 #define MAX_LENGTH 8
-#define MAX_SEQUENCE_CAP  40320
+#define MAX_SEQUENCE_CAP 40320
 
-//Required:
+// Required:
 int initialize_board(const char *initial_state, const char *keys, int size);
 int solve(const char *initial_state, const char *keys, int size);
 
+// p1
+void print_board();
 
 /* Hints from our solution (feel free to use or ignore):
 
@@ -34,17 +96,18 @@ void apply_process_of_elimination(int row, int column, int piece);
 
 Part 3
 
-void generate_valid_sequences(int valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index);
-void generate_valid_sequences_helper(int valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index, int sequence[MAX_LENGTH], int starts_at);
-void generate_filtered_sequences(int filtered_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index);
-bool sequence_filtration(bool is_horizontal, int index);
-bool apply_sequence_filtration(void);
+void generate_valid_sequences(int valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH],
+bool is_horizontal, int index); void generate_valid_sequences_helper(int
+valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index,
+int sequence[MAX_LENGTH], int starts_at); void generate_filtered_sequences(int
+filtered_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int
+index); bool sequence_filtration(bool is_horizontal, int index); bool
+apply_sequence_filtration(void);
 
 Testing functions
 
 void print_possible_pieces_state(void);
 void print_possible_pieces_at_cell(int row, int column);
 */
-
 
 #endif // HW1_H
