@@ -1,11 +1,20 @@
-#include <stdbool.h>
-
 #ifndef __HW1_H
 #define __HW1_H
+
+#include <stdbool.h>
+#include <stdint.h>
 
 // FIXME: debug, remove for grading
 #define HW1_DEBUG
 // #define HW1_COLOR
+
+#define F_MOVE_OK 0x1UL
+#define F_MOVE_QUIT 0x2UL
+#define F_MOVE_DUPLICATE 0x4UL
+#define F_MOVE_KEYERR 0x8UL
+#define F_MOVE_OCCUPIED 0x10UL
+#define F_WIN 0x20UL
+
 
 #define STR(x) #x
 #define ESTR(x) STR(x)
@@ -72,14 +81,19 @@ int solve(const char *initial_state, const char *keys, int size);
 
 // p1
 void print_board();
+unsigned long get_move();
+unsigned long try_move(char choice, int row, int col);
+unsigned long check_dupes_col(int col);
+unsigned long check_dupes_row(int row);
+unsigned long check_row(int row);
+unsigned long check_col(int col);
 
 bool strnmatch(int n, const char *str, bool (*const pred)(char));
 bool read_int_range(int *out, int low, int high);
 bool parse_int_range(int *dst, const char *src, int low, int high);
 bool valid_state(char test);
 bool valid_key(char test);
-bool row_dup(int row, char c);
-bool col_dup(int col, char c);
+
 
 /* Hints from our solution (feel free to use or ignore):
 
