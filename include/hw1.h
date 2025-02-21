@@ -95,6 +95,11 @@ bool valid_state(char test);
 bool valid_key(char test);
 
 
+// p2
+typedef struct board_constraints {
+  uint_fast8_t bv[MAX_LENGTH][MAX_LENGTH];
+} constraints;
+
 /* Hints from our solution (feel free to use or ignore):
 
 Part 1

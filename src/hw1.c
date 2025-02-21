@@ -151,7 +151,7 @@ unsigned long check_dupes_col(int col) {
     if (seen == (seen | piece_bit))
       return F_MOVE_DUPLICATE;
     seen |= piece_bit;
-    edbg("%02x", seen);
+    edbg("%x", seen);
   }
   return F_MOVE_OK;
 }
@@ -166,7 +166,7 @@ unsigned long check_dupes_row(int row) {
     if (seen == (seen | piece_bit))
       return F_MOVE_DUPLICATE;
     seen |= piece_bit;
-    edbg("%02x", seen);
+    edbg("%x", seen);
   }
   return F_MOVE_OK;
 }
@@ -197,7 +197,8 @@ unsigned long check_row(int row) {
       max_right = p_right;
     }
   }
-  if (v_left != left_key[row] || v_right != right_key[row]) {
+  if ((left_key[row] != 0 && v_left != left_key[row]) ||
+      (right_key[row] != 0 && v_right != right_key[row])) {
     l_debug("key error r=%d: expected %d/%d, got %d/%d", row, left_key[row],
             right_key[row], v_left, v_right);
     return F_MOVE_KEYERR;
@@ -213,9 +214,6 @@ unsigned long check_col(int col) {
 
   if ((check_dupes_col(col) & F_MOVE_DUPLICATE) > 0)
     return F_MOVE_DUPLICATE;
-
-  if (top_key[col] == 0 || bottom_key[col] == 0)
-    return F_MOVE_OK;
 
   for (int i = 0; i < length; i++) {
     char p_top = board[i][col];
@@ -233,7 +231,8 @@ unsigned long check_col(int col) {
       max_bottom = p_bottom;
     }
   }
-  if (v_top != top_key[col] || v_bottom != bottom_key[col]) {
+  if ((top_key[col] != 0 && v_top != top_key[col]) ||
+      (bottom_key[col] != 0 && v_bottom != bottom_key[col])) {
     l_debug("key error c=%d: expected %d/%d, got %d/%d", col, top_key[col],
             bottom_key[col], v_top, v_bottom);
     return F_MOVE_KEYERR;
