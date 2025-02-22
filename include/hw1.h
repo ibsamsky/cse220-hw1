@@ -98,6 +98,7 @@ bool valid_key(char test);
 // p2
 typedef struct board_constraints {
   uint_fast8_t bv[MAX_LENGTH][MAX_LENGTH];
+  uint_fast8_t pv[MAX_LENGTH];
 } constraints;
 
 uint_fast8_t piece_to_bit(char piece);
@@ -107,6 +108,7 @@ void place_singles();
 uint_fast8_t edge_constraint(int row, int col);
 void edge_clue_initialization();
 void pp_constraints();
+bool apply_constraint_propagation(int row, int col, char piece);
 
 /* Hints from our solution (feel free to use or ignore):
 

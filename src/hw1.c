@@ -323,7 +323,7 @@ int initialize_board(const char *initial_state, const char *keys, int size) {
 
 /* PART 2 */
 
-constraints con = {.bv = {{0}}};
+constraints con = {.bv = {{0}}, .pv = {0}};
 
 uint_fast8_t piece_to_bit(char piece) { return 1 << (piece - '1'); }
 
@@ -339,10 +339,15 @@ void place_singles() {
   for (int i = 0; i < length * length; i++) {
     int pos = itopos(i, length);
     int row = pos >> 4, col = pos & 7;
-    if (single(con.bv[row][col])) {
+    if (single(con.bv[row][col]) && (con.pv[row] & (1 << col)) == 0) {
       char piece = bit_to_piece(con.bv[row][col]);
       l_debug("placing '%c' at %d:%d", piece, row, col);
       board[row][col] = piece;
+      con.pv[row] |= 1 << col;
+      if (apply_constraint_propagation(row, col, piece)) {
+        // do it again!
+        place_singles();
+      }
     }
   }
 }
@@ -420,14 +425,35 @@ void edge_clue_initialization() {
   place_singles();
 }
 
+bool apply_constraint_propagation(int row, int col, char piece) {
+  uint_fast8_t mask = ~piece_to_bit(piece);
+  bool new_single = false;
+
+  for (int i = 0; i < length; i++) {
+    bool col_single = single(con.bv[row][i]);
+    bool row_single = single(con.bv[i][col]);
+    con.bv[row][i] &= mask;
+    con.bv[i][col] &= mask;
+
+    if ((single(con.bv[row][i]) && !col_single) ||
+        (single(con.bv[i][col]) && !row_single)) {
+      new_single = true;
+    }
+  }
+  // retain single constraint 
+  con.bv[row][col] = piece_to_bit(piece);
+  return new_single;
+}
+
 void pp_constraints() {
 #define each(a) a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]
-#define eight(x) x x x x x x x x
+#define seven(x) x x x x x x x 
   for (int r = 0; r < MAX_LENGTH; r++) {
-    l_debug("con=" eight("%02X"), each((unsigned int)con.bv[r]));
+    l_debug("con.bv=[" seven("%02X ") "%02X]", each((unsigned int)con.bv[r]));
   }
+  l_debug("con.pv=[" seven("%02X ") "%02X]", each((unsigned int)con.pv));
 #undef each
-#undef eight
+#undef seven
 }
 
 int solve(const char *initial_state, const char *keys, int size) {
@@ -439,6 +465,7 @@ int solve(const char *initial_state, const char *keys, int size) {
     char c = initial_state[i];
     int pos = itopos(i, size);
     con.bv[pos >> 4][pos & 7] = c == '-' ? bitmask(size) : piece_to_bit(c);
+    con.pv[pos >> 4] = 0; // unfortunate
   }
 
   pp_constraints();
