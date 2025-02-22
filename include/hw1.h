@@ -106,11 +106,14 @@ typedef struct board_constraints {
 uint_fast8_t piece_to_bit(char piece);
 char bit_to_piece(uint_fast8_t bit);
 bool single(uint_fast8_t val);
-void place_singles();
 uint_fast8_t edge_constraint(int row, int col);
-void edge_clue_initialization();
+uint_fast8_t unique_bit(int n, uint_fast8_t seq[]);
+void place_singles();
 void pp_constraints();
+void edge_clue_initialization();
 bool apply_constraint_propagation(int row, int col, char piece);
+void apply_process_of_elimination(int row, int col);
+
 
 /* Hints from our solution (feel free to use or ignore):
 

@@ -335,15 +335,18 @@ bool single(uint_fast8_t val) { return (val != 0 && (val & (val - 1)) == 0); }
 void place_singles() {
   for (int i = 0; i < length * length; i++) {
     unpack(itopos(i, length), row, col);
+    // just do it every time idc
+    apply_process_of_elimination(row, col);
     if (single(con.bv[row][col]) && (con.pv[row] & (1 << col)) == 0) {
       char piece = bit_to_piece(con.bv[row][col]);
       l_debug("placing '%c' at %d:%d", piece, row, col);
       board[row][col] = piece;
       con.pv[row] |= 1 << col;
-      if (apply_constraint_propagation(row, col, piece)) {
-        // do it again!
+      bool ns = apply_constraint_propagation(row, col, piece);
+
+      // do it again!
+      if (ns || true)
         place_singles();
-      }
     }
   }
 }
@@ -442,6 +445,37 @@ bool apply_constraint_propagation(int row, int col, char piece) {
   return new_single;
 }
 
+void apply_process_of_elimination(int row, int col) {
+  uint_fast8_t colseq[length];
+  for (int i = 0; i < length; i++) {
+    colseq[i] = con.bv[i][col];
+  }
+
+  uint_fast8_t row_uniq = unique_bit(length, con.bv[row]);
+  uint_fast8_t col_uniq = unique_bit(length, colseq);
+
+  if (row_uniq != 0xFFU) {
+    for (int c = 0; c < length; c++) {
+      if ((con.bv[row][c] & row_uniq) > 0 && !single(con.bv[row][c])) {
+        l_debug("constrained %d:%d to %02X by row elimination (from %02X)", row,
+                c, (unsigned int)row_uniq, (unsigned int)con.bv[row][c]);
+        con.bv[row][c] = row_uniq;
+        break;
+      }
+    }
+  }
+  if (col_uniq != 0xFFU) {
+    for (int r = 0; r < length; r++) {
+      if ((con.bv[r][col] & col_uniq) > 0 && !single(con.bv[r][col])) {
+        l_debug("constrained %d:%d to %02X by col elimination (from %02X)", r,
+                col, (unsigned int)col_uniq, (unsigned int)con.bv[r][col]);
+        con.bv[r][col] = col_uniq;
+        break;
+      }
+    }
+  }
+}
+
 void pp_constraints() {
 #define each(a) a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]
 #define seven(x) x x x x x x x
@@ -451,6 +485,20 @@ void pp_constraints() {
   l_debug("con.pv=[" seven("%02X ") "%02X]", each((unsigned int)con.pv));
 #undef each
 #undef seven
+}
+
+uint_fast8_t unique_bit(int n, uint_fast8_t seq[]) {
+  uint_fast8_t count1 = 0, count2 = 0;
+
+  for (int i = 0; i < n; i++) {
+    count2 |= count1 & seq[i];
+    count1 |= seq[i];
+  }
+
+  uint_fast8_t uniques = count1 & ~count2;
+  if (!single(uniques))
+    return -1;
+  return uniques;
 }
 
 int solve(const char *initial_state, const char *keys, int size) {
