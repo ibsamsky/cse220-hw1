@@ -5,8 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
-#include "hw1.h"
+#include "../include/hw1.h"
 
 int top_key[MAX_LENGTH] = {0};
 int bottom_key[MAX_LENGTH] = {0};
@@ -151,7 +152,7 @@ unsigned long check_dupes_col(int col) {
     if (seen == (seen | piece_bit))
       return F_MOVE_DUPLICATE;
     seen |= piece_bit;
-    edbg("%x", seen);
+    // edbg("%02Xx", seen);
   }
   return F_MOVE_OK;
 }
@@ -166,7 +167,7 @@ unsigned long check_dupes_row(int row) {
     if (seen == (seen | piece_bit))
       return F_MOVE_DUPLICATE;
     seen |= piece_bit;
-    edbg("%x", seen);
+    // edbg("%02X", seen);
   }
   return F_MOVE_OK;
 }
@@ -267,6 +268,10 @@ unsigned long try_move(char choice, int row, int col) {
 
 int initialize_board(const char *initial_state, const char *keys, int size) {
 #define die() do { printf("Invalid initial board state.\n"); return 0; } while (0)
+
+  edbg("%d", size);
+  edbg("\"%s\"", initial_state);
+  edbg("\"%s\"", keys);
   length = size;
 
   debug_assert(size <= MAX_LENGTH);
@@ -316,10 +321,136 @@ int initialize_board(const char *initial_state, const char *keys, int size) {
 
 /* END PART 1 */
 
+/* PART 2 */
+
+constraints con = {.bv = {{0}}};
+
+uint_fast8_t piece_to_bit(char piece) { return 1 << (piece - '1'); }
+
+char bit_to_piece(uint_fast8_t bit) {
+  assert(single(bit));
+  return ffs(bit) + '0';
+}
+
+// h/t chess programming wiki
+bool single(uint_fast8_t val) { return (val != 0 && (val & (val - 1)) == 0); }
+
+void place_singles() {
+  for (int i = 0; i < length * length; i++) {
+    int pos = itopos(i, length);
+    int row = pos >> 4, col = pos & 7;
+    if (single(con.bv[row][col])) {
+      char piece = bit_to_piece(con.bv[row][col]);
+      l_debug("placing '%c' at %d:%d", piece, row, col);
+      board[row][col] = piece;
+    }
+  }
+}
+
+static inline uint_fast8_t bitmask(uint_fast8_t nbits) {
+  return ~(~0U << nbits);
+}
+
+uint_fast8_t edge_constraint(int row, int col) {
+  int top_bound = length - top_key[col] + row + 2;
+  int bottom_bound = length - bottom_key[col] + (length - row - 1) + 2;
+  int left_bound = length - left_key[row] + col + 2;
+  int right_bound = length - right_key[row] + (length - col - 1) + 2;
+
+  uint_fast8_t min_bound = bitmask(top_bound - 1) & bitmask(bottom_bound - 1) &
+                           bitmask(left_bound - 1) & bitmask(right_bound - 1);
+  debug_assert(min_bound > 0);
+
+  return min_bound;
+}
+
+void edge_clue_initialization() {
+  // key=N special case
+  for (int i = 0; i < length; i++) {
+    if (top_key[i] == length) {
+      for (int r = 0; r < length; r++) {
+        con.bv[r][i] = piece_to_bit('1' + r);
+      }
+    }
+    if (bottom_key[i] == length) {
+      for (int r = 0; r < length; r++) {
+        con.bv[r][i] = piece_to_bit('0' + length - r);
+      }
+    }
+    if (left_key[i] == length) {
+      for (int c = 0; c < length; c++) {
+        con.bv[i][c] = piece_to_bit('1' + c);
+      }
+    }
+    if (right_key[i] == length) {
+      for (int c = 0; c < length; c++) {
+        con.bv[i][c] = piece_to_bit('0' + length - c);
+      }
+    }
+  }
+
+  // key=1 special case
+  for (int i = 0; i < length; i++) {
+    if (top_key[i] == 1) {
+      con.bv[0][i] = piece_to_bit('0' + length);
+    }
+    if (bottom_key[i] == 1) {
+      con.bv[length - 1][i] = piece_to_bit('0' + length);
+    }
+    if (left_key[i] == 1) {
+      con.bv[i][0] = piece_to_bit('0' + length);
+    }
+    if (right_key[i] == 1) {
+      con.bv[i][length - 1] = piece_to_bit('0' + length);
+    }
+  }
+
+  // all other
+  for (int i = 0; i < length * length; i++) {
+    int pos = itopos(i, length);
+    int row = pos >> 4, col = pos & 7;
+    uint_fast8_t constr = edge_constraint(row, col);
+    l_debug("constraining %d:%d to %02X (from %02X)", row, col,
+            (unsigned int)constr, (unsigned int)con.bv[row][col]);
+    con.bv[row][col] &= constr;
+  }
+
+  // lock in
+  l_debug("placing edge constraints");
+  place_singles();
+}
+
+void pp_constraints() {
+#define each(a) a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]
+#define eight(x) x x x x x x x x
+  for (int r = 0; r < MAX_LENGTH; r++) {
+    l_debug("con=" eight("%02X"), each((unsigned int)con.bv[r]));
+  }
+#undef each
+#undef eight
+}
+
 int solve(const char *initial_state, const char *keys, int size) {
-  (void)initial_state;
-  (void)keys;
-  (void)size;
+  if (0 == initialize_board(initial_state, keys, size))
+    return 0;
+
+  // init constraints
+  for (int i = 0; i < size * size; i++) {
+    char c = initial_state[i];
+    int pos = itopos(i, size);
+    con.bv[pos >> 4][pos & 7] = c == '-' ? bitmask(size) : piece_to_bit(c);
+  }
+
+  pp_constraints();
+
+  edge_clue_initialization();
+
+  pp_constraints();
+  print_board();
+
+  // p < size - key + p_idx + 2
+  // for key=1 p_idx=0 -> p<size+1 ; p=size
+  // for key=size p_idx=0 p<2 ; p=1
 
   return 1;
 }

@@ -100,6 +100,14 @@ typedef struct board_constraints {
   uint_fast8_t bv[MAX_LENGTH][MAX_LENGTH];
 } constraints;
 
+uint_fast8_t piece_to_bit(char piece);
+char bit_to_piece(uint_fast8_t bit);
+bool single(uint_fast8_t val);
+void place_singles();
+uint_fast8_t edge_constraint(int row, int col);
+void edge_clue_initialization();
+void pp_constraints();
+
 /* Hints from our solution (feel free to use or ignore):
 
 Part 1

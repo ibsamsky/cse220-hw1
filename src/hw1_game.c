@@ -10,10 +10,6 @@ int main(int argc, char **argv) {
   if (0 == initialize_board(argv[2], argv[3], size))
     return 0; // for codegrade :)
 
-  edbg("%s", argv[1]);
-  edbg("\"%s\"", argv[2]);
-  edbg("\"%s\"", argv[3]);
-
   unsigned long status;
 
   do {
