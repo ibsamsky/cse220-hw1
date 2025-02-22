@@ -21,7 +21,7 @@ unsigned int remaining = 0;
 
 /* PART 1 */
 
-int itopos(const int n, const int cols) {
+uint_fast8_t itopos(const int n, const int cols) {
   debug_assert(n < cols * cols);
 
   //                         rrrrcccc
@@ -172,22 +172,15 @@ unsigned long check_dupes_row(int row) {
   return F_MOVE_OK;
 }
 
-unsigned long check_row(int row) {
+// ffffbbbb
+// assumes no '-'
+uint_fast8_t nvisible(int n, char seq[]) {
   char max_left = '0', max_right = '0';
-  int v_left = 0, v_right = 0;
+  unsigned int v_left = 0, v_right = 0;
 
-  if ((check_dupes_row(row) & F_MOVE_DUPLICATE) > 0)
-    return F_MOVE_DUPLICATE;
-
-  if (left_key[row] == 0 || right_key[row] == 0)
-    return F_MOVE_OK;
-
-  for (int i = 0; i < length; i++) {
-    char p_left = board[row][i];
-    char p_right = board[row][length - i - 1];
-
-    if (p_left == '-' || p_right == '-')
-      return F_MOVE_OK;
+  for (int i = 0; i < n; i++) {
+    char p_left = seq[i];
+    char p_right = seq[n - i - 1];
 
     if (p_left > max_left) {
       v_left++;
@@ -198,6 +191,19 @@ unsigned long check_row(int row) {
       max_right = p_right;
     }
   }
+
+  return (v_left << 4) | v_right;
+}
+
+unsigned long check_row(int row) {
+  if ((check_dupes_row(row) & F_MOVE_DUPLICATE) > 0)
+    return F_MOVE_DUPLICATE;
+
+  // skip key check if any '-' remain
+  if (memchr(board[row], '-', length) != NULL)
+    return F_MOVE_OK;
+
+  unpack(nvisible(length, board[row]), v_left, v_right);
   if ((left_key[row] != 0 && v_left != left_key[row]) ||
       (right_key[row] != 0 && v_right != right_key[row])) {
     l_debug("key error r=%d: expected %d/%d, got %d/%d", row, left_key[row],
@@ -210,28 +216,19 @@ unsigned long check_row(int row) {
 }
 
 unsigned long check_col(int col) {
-  char max_top = '0', max_bottom = '0';
-  int v_top = 0, v_bottom = 0;
-
   if ((check_dupes_col(col) & F_MOVE_DUPLICATE) > 0)
     return F_MOVE_DUPLICATE;
 
+  char colseq[length];
   for (int i = 0; i < length; i++) {
-    char p_top = board[i][col];
-    char p_bottom = board[length - i - 1][col];
-
-    if (p_top == '-' || p_bottom == '-')
-      return F_MOVE_OK;
-
-    if (p_top > max_top) {
-      v_top++;
-      max_top = p_top;
-    }
-    if (p_bottom > max_bottom) {
-      v_bottom++;
-      max_bottom = p_bottom;
-    }
+    colseq[i] = board[i][col];
   }
+
+  // skip key check if any '-' remain
+  if (memchr(colseq, '-', length) != NULL)
+    return F_MOVE_OK;
+
+  unpack(nvisible(length, colseq), v_top, v_bottom);
   if ((top_key[col] != 0 && v_top != top_key[col]) ||
       (bottom_key[col] != 0 && v_bottom != bottom_key[col])) {
     l_debug("key error c=%d: expected %d/%d, got %d/%d", col, top_key[col],
@@ -287,8 +284,8 @@ int initialize_board(const char *initial_state, const char *keys, int size) {
     // set remaining empty positions
     if (c == '-')
       remaining++;
-    int pos = itopos(i, size);
-    board[pos >> 4][pos & 7] = c;
+    unpack(itopos(i, size), row, col);
+    board[row][col] = c;
   }
 
   if (!strnmatch(size * 4, keys, valid_key)) {
@@ -337,8 +334,7 @@ bool single(uint_fast8_t val) { return (val != 0 && (val & (val - 1)) == 0); }
 
 void place_singles() {
   for (int i = 0; i < length * length; i++) {
-    int pos = itopos(i, length);
-    int row = pos >> 4, col = pos & 7;
+    unpack(itopos(i, length), row, col);
     if (single(con.bv[row][col]) && (con.pv[row] & (1 << col)) == 0) {
       char piece = bit_to_piece(con.bv[row][col]);
       l_debug("placing '%c' at %d:%d", piece, row, col);
@@ -412,8 +408,7 @@ void edge_clue_initialization() {
 
   // all other
   for (int i = 0; i < length * length; i++) {
-    int pos = itopos(i, length);
-    int row = pos >> 4, col = pos & 7;
+    unpack(itopos(i, length), row, col);
     uint_fast8_t constr = edge_constraint(row, col);
     l_debug("constraining %d:%d to %02X (from %02X)", row, col,
             (unsigned int)constr, (unsigned int)con.bv[row][col]);
@@ -440,14 +435,16 @@ bool apply_constraint_propagation(int row, int col, char piece) {
       new_single = true;
     }
   }
-  // retain single constraint 
+  // retain single constraint
   con.bv[row][col] = piece_to_bit(piece);
+  if (new_single)
+    l_debug("propagating '%c' at %d:%d yielded new singles", piece, row, col);
   return new_single;
 }
 
 void pp_constraints() {
 #define each(a) a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]
-#define seven(x) x x x x x x x 
+#define seven(x) x x x x x x x
   for (int r = 0; r < MAX_LENGTH; r++) {
     l_debug("con.bv=[" seven("%02X ") "%02X]", each((unsigned int)con.bv[r]));
   }
@@ -463,9 +460,9 @@ int solve(const char *initial_state, const char *keys, int size) {
   // init constraints
   for (int i = 0; i < size * size; i++) {
     char c = initial_state[i];
-    int pos = itopos(i, size);
-    con.bv[pos >> 4][pos & 7] = c == '-' ? bitmask(size) : piece_to_bit(c);
-    con.pv[pos >> 4] = 0; // unfortunate
+    unpack(itopos(i, length), row, col);
+    con.bv[row][col] = c == '-' ? bitmask(size) : piece_to_bit(c);
+    con.pv[row] = 0; // unfortunate
   }
 
   pp_constraints();

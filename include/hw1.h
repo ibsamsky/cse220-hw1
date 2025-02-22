@@ -15,7 +15,6 @@
 #define F_MOVE_OCCUPIED 0x10UL
 #define F_WIN 0x20UL
 
-
 #define STR(x) #x
 #define ESTR(x) STR(x)
 
@@ -28,6 +27,9 @@
   for (int __i = 0; __i < LEN; __i++) {                                        \
     printf(STR);                                                               \
   }
+
+#define unpack(v, u, l) uint_fast8_t __v = (v);\
+int u = (__v>>4), l = (__v&7)
 
 #ifdef HW1_DEBUG
 #define debug_assert(...) assert(__VA_ARGS__)
@@ -85,6 +87,7 @@ unsigned long get_move();
 unsigned long try_move(char choice, int row, int col);
 unsigned long check_dupes_col(int col);
 unsigned long check_dupes_row(int row);
+uint_fast8_t nvisible(int n, char seq[]);
 unsigned long check_row(int row);
 unsigned long check_col(int col);
 
@@ -93,7 +96,6 @@ bool read_int_range(int *out, int low, int high);
 bool parse_int_range(int *dst, const char *src, int low, int high);
 bool valid_state(char test);
 bool valid_key(char test);
-
 
 // p2
 typedef struct board_constraints {
