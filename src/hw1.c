@@ -332,6 +332,22 @@ char bit_to_piece(uint_fast8_t bit) {
 // h/t chess programming wiki
 bool single(uint_fast8_t val) { return (val != 0 && (val & (val - 1)) == 0); }
 
+// ditto
+unsigned int popcnt(uint_fast8_t x) {
+  int count = 0;
+  while (x) {
+    count++;
+    x &= x - 1; // reset LS1B
+  }
+  return count;
+}
+
+unsigned int nbsf(unsigned int n, uint_fast8_t x) {
+  for (unsigned int i = 0; x && (i < n); i++)
+    x &= x - 1;
+  return ffs(x) - 1;
+}
+
 void place_singles() {
   for (int i = 0; i < length * length; i++) {
     unpack(itopos(i, length), row, col);
@@ -508,6 +524,154 @@ bool solver_win() {
   return (placements == bitmask(length));
 }
 
+void swap(char *x, char *y) {
+  char temp;
+  temp = *x;
+  *x = *y;
+  *y = temp;
+}
+
+// evil :(
+int sequence_pos = 0;
+void permutations(char (*dst)[MAX_LENGTH], int n, char v[], int k) {
+  if (k == 1) {
+    memcpy(dst[sequence_pos], v, n * sizeof(char));
+    sequence_pos++;
+  } else {
+    for (int i = 0; i < k; i++) {
+      permutations(dst, n, v, k - 1);
+      if (k % 2 == 1) {
+        swap(&v[0], &v[k - 1]);
+      } else {
+        swap(&v[i], &v[k - 1]);
+      }
+    }
+  }
+}
+
+char (*all_sequences)[MAX_LENGTH];
+char (*valid_sequences)[MAX_LENGTH];
+char (*filtered_sequences)[MAX_LENGTH];
+
+// returns the number of sequences generated
+size_t generate_valid_sequences(int index, bool is_row) {
+  uint_fast8_t constr[MAX_LENGTH];
+
+  if (is_row)
+    memcpy(constr, con.bv[index], length * sizeof(uint_fast8_t));
+  else // is col
+    for (int i = 0; i < length; i++)
+      constr[i] = con.bv[i][index];
+
+  int valid_pos = 0;
+
+  for (size_t i = 0; i < FACTORIAL[length]; i++) {
+    bool matches = true;
+    for (int j = 0; j < length; j++) {
+      matches =
+          matches && ((constr[j] & piece_to_bit(all_sequences[i][j])) > 0);
+    }
+    if (matches) {
+      memcpy(valid_sequences[valid_pos], all_sequences[i],
+             length * sizeof(char));
+      valid_pos++;
+    }
+  }
+
+  return valid_pos;
+}
+
+size_t generate_filtered_sequences(size_t n_valid, int index, bool is_row) {
+  size_t filtered_pos = 0;
+
+  for (size_t i = 0; i < n_valid; i++) {
+    unpack(nvisible(length, valid_sequences[i]), v_fwd, v_bwd);
+    bool valid_fwd = false, valid_bwd = false;
+
+    if (is_row) {
+      valid_fwd = left_key[index] == 0 || v_fwd == left_key[index];
+      valid_bwd = right_key[index] == 0 || v_bwd == right_key[index];
+    } else { // is col
+      valid_fwd = top_key[index] == 0 || v_fwd == top_key[index];
+      valid_bwd = bottom_key[index] == 0 || v_bwd == bottom_key[index];
+    }
+
+    if (valid_fwd && valid_bwd) {
+      l_debug("generated sequence (#%ld) with key %d/%d for %s %d",
+              filtered_pos + 1, v_fwd, v_bwd, is_row ? "row" : "col", index);
+      memcpy(filtered_sequences[filtered_pos], valid_sequences[i],
+             length * sizeof(char));
+      filtered_pos++;
+    }
+  }
+
+  return filtered_pos;
+}
+
+bool sequence_filtration(int index, bool is_row) {
+  size_t valid = generate_valid_sequences(index, is_row);
+  size_t filtered = generate_filtered_sequences(valid, index, is_row);
+
+  l_debug("%ld valid seq for %s %d", valid, is_row ? "row" : "col", index);
+  l_debug("%ld filtered seq for %s %d", filtered, is_row ? "row" : "col",
+          index);
+
+  // if (valid == filtered)
+  //   return; // nothing more can be done
+
+  uint_fast8_t constr[length];
+  memset(constr, 0, length * sizeof(uint_fast8_t));
+
+  for (size_t i = 0; i < filtered; i++) {
+    for (int j = 0; j < length; j++) {
+      constr[j] |= piece_to_bit(filtered_sequences[i][j]);
+    }
+  }
+
+  bool changed = false;
+  if (is_row) {
+    for (int i = 0; i < length; i++) {
+      if ((con.bv[index][i] & constr[i]) != con.bv[index][i])
+        changed = true;
+      con.bv[index][i] &= constr[i];
+    }
+  } else {
+    for (int i = 0; i < length; i++) {
+      if ((con.bv[i][index] & constr[i]) != con.bv[i][index])
+        changed = true;
+      con.bv[i][index] &= constr[i];
+    }
+  }
+
+  return changed;
+}
+
+// apply filtration to one row and col (for now)
+bool apply_sequence_filtration(int min_empty) {
+  int max_row = 0, idx_row = -1;
+
+  for (int i = 0; i < length; i++) {
+    int filled_row = popcnt(con.pv[i]);
+    if (filled_row > max_row && filled_row < length - min_empty) {
+      max_row = filled_row;
+      idx_row = i;
+    }
+  }
+
+  if (idx_row == -1)
+    return true;
+
+  l_debug("applying sequence filtration to row %d with %d empty", idx_row,
+          length - max_row);
+
+  bool changed = sequence_filtration(idx_row, true) || sequence_filtration(idx_row, false);
+
+  if (changed)
+    place_singles();
+
+  return changed;
+}
+
 int solve(const char *initial_state, const char *keys, int size) {
   if (0 == initialize_board(initial_state, keys, size))
     return 0;
@@ -520,6 +684,20 @@ int solve(const char *initial_state, const char *keys, int size) {
     con.pv[row] = 0; // unfortunate
   }
 
+  // init sequences
+  all_sequences =
+      malloc(sizeof(*all_sequences) * FACTORIAL[size]); // FACTORIAL[size] ?
+  char range[length];
+  for (int i = 1; i <= length; i++)
+    range[i - 1] = '0' + i;
+
+  sequence_pos = 0; // asan..
+  permutations(all_sequences, length, range, length);
+  l_debug("permutations done for n=%d", size);
+
+  valid_sequences = malloc(sizeof(*valid_sequences) * FACTORIAL[size]);
+  filtered_sequences = malloc(sizeof(*filtered_sequences) * FACTORIAL[size]);
+
   pp_constraints();
 
   edge_clue_initialization();
@@ -527,5 +705,17 @@ int solve(const char *initial_state, const char *keys, int size) {
   pp_constraints();
   print_board();
 
+  int iter = 0;
+  do {
+    for (int min = 0; false == apply_sequence_filtration(min); min++)
+      place_singles();
+  } while (!solver_win() && iter++ < 10);
+
+  pp_constraints();
+  print_board();
+
+  free(all_sequences);
+  free(valid_sequences);
+  free(filtered_sequences);
   return 1;
 }

@@ -31,6 +31,8 @@
 #define unpack(v, u, l) uint_fast8_t __v = (v);\
 int u = (__v>>4), l = (__v&7)
 
+#define FACTORIAL ((const unsigned int[]){1,1,2,6,24,120,720,5040,40320})
+
 #ifdef HW1_DEBUG
 #define debug_assert(...) assert(__VA_ARGS__)
 #define LOG_LEVEL 0
@@ -107,6 +109,8 @@ bool solver_win();
 uint_fast8_t piece_to_bit(char piece);
 char bit_to_piece(uint_fast8_t bit);
 bool single(uint_fast8_t val);
+unsigned int popcnt(uint_fast8_t x);
+unsigned int nbsf(unsigned int n, uint_fast8_t x);
 uint_fast8_t edge_constraint(int row, int col);
 uint_fast8_t unique_bits(int n, uint_fast8_t seq[]);
 void place_singles();
@@ -114,6 +118,13 @@ void pp_constraints();
 void edge_clue_initialization();
 bool apply_constraint_propagation(int row, int col, char piece);
 void apply_process_of_elimination(int row, int col);
+
+// p3
+size_t generate_valid_sequences( int index, bool is_row);
+void swap(char *x, char *y);
+void permutations(char (*dst)[MAX_LENGTH], int n, char v[], int k);
+size_t generate_valid_sequences(int index, bool is_row);
+size_t generate_filtered_sequences(size_t n_valid, int index, bool is_row);
 
 
 // void generate_valid_sequences(int valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index);
