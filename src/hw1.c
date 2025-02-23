@@ -597,8 +597,8 @@ size_t generate_filtered_sequences(size_t n_valid, int index, bool is_row) {
     }
 
     if (valid_fwd && valid_bwd) {
-      l_debug("generated sequence (#%ld) with key %d/%d for %s %d",
-              filtered_pos + 1, v_fwd, v_bwd, is_row ? "row" : "col", index);
+      // l_debug("generated sequence (#%ld) with key %d/%d for %s %d",
+      //         filtered_pos + 1, v_fwd, v_bwd, is_row ? "row" : "col", index);
       memcpy(filtered_sequences[filtered_pos], valid_sequences[i],
              length * sizeof(char));
       filtered_pos++;
@@ -647,39 +647,39 @@ bool sequence_filtration(int index, bool is_row) {
 }
 
 // apply filtration to one row and col (for now)
-bool apply_sequence_filtration(int min_empty) {
+bool apply_sequence_filtration() {
   bool changed = false;
-  if (length <= 6) {
-    for (int i = 0; i < length; i++) {
-      changed = changed || sequence_filtration(i, true) ||
-                sequence_filtration(i, false);
-    }
-    return changed;
-  }
-
-  int max_row = 0, idx_row = -1;
 
   for (int i = 0; i < length; i++) {
-    int filled_row = popcnt(con.pv[i]);
-    if (filled_row > max_row && filled_row < length - min_empty) {
-      max_row = filled_row;
-      idx_row = i;
-    }
+    changed = changed || sequence_filtration(i, true) ||
+              sequence_filtration(i, false);
   }
-
-  if (idx_row == -1)
-    return true;
-
-  l_debug("applying sequence filtration to row %d with %d empty", idx_row,
-          length - max_row);
-
-  changed =
-      sequence_filtration(idx_row, true) || sequence_filtration(idx_row, false);
-
-  if (changed)
-    place_singles();
-
   return changed;
+
+  // int max_row = 0, idx_row = -1;
+
+  // for (int i = 0; i < length; i++) {
+  //   int filled_row = popcnt(con.pv[i]);
+  //   if (filled_row > max_row && filled_row < length - min_empty) {
+  //     max_row = filled_row;
+  //     idx_row = i;
+  //   }
+  // }
+
+  // if (idx_row == -1)
+  //   return true;
+
+  // l_debug("applying sequence filtration to row %d with %d empty", idx_row,
+  //         length - max_row);
+
+  // changed =
+  //     sequence_filtration(idx_row, true) || sequence_filtration(idx_row,
+  //     false);
+
+  // if (changed)
+  //   place_singles();
+
+  // return changed;
 }
 
 int solve(const char *initial_state, const char *keys, int size) {
@@ -717,8 +717,7 @@ int solve(const char *initial_state, const char *keys, int size) {
 
   int iter = 0;
   do {
-    for (int min = 0; false == apply_sequence_filtration(min) && min <= length; min++)
-      ;
+    apply_sequence_filtration();
     place_singles();
   } while (!solver_win() && iter++ < 20);
 
