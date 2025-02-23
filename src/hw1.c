@@ -719,7 +719,7 @@ int solve(const char *initial_state, const char *keys, int size) {
   do {
     apply_sequence_filtration();
     place_singles();
-  } while (!solver_win() && iter++ < 20);
+  } while (!solver_win() && iter++ < 50);
 
   pp_constraints();
   print_board();

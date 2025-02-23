@@ -125,7 +125,8 @@ void swap(char *x, char *y);
 void permutations(char (*dst)[MAX_LENGTH], int n, char v[], int k);
 size_t generate_valid_sequences(int index, bool is_row);
 size_t generate_filtered_sequences(size_t n_valid, int index, bool is_row);
-
+bool sequence_filtration(int index, bool is_row);
+bool apply_sequence_filtration();
 
 // void generate_valid_sequences(int valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index);
 
