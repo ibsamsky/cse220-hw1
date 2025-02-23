@@ -359,14 +359,13 @@ void place_singles() {
       board[row][col] = piece;
       con.pv[row] |= 1 << col;
       bool ns = apply_constraint_propagation(row, col, piece);
-      if (!row_filled(row))
-        sequence_filtration(row, true);
-      if (!col_filled(col))
-        sequence_filtration(col, false);
+      bool sfr = sequence_filtration(row, true);bool sfc=  sequence_filtration(col, false);
+
+      if (!(ns || sfr || sfc))
+        l_debug("constraints unchanged after heuristics");
 
       // do it again!
-      if (ns || true)
-        place_singles();
+      place_singles();
     }
   }
 }
@@ -627,12 +626,14 @@ bool sequence_filtration(int index, bool is_row) {
   size_t valid = generate_valid_sequences(index, is_row);
   size_t filtered = generate_filtered_sequences(valid, index, is_row);
 
-  if (valid != filtered) {
-    l_debug("%ld valid seq for %s %d", valid, is_row ? "row" : "col", index);
+  if ((valid + filtered) > 2) {
+    if (valid != filtered) {
+      l_debug("%-5ld valid    seq for %s %d", valid, is_row ? "row" : "col",
+              index);
+    }
+    l_debug("%-5ld filtered seq for %s %d", filtered, is_row ? "row" : "col",
+            index);
   }
-
-  l_debug("%ld filtered seq for %s %d", filtered, is_row ? "row" : "col",
-          index);
 
   uint_fast8_t constr[length];
   memset(constr, 0, length * sizeof(uint_fast8_t));
@@ -661,40 +662,15 @@ bool sequence_filtration(int index, bool is_row) {
   return changed;
 }
 
-// apply filtration to one row and col (for now)
 bool apply_sequence_filtration() {
   bool changed = false;
 
   for (int i = 0; i < length; i++) {
-    changed = changed || sequence_filtration(i, true) ||
-              sequence_filtration(i, false);
+    bool row_changed = !row_filled(i) && sequence_filtration(i, true);
+    bool col_changed = !col_filled(i) && sequence_filtration(i, false);
+    changed = changed || row_changed || col_changed;
   }
   return changed;
-
-  // int max_row = 0, idx_row = -1;
-
-  // for (int i = 0; i < length; i++) {
-  //   int filled_row = popcnt(con.pv[i]);
-  //   if (filled_row > max_row && filled_row < length - min_empty) {
-  //     max_row = filled_row;
-  //     idx_row = i;
-  //   }
-  // }
-
-  // if (idx_row == -1)
-  //   return true;
-
-  // l_debug("applying sequence filtration to row %d with %d empty", idx_row,
-  //         length - max_row);
-
-  // changed =
-  //     sequence_filtration(idx_row, true) || sequence_filtration(idx_row,
-  //     false);
-
-  // if (changed)
-  //   place_singles();
-
-  // return changed;
 }
 
 int solve(const char *initial_state, const char *keys, int size) {
@@ -710,8 +686,7 @@ int solve(const char *initial_state, const char *keys, int size) {
   }
 
   // init sequences
-  all_sequences =
-      malloc(sizeof(*all_sequences) * FACTORIAL[size]); // FACTORIAL[size] ?
+  all_sequences = malloc(sizeof(*all_sequences) * FACTORIAL[size]);
   char range[length];
   for (int i = 1; i <= length; i++)
     range[i - 1] = '0' + i;
@@ -726,6 +701,29 @@ int solve(const char *initial_state, const char *keys, int size) {
   pp_constraints();
 
   edge_clue_initialization();
+
+  pp_constraints();
+  print_board();
+
+  if (!solver_win()) {
+    l_debug("board unsolved after recursion, bruteforcing");
+  } else {
+    l_debug("board solved by recursion");
+
+    free(all_sequences);
+    free(valid_sequences);
+    free(filtered_sequences);
+
+    return 1;
+  }
+
+  int iter = 0;
+  while (!solver_win() && iter++ < 50) {
+    apply_sequence_filtration();
+    place_singles();
+  }
+
+  l_debug("board solved by bruteforce");
 
   pp_constraints();
   print_board();
