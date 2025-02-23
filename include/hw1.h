@@ -105,6 +105,8 @@ typedef struct board_constraints {
   uint_fast8_t pv[MAX_LENGTH];
 } constraints;
 
+bool row_filled(int row);
+bool col_filled(int col);
 bool solver_win();
 uint_fast8_t piece_to_bit(char piece);
 char bit_to_piece(uint_fast8_t bit);

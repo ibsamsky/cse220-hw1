@@ -359,6 +359,10 @@ void place_singles() {
       board[row][col] = piece;
       con.pv[row] |= 1 << col;
       bool ns = apply_constraint_propagation(row, col, piece);
+      if (!row_filled(row))
+        sequence_filtration(row, true);
+      if (!col_filled(col))
+        sequence_filtration(col, false);
 
       // do it again!
       if (ns || true)
@@ -515,6 +519,17 @@ uint_fast8_t unique_bits(int n, uint_fast8_t seq[]) {
   return uniques;
 }
 
+bool row_filled(int row) { return (con.pv[row] == bitmask(length)); }
+bool col_filled(int col) {
+  bool filled = true;
+
+  for (int i = 0; i < length; i++) {
+    filled = filled && (((con.pv[i] >> col) & 1) == 1);
+  }
+
+  return filled;
+}
+
 bool solver_win() {
   uint_fast8_t placements = bitmask(length);
   for (int i = 0; i < length; i++) {
@@ -612,12 +627,12 @@ bool sequence_filtration(int index, bool is_row) {
   size_t valid = generate_valid_sequences(index, is_row);
   size_t filtered = generate_filtered_sequences(valid, index, is_row);
 
-  l_debug("%ld valid seq for %s %d", valid, is_row ? "row" : "col", index);
+  if (valid != filtered) {
+    l_debug("%ld valid seq for %s %d", valid, is_row ? "row" : "col", index);
+  }
+
   l_debug("%ld filtered seq for %s %d", filtered, is_row ? "row" : "col",
           index);
-
-  // if (valid == filtered)
-  //   return; // nothing more can be done
 
   uint_fast8_t constr[length];
   memset(constr, 0, length * sizeof(uint_fast8_t));
@@ -711,15 +726,6 @@ int solve(const char *initial_state, const char *keys, int size) {
   pp_constraints();
 
   edge_clue_initialization();
-
-  pp_constraints();
-  print_board();
-
-  int iter = 0;
-  do {
-    apply_sequence_filtration();
-    place_singles();
-  } while (!solver_win() && iter++ < 50);
 
   pp_constraints();
   print_board();

@@ -7,6 +7,11 @@
 itopos:                                 # @itopos
 	.cfi_startproc
 # %bb.0:
+	mov	eax, esi
+	imul	eax, esi
+	cmp	eax, edi
+	jle	.LBB0_2
+# %bb.1:
 	mov	eax, edi
 	cdq
 	idiv	esi
@@ -14,6 +19,14 @@ itopos:                                 # @itopos
 	or	eax, edx
                                         # kill: def $al killed $al killed $eax
 	ret
+.LBB0_2:
+	push	rax
+	.cfi_def_cfa_offset 16
+	lea	rdi, [rip + .L.str]
+	lea	rsi, [rip + .L.str.1]
+	lea	rcx, [rip + .L__PRETTY_FUNCTION__.itopos]
+	mov	edx, 25
+	call	__assert_fail@PLT
 .Lfunc_end0:
 	.size	itopos, .Lfunc_end0-itopos
 	.cfi_endproc
@@ -162,14 +175,14 @@ print_board:                            # @print_board
 	.cfi_offset r14, -32
 	.cfi_offset r15, -24
 	.cfi_offset rbp, -16
-	lea	rdi, [rip + .L.str]
+	lea	rdi, [rip + .L.str.2]
 	xor	eax, eax
 	call	printf@PLT
 	cmp	dword ptr [rip + length], 0
 	jle	.LBB5_3
 # %bb.1:
 	lea	r14, [rip + top_key]
-	lea	rbx, [rip + .L.str.1]
+	lea	rbx, [rip + .L.str.3]
 	xor	r15d, r15d
 	.p2align	4, 0x90
 .LBB5_2:                                # =>This Inner Loop Header: Depth=1
@@ -183,13 +196,13 @@ print_board:                            # @print_board
 	cmp	r15, rax
 	jl	.LBB5_2
 .LBB5_3:
-	lea	rdi, [rip + .L.str.2]
+	lea	rdi, [rip + .L.str.4]
 	xor	eax, eax
 	call	printf@PLT
 	cmp	dword ptr [rip + length], 0
 	jle	.LBB5_12
 # %bb.4:
-	lea	rbx, [rip + .L.str.3]
+	lea	rbx, [rip + .L.str.5]
 	xor	ebp, ebp
 	.p2align	4, 0x90
 .LBB5_5:                                # =>This Inner Loop Header: Depth=1
@@ -205,9 +218,9 @@ print_board:                            # @print_board
 	jle	.LBB5_12
 # %bb.7:
 	lea	r12, [rip + board]
-	lea	r14, [rip + .L.str.5]
+	lea	r14, [rip + .L.str.7]
 	lea	rbp, [rip + right_key]
-	lea	r15, [rip + .L.str.6]
+	lea	r15, [rip + .L.str.8]
 	xor	r13d, r13d
 	jmp	.LBB5_8
 	.p2align	4, 0x90
@@ -225,7 +238,7 @@ print_board:                            # @print_board
                                         #     Child Loop BB5_10 Depth 2
 	lea	rax, [rip + left_key]
 	mov	esi, dword ptr [rax + 4*r13]
-	lea	rdi, [rip + .L.str.4]
+	lea	rdi, [rip + .L.str.6]
 	xor	eax, eax
 	call	printf@PLT
 	cmp	dword ptr [rip + length], 0
@@ -245,13 +258,13 @@ print_board:                            # @print_board
 	jl	.LBB5_10
 	jmp	.LBB5_11
 .LBB5_12:
-	lea	rdi, [rip + .L.str.2]
+	lea	rdi, [rip + .L.str.4]
 	xor	eax, eax
 	call	printf@PLT
 	cmp	dword ptr [rip + length], 0
 	jle	.LBB5_15
 # %bb.13:
-	lea	rbx, [rip + .L.str.7]
+	lea	rbx, [rip + .L.str.9]
 	xor	ebp, ebp
 	.p2align	4, 0x90
 .LBB5_14:                               # =>This Inner Loop Header: Depth=1
@@ -262,14 +275,14 @@ print_board:                            # @print_board
 	cmp	ebp, dword ptr [rip + length]
 	jl	.LBB5_14
 .LBB5_15:
-	lea	rdi, [rip + .L.str.2]
+	lea	rdi, [rip + .L.str.4]
 	xor	eax, eax
 	call	printf@PLT
 	cmp	dword ptr [rip + length], 0
 	jle	.LBB5_18
 # %bb.16:
 	lea	r14, [rip + bottom_key]
-	lea	rbx, [rip + .L.str.1]
+	lea	rbx, [rip + .L.str.3]
 	xor	r15d, r15d
 	.p2align	4, 0x90
 .LBB5_17:                               # =>This Inner Loop Header: Depth=1
@@ -332,7 +345,7 @@ read_int_range:                         # @read_int_range
 	mov	rax, qword ptr fs:[40]
 	mov	qword ptr [rsp + 40], rax
 	mov	dword ptr [rsp + 12], 0
-	lea	rdi, [rip + .L.str.9]
+	lea	rdi, [rip + .L.str.11]
 	xor	r15d, r15d
 	lea	r12, [rsp + 31]
 	lea	rdx, [rsp + 12]
@@ -510,10 +523,10 @@ get_move:                               # @get_move
 	.cfi_offset rbp, -16
 	mov	rax, qword ptr fs:[40]
 	mov	qword ptr [rsp + 48], rax
-	lea	rbx, [rip + .L.str.10]
-	lea	r14, [rip + .L.str.11]
+	lea	rbx, [rip + .L.str.12]
+	lea	r14, [rip + .L.str.13]
 	lea	r15, [rsp + 30]
-	lea	r13, [rip + .L.str.13]
+	lea	r13, [rip + .L.str.15]
 	jmp	.LBB8_1
 	.p2align	4, 0x90
 .LBB8_7:                                #   in Loop: Header=BB8_1 Depth=1
@@ -557,7 +570,7 @@ get_move:                               # @get_move
 .LBB8_9:
 	lea	rbx, [rsp + 39]
 	lea	r13, [rsp + 12]
-	lea	rbp, [rip + .L.str.13]
+	lea	rbp, [rip + .L.str.15]
 	jmp	.LBB8_10
 	.p2align	4, 0x90
 .LBB8_15:                               #   in Loop: Header=BB8_10 Depth=1
@@ -570,12 +583,12 @@ get_move:                               # @get_move
 .LBB8_10:                               # =>This Inner Loop Header: Depth=1
 	mov	esi, dword ptr [rip + length]
 	dec	esi
-	lea	rdi, [rip + .L.str.14]
+	lea	rdi, [rip + .L.str.16]
 	xor	eax, eax
 	call	printf@PLT
 	mov	r15d, dword ptr [rip + length]
 	mov	dword ptr [rsp + 12], 0
-	lea	rdi, [rip + .L.str.9]
+	lea	rdi, [rip + .L.str.11]
 	mov	rsi, rbx
 	mov	rdx, r13
 	xor	eax, eax
@@ -605,7 +618,7 @@ get_move:                               # @get_move
 	cmp	r15d, r14d
 	jle	.LBB8_15
 .LBB8_16:
-	lea	rbp, [rip + .L.str.13]
+	lea	rbp, [rip + .L.str.15]
 	jmp	.LBB8_17
 	.p2align	4, 0x90
 .LBB8_22:                               #   in Loop: Header=BB8_17 Depth=1
@@ -618,12 +631,12 @@ get_move:                               # @get_move
 .LBB8_17:                               # =>This Inner Loop Header: Depth=1
 	mov	esi, dword ptr [rip + length]
 	dec	esi
-	lea	rdi, [rip + .L.str.15]
+	lea	rdi, [rip + .L.str.17]
 	xor	eax, eax
 	call	printf@PLT
 	mov	r13d, dword ptr [rip + length]
 	mov	dword ptr [rsp + 12], 0
-	lea	rdi, [rip + .L.str.9]
+	lea	rdi, [rip + .L.str.11]
 	mov	rsi, rbx
 	lea	rdx, [rsp + 12]
 	xor	eax, eax
@@ -658,7 +671,7 @@ get_move:                               # @get_move
 	lea	rcx, [rip + board]
 	lea	rbp, [rcx + 8*rax]
 	mov	ebx, 16
-	lea	r15, [rip + .Lstr.26]
+	lea	r15, [rip + .Lstr.98]
 	cmp	byte ptr [r13 + rbp], 45
 	jne	.LBB8_32
 # %bb.24:
@@ -695,7 +708,7 @@ get_move:                               # @get_move
 	lea	r15, [rip + .Lstr]
 	jmp	.LBB8_32
 .LBB8_29:
-	lea	r15, [rip + .Lstr.25]
+	lea	r15, [rip + .Lstr.97]
 .LBB8_32:
 	mov	rdi, r15
 	call	puts@PLT
@@ -1067,22 +1080,23 @@ check_row:                              # @check_row
 	.cfi_def_cfa_offset 48
 	push	rbx
 	.cfi_def_cfa_offset 56
-	sub	rsp, 40
-	.cfi_def_cfa_offset 96
+	sub	rsp, 56
+	.cfi_def_cfa_offset 112
 	.cfi_offset rbx, -56
 	.cfi_offset r12, -48
 	.cfi_offset r13, -40
 	.cfi_offset r14, -32
 	.cfi_offset r15, -24
 	.cfi_offset rbp, -16
+	mov	ebp, edi
 	movsxd	rbx, dword ptr [rip + length]
-	movsxd	r14, edi
+	movsxd	r13, edi
 	test	rbx, rbx
 	jle	.LBB13_14
 # %bb.1:
-	lea	rax, [8*r14]
+	lea	rax, [8*r13]
 	xor	ecx, ecx
-	lea	r15, [rip + board]
+	lea	r14, [rip + board]
 	mov	edx, 1
 	xor	esi, esi
 	jmp	.LBB13_3
@@ -1093,7 +1107,7 @@ check_row:                              # @check_row
 	je	.LBB13_6
 .LBB13_3:                               # =>This Inner Loop Header: Depth=1
 	lea	rdi, [rax + rcx]
-	movsx	edi, byte ptr [r15 + rdi]
+	movsx	edi, byte ptr [r14 + rdi]
 	cmp	edi, 45
 	je	.LBB13_2
 # %bb.4:                                #   in Loop: Header=BB13_3 Depth=1
@@ -1106,41 +1120,44 @@ check_row:                              # @check_row
 	jne	.LBB13_2
 # %bb.5:
 	mov	eax, 4
-	jmp	.LBB13_19
+	jmp	.LBB13_15
 .LBB13_6:
-	lea	r12, [r15 + 8*r14]
-	mov	rdi, r12
+	lea	r15, [r14 + 8*r13]
+	mov	rdi, r15
 	mov	esi, 45
 	mov	rdx, rbx
 	call	memchr@PLT
 	mov	rcx, rax
 	mov	eax, 1
 	test	rcx, rcx
-	jne	.LBB13_19
+	jne	.LBB13_15
 # %bb.7:
 	test	ebx, ebx
-	jle	.LBB13_16
+	jle	.LBB13_17
 # %bb.8:
+	mov	dword ptr [rsp + 20], ebp       # 4-byte Spill
 	mov	eax, ebx
 	and	eax, 3
-	mov	qword ptr [rsp + 16], rax       # 8-byte Spill
+	mov	qword ptr [rsp + 32], rax       # 8-byte Spill
 	cmp	ebx, 4
-	mov	qword ptr [rsp + 24], r14       # 8-byte Spill
-	jae	.LBB13_20
+	mov	qword ptr [rsp + 40], r13       # 8-byte Spill
+	mov	qword ptr [rsp + 24], rbx       # 8-byte Spill
+	jae	.LBB13_25
 # %bb.9:
-	mov	r15b, 48
+	mov	bl, 48
 	xor	edi, edi
 	mov	dl, 48
 	xor	r11d, r11d
 	xor	ecx, ecx
 .LBB13_10:
-	mov	r12, qword ptr [rsp + 16]       # 8-byte Reload
-	test	r12, r12
-	mov	r14, qword ptr [rsp + 24]       # 8-byte Reload
+	mov	r14, qword ptr [rsp + 32]       # 8-byte Reload
+	test	r14, r14
+	mov	r13, qword ptr [rsp + 40]       # 8-byte Reload
 	je	.LBB13_13
 # %bb.11:
-	lea	r8, [rbx + 8*r14]
-	lea	r9, [rdi + 8*r14]
+	mov	rax, qword ptr [rsp + 24]       # 8-byte Reload
+	lea	r8, [rax + 8*r13]
+	lea	r9, [rdi + 8*r13]
 	not	rdi
 	lea	rax, [rip + board]
 	add	r8, rax
@@ -1151,10 +1168,10 @@ check_row:                              # @check_row
 .LBB13_12:                              # =>This Inner Loop Header: Depth=1
 	movzx	eax, byte ptr [r9 + rdi]
 	movzx	esi, byte ptr [r8]
-	cmp	al, r15b
+	cmp	al, bl
 	setg	r10b
-	movzx	r15d, r15b
-	cmovg	r15d, eax
+	movzx	ebx, bl
+	cmovg	ebx, eax
 	add	cl, r10b
 	cmp	sil, dl
 	setg	al
@@ -1163,51 +1180,26 @@ check_row:                              # @check_row
 	add	r11b, al
 	inc	rdi
 	dec	r8
-	cmp	r12, rdi
+	cmp	r14, rdi
 	jne	.LBB13_12
 .LBB13_13:
 	shl	cl, 4
 	or	cl, r11b
-	movzx	ecx, cl
-	lea	rax, [rip + left_key]
-	mov	edx, dword ptr [rax + 4*r14]
-	test	edx, edx
-	jne	.LBB13_17
+	movzx	r15d, cl
+	mov	ebp, dword ptr [rsp + 20]       # 4-byte Reload
 	jmp	.LBB13_18
 .LBB13_14:
 	lea	rax, [rip + board]
-	lea	rdi, [rax + 8*r14]
+	lea	rdi, [rax + 8*r13]
 	mov	esi, 45
 	mov	rdx, rbx
 	call	memchr@PLT
 	mov	rcx, rax
 	mov	eax, 1
 	test	rcx, rcx
-	jne	.LBB13_19
-.LBB13_16:
-	xor	ecx, ecx
-	lea	rax, [rip + left_key]
-	mov	edx, dword ptr [rax + 4*r14]
-	test	edx, edx
-	je	.LBB13_18
-.LBB13_17:
-	mov	esi, ecx
-	shr	esi, 4
-	mov	eax, 8
-	cmp	esi, edx
-	jne	.LBB13_19
-.LBB13_18:
-	and	ecx, 7
-	lea	rax, [rip + right_key]
-	mov	edx, dword ptr [rax + 4*r14]
-	cmp	ecx, edx
-	mov	ecx, 1
-	mov	eax, 8
-	cmove	rax, rcx
-	test	edx, edx
-	cmove	rax, rcx
-.LBB13_19:
-	add	rsp, 40
+	je	.LBB13_17
+.LBB13_15:
+	add	rsp, 56
 	.cfi_def_cfa_offset 56
 	pop	rbx
 	.cfi_def_cfa_offset 48
@@ -1222,35 +1214,103 @@ check_row:                              # @check_row
 	pop	rbp
 	.cfi_def_cfa_offset 8
 	ret
+.LBB13_17:
+	.cfi_def_cfa_offset 112
+	xor	r15d, r15d
+.LBB13_18:
+	mov	r14d, r15d
+	shr	r14d, 4
+	and	r15d, 7
+	lea	rbx, [rip + left_key]
+	mov	eax, dword ptr [rbx + 4*r13]
+	test	eax, eax
+	je	.LBB13_20
+# %bb.19:
+	cmp	r14d, eax
+	jne	.LBB13_22
 .LBB13_20:
-	.cfi_def_cfa_offset 96
+	lea	rax, [rip + right_key]
+	mov	eax, dword ptr [rax + 4*r13]
+	test	eax, eax
+	je	.LBB13_23
+# %bb.21:
+	cmp	r15d, eax
+	je	.LBB13_23
+.LBB13_22:
+	mov	r12, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [r12]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 210
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r12]
+	mov	ecx, dword ptr [rbx + 4*r13]
+	lea	rax, [rip + right_key]
+	mov	r8d, dword ptr [rax + 4*r13]
+	mov	dword ptr [rsp], r15d
+	lea	rsi, [rip + .L.str.28]
+	mov	edx, r13d
+	mov	r9d, r14d
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	ebx, 8
+	jmp	.LBB13_24
+.LBB13_23:
+	mov	rbx, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rbx]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 214
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbx]
+	lea	rsi, [rip + .L.str.31]
+	mov	edx, ebp
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	ebx, 1
+.LBB13_24:
+	mov	r14, qword ptr [rip + stderr@GOTPCREL]
+	mov	rsi, qword ptr [r14]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r14]
+	call	fflush@PLT
+	mov	rax, rbx
+	jmp	.LBB13_15
+.LBB13_25:
 	mov	eax, ebx
 	and	eax, 2147483644
-	mov	qword ptr [rsp + 32], rax       # 8-byte Spill
-	lea	r9, [r15 + 8*r14]
+	mov	qword ptr [rsp + 48], rax       # 8-byte Spill
+	lea	r9, [r14 + 8*r13]
 	add	r9, 3
-	lea	r10, [rbx + r12]
+	lea	r10, [rbx + r15]
 	dec	r10
-	add	r12, rbx
-	mov	r15b, 48
+	add	r15, rbx
+	mov	bl, 48
 	xor	edi, edi
 	mov	dl, 48
 	xor	r13d, r13d
 	xor	ecx, ecx
-	jmp	.LBB13_22
+	jmp	.LBB13_27
 	.p2align	4, 0x90
-.LBB13_21:                              #   in Loop: Header=BB13_22 Depth=1
-	add	cl, byte ptr [rsp + 14]         # 1-byte Folded Reload
+.LBB13_26:                              #   in Loop: Header=BB13_27 Depth=1
+	add	cl, bpl
 	add	cl, r8b
+	add	cl, r15b
 	add	cl, r14b
-	add	cl, r11b
-	add	r13b, byte ptr [rsp + 15]       # 1-byte Folded Reload
+	add	r13b, byte ptr [rsp + 19]       # 1-byte Folded Reload
 	add	r13b, al
 	add	r13b, r12b
 	mov	rax, rdi
 	xor	rax, -4
-	mov	r12, rbp
-	movzx	eax, byte ptr [rbp + rax]
+	mov	r15, r11
+	movzx	eax, byte ptr [r11 + rax]
 	cmp	al, dl
 	setg	r11b
 	cmovg	edx, eax
@@ -1258,47 +1318,47 @@ check_row:                              # @check_row
 	add	rdi, 4
 	add	r10, -4
 	mov	r13d, r11d
-	cmp	qword ptr [rsp + 32], rdi       # 8-byte Folded Reload
+	cmp	qword ptr [rsp + 48], rdi       # 8-byte Folded Reload
 	je	.LBB13_10
-.LBB13_22:                              # =>This Inner Loop Header: Depth=1
+.LBB13_27:                              # =>This Inner Loop Header: Depth=1
 	mov	eax, dword ptr [r9 + rdi - 3]
-	cmp	al, r15b
-	setg	byte ptr [rsp + 14]             # 1-byte Folded Spill
+	cmp	al, bl
+	setg	bpl
 	movzx	r8d, byte ptr [r10]
-	movzx	esi, r15b
+	movzx	esi, bl
 	cmovg	esi, eax
 	cmp	r8b, dl
-	setg	byte ptr [rsp + 15]             # 1-byte Folded Spill
+	setg	byte ptr [rsp + 19]             # 1-byte Folded Spill
 	movzx	edx, dl
 	cmovg	edx, r8d
 	movzx	eax, byte ptr [r9 + rdi - 2]
 	mov	r8, rdi
 	xor	r8, -2
-	movzx	r11d, byte ptr [r12 + r8]
+	movzx	ebx, byte ptr [r15 + r8]
 	cmp	al, sil
 	setg	r8b
 	cmovg	esi, eax
-	cmp	r11b, dl
+	cmp	bl, dl
 	setg	al
-	cmovg	edx, r11d
-	movzx	r11d, byte ptr [r9 + rdi - 1]
+	cmovg	edx, ebx
+	movzx	ebx, byte ptr [r9 + rdi - 1]
 	mov	r14, rdi
 	xor	r14, -3
-	mov	rbp, r12
-	movzx	r15d, byte ptr [r12 + r14]
-	cmp	r11b, sil
-	setg	r14b
-	cmovg	esi, r11d
-	cmp	r15b, dl
+	mov	r11, r15
+	movzx	r14d, byte ptr [r15 + r14]
+	cmp	bl, sil
+	setg	r15b
+	cmovg	esi, ebx
+	cmp	r14b, dl
 	setg	r12b
-	cmovg	edx, r15d
-	movzx	r15d, byte ptr [r9 + rdi]
-	cmp	r15b, sil
-	setg	r11b
-	jg	.LBB13_21
-# %bb.23:                               #   in Loop: Header=BB13_22 Depth=1
-	mov	r15d, esi
-	jmp	.LBB13_21
+	cmovg	edx, r14d
+	movzx	ebx, byte ptr [r9 + rdi]
+	cmp	bl, sil
+	setg	r14b
+	jg	.LBB13_26
+# %bb.28:                               #   in Loop: Header=BB13_27 Depth=1
+	mov	ebx, esi
+	jmp	.LBB13_26
 .Lfunc_end13:
 	.size	check_row, .Lfunc_end13-check_row
 	.cfi_endproc
@@ -1495,80 +1555,83 @@ check_col:                              # @check_col
 	.cfi_offset r13, -40
 	.cfi_offset r14, -32
 	.cfi_offset r15, -24
+	mov	r13d, edi
 	mov	rax, qword ptr fs:[40]
 	mov	qword ptr [rbp - 48], rax
 	mov	eax, dword ptr [rip + length]
-	movsxd	rbx, edi
 	test	eax, eax
 	jle	.LBB14_6
 # %bb.1:
-	xor	ecx, ecx
-	lea	rdx, [rip + board]
-	mov	esi, 1
-	xor	edi, edi
+	movsxd	rcx, r13d
+	xor	edx, edx
+	lea	rsi, [rip + board]
+	mov	edi, 1
+	xor	r8d, r8d
 	jmp	.LBB14_3
 	.p2align	4, 0x90
 .LBB14_2:                               #   in Loop: Header=BB14_3 Depth=1
-	inc	rcx
-	cmp	rax, rcx
+	inc	rdx
+	cmp	rax, rdx
 	je	.LBB14_6
 .LBB14_3:                               # =>This Inner Loop Header: Depth=1
-	lea	r8, [rbx + 8*rcx]
-	movsx	r8d, byte ptr [rdx + r8]
-	cmp	r8d, 45
+	lea	r9, [rcx + 8*rdx]
+	movsx	r9d, byte ptr [rsi + r9]
+	cmp	r9d, 45
 	je	.LBB14_2
 # %bb.4:                                #   in Loop: Header=BB14_3 Depth=1
-	add	r8b, -49
-	shlx	r8d, esi, r8d
-	movzx	r9d, dil
-	movzx	edi, r8b
-	or	edi, r9d
-	cmp	edi, r9d
+	add	r9b, -49
+	shlx	r9d, edi, r9d
+	movzx	r10d, r8b
+	movzx	r8d, r9b
+	or	r8d, r10d
+	cmp	r8d, r10d
 	jne	.LBB14_2
 # %bb.5:
 	mov	eax, 4
-	jmp	.LBB14_32
+	jmp	.LBB14_22
 .LBB14_6:
-	mov	r14, rsp
-	mov	r15, rsp
+	mov	rbx, rsp
+	mov	rdi, rsp
 	add	rax, 15
 	and	rax, -16
-	sub	r15, rax
-	mov	rsp, r15
-	movsxd	r12, dword ptr [rip + length]
-	test	r12, r12
+	sub	rdi, rax
+	mov	rsp, rdi
+	movsxd	r15, dword ptr [rip + length]
+	test	r15, r15
 	jle	.LBB14_9
 # %bb.7:
-	cmp	r12d, 17
+	movsxd	rax, r13d
+	cmp	r15d, 17
 	jae	.LBB14_11
 # %bb.8:
-	xor	eax, eax
+	xor	ecx, ecx
 	jmp	.LBB14_18
 .LBB14_9:
-	mov	rdi, r15
 	mov	esi, 45
-	mov	rdx, r12
+	mov	rdx, r15
 	call	memchr@PLT
 	mov	rcx, rax
 	mov	eax, 1
 	test	rcx, rcx
-	jne	.LBB14_31
-	jmp	.LBB14_28
+	jne	.LBB14_21
+# %bb.10:
+	mov	qword ptr [rbp - 80], rbx       # 8-byte Spill
+	jmp	.LBB14_31
 .LBB14_11:
-	cmp	r12d, 33
+	cmp	r15d, 33
 	jae	.LBB14_13
 # %bb.12:
-	xor	eax, eax
+	xor	ecx, ecx
 	jmp	.LBB14_16
 .LBB14_13:
-	mov	eax, r12d
-	and	eax, 31
-	mov	ecx, 32
-	cmovne	rcx, rax
-	mov	rax, r12
-	sub	rax, rcx
-	xor	edx, edx
-	lea	rsi, [rip + board]
+	mov	ecx, r15d
+	and	ecx, 31
+	mov	edx, 32
+	cmovne	rdx, rcx
+	mov	rcx, r15
+	sub	rcx, rdx
+	xor	esi, esi
+	lea	r9, [rip + board]
 	vpbroadcastw	xmm0, word ptr [rip + .LCPI14_7] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm1, word ptr [rip + .LCPI14_7] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm2, word ptr [rip + .LCPI14_7] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
@@ -1578,22 +1641,22 @@ check_col:                              # @check_col
 	vpbroadcastd	ymm6, dword ptr [rip + .LCPI14_9] # ymm6 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
 	.p2align	4, 0x90
 .LBB14_14:                              # =>This Inner Loop Header: Depth=1
-	lea	rdi, [rbx + 8*rdx]
-	vmovdqu	xmm7, xmmword ptr [rsi + rdi + 112]
+	lea	r8, [rax + 8*rsi]
+	vmovdqu	xmm7, xmmword ptr [r9 + r8 + 112]
 	vpshufb	xmm7, xmm7, xmm0
-	vmovdqu	xmm8, xmmword ptr [rsi + rdi + 96]
+	vmovdqu	xmm8, xmmword ptr [r9 + r8 + 96]
 	vpshufb	xmm8, xmm8, xmm0
 	vpunpcklwd	xmm7, xmm8, xmm7        # xmm7 = xmm8[0],xmm7[0],xmm8[1],xmm7[1],xmm8[2],xmm7[2],xmm8[3],xmm7[3]
-	vmovdqu	xmm8, xmmword ptr [rsi + rdi + 80]
+	vmovdqu	xmm8, xmmword ptr [r9 + r8 + 80]
 	vpshufb	xmm8, xmm8, xmm1
-	vmovdqu	xmm9, xmmword ptr [rsi + rdi + 64]
+	vmovdqu	xmm9, xmmword ptr [r9 + r8 + 64]
 	vpshufb	xmm9, xmm9, xmm1
 	vpunpcklwd	xmm8, xmm9, xmm8        # xmm8 = xmm9[0],xmm8[0],xmm9[1],xmm8[1],xmm9[2],xmm8[2],xmm9[3],xmm8[3]
 	vpblendd	xmm7, xmm8, xmm7, 8             # xmm7 = xmm8[0,1,2],xmm7[3]
-	vmovdqu	xmm8, xmmword ptr [rsi + rdi]
-	vmovdqu	xmm9, xmmword ptr [rsi + rdi + 16]
-	vmovdqu	xmm10, xmmword ptr [rsi + rdi + 32]
-	vmovdqu	xmm11, xmmword ptr [rsi + rdi + 48]
+	vmovdqu	xmm8, xmmword ptr [r9 + r8]
+	vmovdqu	xmm9, xmmword ptr [r9 + r8 + 16]
+	vmovdqu	xmm10, xmmword ptr [r9 + r8 + 32]
+	vmovdqu	xmm11, xmmword ptr [r9 + r8 + 48]
 	vpshufb	xmm11, xmm11, xmm2
 	vpshufb	xmm10, xmm10, xmm2
 	vpunpcklwd	xmm10, xmm10, xmm11     # xmm10 = xmm10[0],xmm11[0],xmm10[1],xmm11[1],xmm10[2],xmm11[2],xmm10[3],xmm11[3]
@@ -1603,64 +1666,64 @@ check_col:                              # @check_col
 	vpblendd	xmm8, xmm8, xmm10, 2            # xmm8 = xmm8[0],xmm10[1],xmm8[2,3]
 	vpblendd	xmm7, xmm8, xmm7, 12            # xmm7 = xmm8[0,1],xmm7[2,3]
 	vxorps	xmm8, xmm8, xmm8
-	vpermd	ymm8, ymm4, ymmword ptr [rsi + rdi + 224]
+	vpermd	ymm8, ymm4, ymmword ptr [r9 + r8 + 224]
 	vpshufb	ymm8, ymm8, ymm5
 	vxorps	xmm9, xmm9, xmm9
-	vpermd	ymm9, ymm4, ymmword ptr [rsi + rdi + 192]
+	vpermd	ymm9, ymm4, ymmword ptr [r9 + r8 + 192]
 	vpshufb	ymm9, ymm9, ymm5
 	vxorps	xmm10, xmm10, xmm10
-	vpermd	ymm10, ymm4, ymmword ptr [rsi + rdi + 160]
+	vpermd	ymm10, ymm4, ymmword ptr [r9 + r8 + 160]
 	vpblendd	ymm8, ymm9, ymm8, 128           # ymm8 = ymm9[0,1,2,3,4,5,6],ymm8[7]
 	vpshufb	ymm9, ymm10, ymm6
 	vxorps	xmm10, xmm10, xmm10
-	vpermd	ymm10, ymm4, ymmword ptr [rsi + rdi + 128]
+	vpermd	ymm10, ymm4, ymmword ptr [r9 + r8 + 128]
 	vpshufb	ymm10, ymm10, ymm6
 	vpblendd	ymm9, ymm10, ymm9, 32           # ymm9 = ymm10[0,1,2,3,4],ymm9[5],ymm10[6,7]
 	vpblendd	ymm8, ymm9, ymm8, 192           # ymm8 = ymm9[0,1,2,3,4,5],ymm8[6,7]
 	vpblendd	ymm7, ymm8, ymm7, 15            # ymm7 = ymm7[0,1,2,3],ymm8[4,5,6,7]
-	vmovdqu	ymmword ptr [r15 + rdx], ymm7
-	add	rdx, 32
-	cmp	rax, rdx
+	vmovdqu	ymmword ptr [rdi + rsi], ymm7
+	add	rsi, 32
+	cmp	rcx, rsi
 	jne	.LBB14_14
 # %bb.15:
-	cmp	ecx, 16
+	cmp	edx, 16
 	jbe	.LBB14_18
 .LBB14_16:
-	mov	rdi, rax
-	mov	eax, r12d
-	and	eax, 15
-	mov	ecx, 16
-	cmovne	rcx, rax
-	mov	rax, r12
-	sub	rax, rcx
-	lea	rdx, [rbx + 8*rdi]
-	lea	rcx, [rip + board]
-	add	rcx, rdx
-	lea	rdx, [r15 + rdi]
-	mov	rsi, rax
-	sub	rsi, rdi
-	xor	edi, edi
+	mov	r8, rcx
+	mov	ecx, r15d
+	and	ecx, 15
+	mov	edx, 16
+	cmovne	rdx, rcx
+	mov	rcx, r15
+	sub	rcx, rdx
+	lea	rsi, [rax + 8*r8]
+	lea	rdx, [rip + board]
+	add	rdx, rsi
+	lea	rsi, [rdi + r8]
+	mov	r9, rcx
+	sub	r9, r8
+	xor	r8d, r8d
 	vpbroadcastw	xmm0, word ptr [rip + .LCPI14_7] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm1, word ptr [rip + .LCPI14_7] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm2, word ptr [rip + .LCPI14_7] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm3, word ptr [rip + .LCPI14_7] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	.p2align	4, 0x90
 .LBB14_17:                              # =>This Inner Loop Header: Depth=1
-	vmovdqu	xmm4, xmmword ptr [rcx + 8*rdi + 112]
+	vmovdqu	xmm4, xmmword ptr [rdx + 8*r8 + 112]
 	vpshufb	xmm4, xmm4, xmm0
-	vmovdqu	xmm5, xmmword ptr [rcx + 8*rdi + 96]
+	vmovdqu	xmm5, xmmword ptr [rdx + 8*r8 + 96]
 	vpshufb	xmm5, xmm5, xmm0
 	vpunpcklwd	xmm4, xmm5, xmm4        # xmm4 = xmm5[0],xmm4[0],xmm5[1],xmm4[1],xmm5[2],xmm4[2],xmm5[3],xmm4[3]
-	vmovdqu	xmm5, xmmword ptr [rcx + 8*rdi + 80]
+	vmovdqu	xmm5, xmmword ptr [rdx + 8*r8 + 80]
 	vpshufb	xmm5, xmm5, xmm1
-	vmovdqu	xmm6, xmmword ptr [rcx + 8*rdi + 64]
+	vmovdqu	xmm6, xmmword ptr [rdx + 8*r8 + 64]
 	vpshufb	xmm6, xmm6, xmm1
 	vpunpcklwd	xmm5, xmm6, xmm5        # xmm5 = xmm6[0],xmm5[0],xmm6[1],xmm5[1],xmm6[2],xmm5[2],xmm6[3],xmm5[3]
 	vpblendd	xmm4, xmm5, xmm4, 8             # xmm4 = xmm5[0,1,2],xmm4[3]
-	vmovdqu	xmm5, xmmword ptr [rcx + 8*rdi]
-	vmovdqu	xmm6, xmmword ptr [rcx + 8*rdi + 16]
-	vmovdqu	xmm7, xmmword ptr [rcx + 8*rdi + 32]
-	vmovdqu	xmm8, xmmword ptr [rcx + 8*rdi + 48]
+	vmovdqu	xmm5, xmmword ptr [rdx + 8*r8]
+	vmovdqu	xmm6, xmmword ptr [rdx + 8*r8 + 16]
+	vmovdqu	xmm7, xmmword ptr [rdx + 8*r8 + 32]
+	vmovdqu	xmm8, xmmword ptr [rdx + 8*r8 + 48]
 	vpshufb	xmm8, xmm8, xmm2
 	vpshufb	xmm7, xmm7, xmm2
 	vpunpcklwd	xmm7, xmm7, xmm8        # xmm7 = xmm7[0],xmm8[0],xmm7[1],xmm8[1],xmm7[2],xmm8[2],xmm7[3],xmm8[3]
@@ -1669,124 +1732,42 @@ check_col:                              # @check_col
 	vpunpcklwd	xmm5, xmm5, xmm6        # xmm5 = xmm5[0],xmm6[0],xmm5[1],xmm6[1],xmm5[2],xmm6[2],xmm5[3],xmm6[3]
 	vpblendd	xmm5, xmm5, xmm7, 2             # xmm5 = xmm5[0],xmm7[1],xmm5[2,3]
 	vpblendd	xmm4, xmm5, xmm4, 12            # xmm4 = xmm5[0,1],xmm4[2,3]
-	vmovdqu	xmmword ptr [rdx + rdi], xmm4
-	add	rdi, 16
-	cmp	rsi, rdi
+	vmovdqu	xmmword ptr [rsi + r8], xmm4
+	add	r8, 16
+	cmp	r9, r8
 	jne	.LBB14_17
 .LBB14_18:
-	lea	rcx, [r15 + rax]
-	lea	rsi, [rbx + 8*rax]
-	lea	rdx, [rip + board]
-	add	rdx, rsi
-	mov	rsi, r12
-	sub	rsi, rax
-	xor	eax, eax
+	lea	rdx, [rdi + rcx]
+	lea	rsi, [rax + 8*rcx]
+	lea	rax, [rip + board]
+	add	rax, rsi
+	mov	rsi, r15
+	sub	rsi, rcx
+	xor	ecx, ecx
 	.p2align	4, 0x90
 .LBB14_19:                              # =>This Inner Loop Header: Depth=1
-	movzx	edi, byte ptr [rdx + 8*rax]
-	mov	byte ptr [rcx + rax], dil
-	inc	rax
-	cmp	rsi, rax
+	movzx	r8d, byte ptr [rax + 8*rcx]
+	mov	byte ptr [rdx + rcx], r8b
+	inc	rcx
+	cmp	rsi, rcx
 	jne	.LBB14_19
 # %bb.20:
-	mov	rdi, r15
 	mov	esi, 45
-	mov	rdx, r12
+	mov	rdx, r15
+	mov	r14, rdi
 	vzeroupper
 	call	memchr@PLT
 	mov	rcx, rax
 	mov	eax, 1
 	test	rcx, rcx
-	jne	.LBB14_31
-# %bb.21:
-	test	r12d, r12d
-	jle	.LBB14_28
-# %bb.22:
-	mov	qword ptr [rbp - 88], r14       # 8-byte Spill
-	mov	qword ptr [rbp - 96], rbx       # 8-byte Spill
-	mov	eax, r12d
-	and	eax, 3
-	mov	qword ptr [rbp - 80], rax       # 8-byte Spill
-	cmp	r12d, 4
-	mov	qword ptr [rbp - 64], r15       # 8-byte Spill
-	mov	qword ptr [rbp - 72], r12       # 8-byte Spill
-	jae	.LBB14_34
-# %bb.23:
-	mov	al, 48
-	xor	edi, edi
-	mov	dl, 48
-	xor	r11d, r11d
-	xor	ecx, ecx
-.LBB14_24:
-	mov	r14, qword ptr [rbp - 80]       # 8-byte Reload
-	test	r14, r14
-	mov	rbx, qword ptr [rbp - 64]       # 8-byte Reload
-	je	.LBB14_27
-# %bb.25:
-	mov	r8, rdi
-	not	r8
-	add	r8, qword ptr [rbp - 72]        # 8-byte Folded Reload
-	add	r8, rbx
-	add	rbx, rdi
-	xor	edi, edi
-	.p2align	4, 0x90
-.LBB14_26:                              # =>This Inner Loop Header: Depth=1
-	movzx	esi, byte ptr [rbx + rdi]
-	movzx	r9d, byte ptr [r8]
-	cmp	sil, al
-	setg	r10b
-	movzx	eax, al
-	cmovg	eax, esi
-	add	cl, r10b
-	cmp	r9b, dl
-	setg	sil
-	movzx	edx, dl
-	cmovg	edx, r9d
-	add	r11b, sil
-	inc	rdi
-	dec	r8
-	cmp	r14, rdi
-	jne	.LBB14_26
-.LBB14_27:
-	shl	cl, 4
-	or	cl, r11b
-	movzx	ecx, cl
-	mov	rbx, qword ptr [rbp - 96]       # 8-byte Reload
-	mov	r14, qword ptr [rbp - 88]       # 8-byte Reload
-	lea	rax, [rip + top_key]
-	mov	edx, dword ptr [rax + 4*rbx]
-	test	edx, edx
-	jne	.LBB14_29
-	jmp	.LBB14_30
-.LBB14_28:
-	xor	ecx, ecx
-	lea	rax, [rip + top_key]
-	mov	edx, dword ptr [rax + 4*rbx]
-	test	edx, edx
-	je	.LBB14_30
-.LBB14_29:
-	mov	esi, ecx
-	shr	esi, 4
-	mov	eax, 8
-	cmp	esi, edx
-	jne	.LBB14_31
-.LBB14_30:
-	and	ecx, 7
-	lea	rax, [rip + bottom_key]
-	mov	edx, dword ptr [rax + 4*rbx]
-	cmp	ecx, edx
-	mov	ecx, 1
-	mov	eax, 8
-	cmove	rax, rcx
-	test	edx, edx
-	cmove	rax, rcx
-.LBB14_31:
-	mov	rsp, r14
-.LBB14_32:
+	je	.LBB14_24
+.LBB14_21:
+	mov	rsp, rbx
+.LBB14_22:
 	mov	rcx, qword ptr fs:[40]
 	cmp	rcx, qword ptr [rbp - 48]
-	jne	.LBB14_38
-# %bb.33:
+	jne	.LBB14_43
+# %bb.23:
 	lea	rsp, [rbp - 40]
 	pop	rbx
 	pop	r12
@@ -1796,82 +1777,211 @@ check_col:                              # @check_col
 	pop	rbp
 	.cfi_def_cfa rsp, 8
 	ret
-.LBB14_34:
+.LBB14_24:
 	.cfi_def_cfa rbp, 16
-	lea	rbx, [r15 + r12]
-	mov	eax, r12d
+	mov	qword ptr [rbp - 64], r14       # 8-byte Spill
+	test	r15d, r15d
+	mov	qword ptr [rbp - 80], rbx       # 8-byte Spill
+	jle	.LBB14_31
+# %bb.25:
+	mov	dword ptr [rbp - 68], r13d      # 4-byte Spill
+	mov	eax, r15d
+	and	eax, 3
+	mov	qword ptr [rbp - 96], rax       # 8-byte Spill
+	cmp	r15d, 4
+	mov	qword ptr [rbp - 88], r15       # 8-byte Spill
+	jae	.LBB14_39
+# %bb.26:
+	mov	bl, 48
+	xor	edi, edi
+	mov	dl, 48
+	xor	r11d, r11d
+	xor	ecx, ecx
+.LBB14_27:
+	mov	r14, qword ptr [rbp - 96]       # 8-byte Reload
+	test	r14, r14
+	mov	r10, qword ptr [rbp - 64]       # 8-byte Reload
+	je	.LBB14_30
+# %bb.28:
+	mov	r8, rdi
+	not	r8
+	add	r8, qword ptr [rbp - 88]        # 8-byte Folded Reload
+	add	r8, r10
+	add	r10, rdi
+	xor	edi, edi
+	.p2align	4, 0x90
+.LBB14_29:                              # =>This Inner Loop Header: Depth=1
+	movzx	eax, byte ptr [r10 + rdi]
+	movzx	esi, byte ptr [r8]
+	cmp	al, bl
+	setg	r9b
+	movzx	ebx, bl
+	cmovg	ebx, eax
+	add	cl, r9b
+	cmp	sil, dl
+	setg	al
+	movzx	edx, dl
+	cmovg	edx, esi
+	add	r11b, al
+	inc	rdi
+	dec	r8
+	cmp	r14, rdi
+	jne	.LBB14_29
+.LBB14_30:
+	shl	cl, 4
+	or	cl, r11b
+	movzx	r15d, cl
+	mov	r13d, dword ptr [rbp - 68]      # 4-byte Reload
+	jmp	.LBB14_32
+.LBB14_31:
+	xor	r15d, r15d
+.LBB14_32:
+	mov	r14d, r15d
+	shr	r14d, 4
+	and	r15d, 7
+	movsxd	rbx, r13d
+	lea	rax, [rip + top_key]
+	mov	eax, dword ptr [rax + 4*rbx]
+	test	eax, eax
+	je	.LBB14_34
+# %bb.33:
+	cmp	r14d, eax
+	jne	.LBB14_36
+.LBB14_34:
+	lea	rax, [rip + bottom_key]
+	mov	eax, dword ptr [rax + 4*rbx]
+	test	eax, eax
+	je	.LBB14_37
+# %bb.35:
+	cmp	r15d, eax
+	je	.LBB14_37
+.LBB14_36:
+	mov	r12, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [r12]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 235
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r12]
+	lea	rax, [rip + top_key]
+	mov	ecx, dword ptr [rax + 4*rbx]
+	lea	rax, [rip + bottom_key]
+	mov	r8d, dword ptr [rax + 4*rbx]
+	sub	rsp, 8
+	lea	rsi, [rip + .L.str.34]
+	mov	edx, r13d
+	mov	r9d, r14d
+	xor	eax, eax
+	push	r15
+	call	fprintf@PLT
+	add	rsp, 16
+	mov	ebx, 8
+	jmp	.LBB14_38
+.LBB14_37:
+	mov	rbx, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rbx]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 239
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbx]
+	lea	rsi, [rip + .L.str.37]
+	mov	edx, r13d
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	ebx, 1
+.LBB14_38:
+	mov	r14, qword ptr [rip + stderr@GOTPCREL]
+	mov	rsi, qword ptr [r14]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r14]
+	call	fflush@PLT
+	mov	rax, rbx
+	mov	rbx, qword ptr [rbp - 80]       # 8-byte Reload
+	jmp	.LBB14_21
+.LBB14_39:
+	mov	rax, qword ptr [rbp - 64]       # 8-byte Reload
+	lea	r14, [rax + r15]
+	mov	eax, r15d
 	and	eax, 2147483644
 	mov	qword ptr [rbp - 104], rax      # 8-byte Spill
-	lea	r10, [r12 - 1]
-	mov	al, 48
+	lea	r10, [r15 - 1]
+	mov	bl, 48
 	xor	edi, edi
 	mov	dl, 48
 	xor	r13d, r13d
 	xor	ecx, ecx
-	jmp	.LBB14_36
+	jmp	.LBB14_41
 	.p2align	4, 0x90
-.LBB14_35:                              #   in Loop: Header=BB14_36 Depth=1
+.LBB14_40:                              #   in Loop: Header=BB14_41 Depth=1
 	add	cl, byte ptr [rbp - 49]         # 1-byte Folded Reload
-	add	cl, r9b
+	add	cl, al
+	add	cl, r14b
 	add	cl, r8b
-	add	cl, bl
 	add	r13b, byte ptr [rbp - 50]       # 1-byte Folded Reload
-	add	r13b, r14b
 	add	r13b, r15b
-	mov	rsi, rdi
-	xor	rsi, -4
-	mov	rbx, r12
-	movzx	esi, byte ptr [r12 + rsi]
-	cmp	sil, dl
+	add	r13b, r9b
+	mov	rax, rdi
+	xor	rax, -4
+	mov	r14, r12
+	movzx	eax, byte ptr [r12 + rax]
+	cmp	al, dl
 	setg	r11b
-	cmovg	edx, esi
+	cmovg	edx, eax
 	add	r11b, r13b
 	add	rdi, 4
 	add	r10, -4
 	mov	r13d, r11d
 	cmp	qword ptr [rbp - 104], rdi      # 8-byte Folded Reload
-	je	.LBB14_24
-.LBB14_36:                              # =>This Inner Loop Header: Depth=1
+	je	.LBB14_27
+.LBB14_41:                              # =>This Inner Loop Header: Depth=1
 	mov	r11, qword ptr [rbp - 64]       # 8-byte Reload
-	mov	r8d, dword ptr [r11 + rdi]
-	cmp	r8b, al
+	mov	eax, dword ptr [r11 + rdi]
+	cmp	al, bl
 	setg	byte ptr [rbp - 49]             # 1-byte Folded Spill
-	movzx	r9d, byte ptr [r11 + r10]
-	movzx	esi, al
-	cmovg	esi, r8d
-	cmp	r9b, dl
-	setg	byte ptr [rbp - 50]             # 1-byte Folded Spill
-	movzx	edx, dl
-	cmovg	edx, r9d
-	movzx	eax, byte ptr [r11 + rdi + 1]
-	mov	r8, rdi
-	xor	r8, -2
-	movzx	r8d, byte ptr [rbx + r8]
-	cmp	al, sil
-	setg	r9b
+	movzx	r8d, byte ptr [r11 + r10]
+	movzx	esi, bl
 	cmovg	esi, eax
 	cmp	r8b, dl
-	setg	r14b
+	setg	byte ptr [rbp - 50]             # 1-byte Folded Spill
+	movzx	edx, dl
 	cmovg	edx, r8d
-	movzx	eax, byte ptr [r11 + rdi + 2]
-	mov	r8, rdi
-	xor	r8, -3
-	mov	r12, rbx
-	movzx	ebx, byte ptr [rbx + r8]
-	cmp	al, sil
-	setg	r8b
-	cmovg	esi, eax
-	cmp	bl, dl
+	movzx	r8d, byte ptr [r11 + rdi + 1]
+	mov	rax, rdi
+	xor	rax, -2
+	movzx	r9d, byte ptr [r14 + rax]
+	cmp	r8b, sil
+	setg	al
+	cmovg	esi, r8d
+	cmp	r9b, dl
 	setg	r15b
+	cmovg	edx, r9d
+	movzx	r8d, byte ptr [r11 + rdi + 2]
+	mov	r9, rdi
+	xor	r9, -3
+	mov	r12, r14
+	movzx	ebx, byte ptr [r14 + r9]
+	cmp	r8b, sil
+	setg	r14b
+	cmovg	esi, r8d
+	cmp	bl, dl
+	setg	r9b
 	cmovg	edx, ebx
-	movzx	eax, byte ptr [r11 + rdi + 3]
-	cmp	al, sil
-	setg	bl
-	jg	.LBB14_35
-# %bb.37:                               #   in Loop: Header=BB14_36 Depth=1
-	mov	eax, esi
-	jmp	.LBB14_35
-.LBB14_38:
+	movzx	ebx, byte ptr [r11 + rdi + 3]
+	cmp	bl, sil
+	setg	r8b
+	jg	.LBB14_40
+# %bb.42:                               #   in Loop: Header=BB14_41 Depth=1
+	mov	ebx, esi
+	jmp	.LBB14_40
+.LBB14_43:
 	call	__stack_chk_fail@PLT
 .Lfunc_end14:
 	.size	check_col, .Lfunc_end14-check_col
@@ -1904,63 +2014,128 @@ initialize_board:                       # @initialize_board
 	.cfi_offset r13, -40
 	.cfi_offset r14, -32
 	.cfi_offset r15, -24
+	mov	ebx, edx
+	mov	r14, rsi
+	mov	r15, rdi
 	mov	rax, qword ptr fs:[40]
 	mov	qword ptr [rbp - 48], rax
-	mov	dword ptr [rip + length], edx
-	test	edx, edx
-	je	.LBB15_21
+	mov	r13, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.21]
+	lea	r12, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	rdx, r12
+	mov	r9d, 269
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.40]
+	mov	edx, ebx
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rsi, qword ptr [r13]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r13]
+	call	fflush@PLT
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.21]
+	mov	rdx, r12
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 270
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.43]
+	mov	rdx, r15
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rsi, qword ptr [r13]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r13]
+	call	fflush@PLT
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.21]
+	mov	rdx, r12
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 271
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.46]
+	mov	rdx, r14
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rsi, qword ptr [r13]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r13]
+	call	fflush@PLT
+	mov	dword ptr [rip + length], ebx
+	cmp	ebx, 9
+	jge	.LBB15_41
 # %bb.1:
-	mov	ebx, edx
-	mov	eax, edx
-	imul	eax, eax
-	lea	ecx, [rbx + 48]
-	xor	edx, edx
+	test	ebx, ebx
+	jle	.LBB15_42
+# %bb.2:
+	mov	r12d, ebx
+	imul	r12d, r12d
+	lea	esi, [rbx + 48]
+	xor	eax, eax
 	jmp	.LBB15_3
 	.p2align	4, 0x90
-.LBB15_2:                               #   in Loop: Header=BB15_3 Depth=1
-	inc	rdx
-	cmp	rdx, rax
-	jge	.LBB15_7
+.LBB15_4:                               #   in Loop: Header=BB15_3 Depth=1
+	inc	rax
+	cmp	rax, r12
+	jge	.LBB15_5
 .LBB15_3:                               # =>This Inner Loop Header: Depth=1
-	movzx	r8d, byte ptr [rdi + rdx]
-	cmp	r8b, 45
-	je	.LBB15_2
-# %bb.4:                                #   in Loop: Header=BB15_3 Depth=1
-	cmp	r8b, 49
-	jl	.LBB15_6
-# %bb.5:                                #   in Loop: Header=BB15_3 Depth=1
-	cmp	cl, r8b
-	jge	.LBB15_2
-.LBB15_6:
-	lea	rdi, [rip + .Lstr.29]
-	call	puts@PLT
+	movzx	ecx, byte ptr [r15 + rax]
+	cmp	cl, 45
+	je	.LBB15_4
+# %bb.12:                               #   in Loop: Header=BB15_3 Depth=1
+	cmp	cl, 49
+	jl	.LBB15_14
+# %bb.13:                               #   in Loop: Header=BB15_3 Depth=1
+	cmp	sil, cl
+	jge	.LBB15_4
+.LBB15_14:
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 279
 	xor	eax, eax
-	jmp	.LBB15_24
-.LBB15_7:
-	test	ebx, ebx
-	je	.LBB15_21
-# %bb.8:
-	mov	r8d, dword ptr [rip + remaining]
-	mov	r9d, 1
-	cmp	eax, 2
-	cmovae	r9d, eax
-	jae	.LBB15_26
-# %bb.9:
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.51]
+	mov	edx, r12d
+	mov	rcx, r15
+	jmp	.LBB15_15
+.LBB15_5:
+	mov	edi, dword ptr [rip + remaining]
+	cmp	r12d, 1
+	jne	.LBB15_20
+# %bb.6:
 	xor	ecx, ecx
+.LBB15_7:
+	test	r12b, 1
+	je	.LBB15_11
+# %bb.8:
+	movzx	r8d, byte ptr [r15 + rcx]
+	cmp	r8b, 45
+	jne	.LBB15_10
+# %bb.9:
+	inc	edi
+	mov	dword ptr [rip + remaining], edi
 .LBB15_10:
-	test	r9b, 1
-	je	.LBB15_14
-# %bb.11:
-	movzx	edi, byte ptr [rdi + rcx]
-	cmp	dil, 45
-	jne	.LBB15_13
-# %bb.12:
-	inc	r8d
-	mov	dword ptr [rip + remaining], r8d
-.LBB15_13:
 	mov	eax, ecx
-	cdq
-	idiv	ebx
+	xor	edx, edx
+	div	ebx
                                         # kill: def $edx killed $edx def $rdx
                                         # kill: def $eax killed $eax def $rax
 	shl	eax, 4
@@ -1970,55 +2145,180 @@ initialize_board:                       # @initialize_board
 	and	eax, 120
 	lea	rcx, [rip + board]
 	add	rcx, rax
-	mov	byte ptr [rdx + rcx], dil
-.LBB15_14:
-	test	ebx, ebx
-	jle	.LBB15_21
-# %bb.15:
-	lea	ecx, [4*rbx]
-	movsxd	rax, ecx
-	lea	edx, [rbx + 48]
-	xor	edi, edi
+	mov	byte ptr [rdx + rcx], r8b
+.LBB15_11:
+	lea	r15d, [4*rbx]
+	xor	eax, eax
 	.p2align	4, 0x90
-.LBB15_16:                              # =>This Inner Loop Header: Depth=1
-	movzx	r8d, byte ptr [rsi + rdi]
-	cmp	r8b, 48
-	jl	.LBB15_6
-# %bb.17:                               #   in Loop: Header=BB15_16 Depth=1
-	cmp	dl, r8b
-	jl	.LBB15_6
-# %bb.18:                               #   in Loop: Header=BB15_16 Depth=1
-	inc	rdi
-	cmp	rdi, rax
-	jl	.LBB15_16
-# %bb.19:
+.LBB15_17:                              # =>This Inner Loop Header: Depth=1
+	movzx	ecx, byte ptr [r14 + rax]
+	cmp	cl, 48
+	jl	.LBB15_19
+# %bb.18:                               #   in Loop: Header=BB15_17 Depth=1
+	cmp	sil, cl
+	jl	.LBB15_19
+# %bb.16:                               #   in Loop: Header=BB15_17 Depth=1
+	inc	rax
+	cmp	rax, r15
+	jl	.LBB15_17
+# %bb.26:
+	mov	qword ptr [rbp - 64], rsp       # 8-byte Spill
 	mov	r12, rsp
-	mov	eax, ecx
-	mov	r14, rsp
-	lea	rax, [4*rax + 15]
+	lea	rax, [4*r15 + 15]
 	and	rax, -16
-	sub	r14, rax
-	mov	rsp, r14
-	cmp	ecx, 2
-	mov	eax, 1
-	cmovge	eax, ecx
-	cmp	ecx, 31
-	jg	.LBB15_32
-# %bb.20:
-	xor	ecx, ecx
-	jmp	.LBB15_35
-.LBB15_21:
-	mov	r12, rsp
-.LBB15_22:
-	mov	r15b, 1
-.LBB15_23:
+	sub	r12, rax
 	mov	rsp, r12
-	movzx	eax, r15b
-.LBB15_24:
+	cmp	r15d, 16
+	jae	.LBB15_28
+# %bb.27:
+	xor	eax, eax
+	jmp	.LBB15_31
+.LBB15_20:
+	mov	r8d, r12d
+	and	r8d, -4
+	xor	ecx, ecx
+	lea	r9, [rip + board]
+	jmp	.LBB15_21
+	.p2align	4, 0x90
+.LBB15_25:                              #   in Loop: Header=BB15_21 Depth=1
+	lea	eax, [rcx + 1]
+	xor	edx, edx
+	div	ebx
+                                        # kill: def $edx killed $edx def $rdx
+                                        # kill: def $eax killed $eax def $rax
+	shl	eax, 4
+	or	eax, edx
+	and	edx, 7
+	shr	eax
+	and	eax, 120
+	add	rax, r9
+	mov	byte ptr [rdx + rax], r10b
+	add	rcx, 2
+	cmp	r8, rcx
+	je	.LBB15_7
+.LBB15_21:                              # =>This Inner Loop Header: Depth=1
+	movzx	r10d, byte ptr [r15 + rcx]
+	cmp	r10b, 45
+	jne	.LBB15_23
+# %bb.22:                               #   in Loop: Header=BB15_21 Depth=1
+	inc	edi
+	mov	dword ptr [rip + remaining], edi
+.LBB15_23:                              #   in Loop: Header=BB15_21 Depth=1
+	mov	eax, ecx
+	xor	edx, edx
+	div	ebx
+                                        # kill: def $edx killed $edx def $rdx
+                                        # kill: def $eax killed $eax def $rax
+	shl	eax, 4
+	or	eax, edx
+	and	edx, 7
+	shr	eax
+	and	eax, 120
+	add	rax, r9
+	mov	byte ptr [rdx + rax], r10b
+	movzx	r10d, byte ptr [r15 + rcx + 1]
+	cmp	r10b, 45
+	jne	.LBB15_25
+# %bb.24:                               #   in Loop: Header=BB15_21 Depth=1
+	inc	edi
+	mov	dword ptr [rip + remaining], edi
+	jmp	.LBB15_25
+.LBB15_28:
+	mov	eax, r15d
+	and	eax, -16
+	xor	ecx, ecx
+	vpbroadcastd	ymm0, dword ptr [rip + .LCPI15_0] # ymm0 = [4294967248,4294967248,4294967248,4294967248,4294967248,4294967248,4294967248,4294967248]
+	.p2align	4, 0x90
+.LBB15_29:                              # =>This Inner Loop Header: Depth=1
+	vpmovsxbd	ymm1, qword ptr [r14 + rcx]
+	vpmovsxbd	ymm2, qword ptr [r14 + rcx + 8]
+	vpaddd	ymm1, ymm1, ymm0
+	vpaddd	ymm2, ymm2, ymm0
+	vmovdqu	ymmword ptr [r12 + 4*rcx], ymm1
+	vmovdqu	ymmword ptr [r12 + 4*rcx + 32], ymm2
+	add	rcx, 16
+	cmp	rax, rcx
+	jne	.LBB15_29
+# %bb.30:
+	cmp	eax, r15d
+	je	.LBB15_32
+	.p2align	4, 0x90
+.LBB15_31:                              # =>This Inner Loop Header: Depth=1
+	movsx	ecx, byte ptr [r14 + rax]
+	add	ecx, -48
+	mov	dword ptr [r12 + 4*rax], ecx
+	inc	rax
+	cmp	r15, rax
+	jne	.LBB15_31
+.LBB15_32:
+	mov	r15d, ebx
+	lea	r13d, [rbx + rbx]
+	lea	eax, [rbx + 2*rbx]
+	mov	qword ptr [rbp - 56], rax       # 8-byte Spill
+	lea	r14, [4*r15]
+	lea	rdi, [rip + top_key]
+	mov	rsi, r12
+	mov	rdx, r14
+	vzeroupper
+	call	memcpy@PLT
+	lea	rsi, [r12 + 4*r15]
+	lea	rdi, [rip + bottom_key]
+	mov	rdx, r14
+	call	memcpy@PLT
+	lea	rsi, [r12 + 4*r13]
+	lea	rdi, [rip + left_key]
+	mov	rdx, r14
+	call	memcpy@PLT
+	mov	rax, qword ptr [rbp - 56]       # 8-byte Reload
+	lea	rsi, [r12 + 4*rax]
+	lea	rdi, [rip + right_key]
+	mov	rdx, r14
+	call	memcpy@PLT
+	cmp	ebx, 2
+	mov	r14d, 1
+	mov	r12d, 1
+	cmovge	r12d, ebx
+	xor	r13d, r13d
+	xor	edi, edi
+	call	check_row
+	mov	r15, rax
+	xor	edi, edi
+	call	check_col
+	or	rax, r15
+	cmp	rax, 3
+	ja	.LBB15_36
+	.p2align	4, 0x90
+.LBB15_33:                              # =>This Inner Loop Header: Depth=1
+	cmp	r12d, r14d
+	je	.LBB15_37
+# %bb.34:                               #   in Loop: Header=BB15_33 Depth=1
+	mov	edi, r14d
+	call	check_row
+	mov	r15, rax
+	mov	edi, r14d
+	call	check_col
+	or	rax, r15
+	inc	r14d
+	cmp	rax, 4
+	jb	.LBB15_33
+# %bb.35:
+	dec	r14d
+	cmp	r14d, ebx
+	setge	r13b
+.LBB15_36:
+	lea	rdi, [rip + .Lstr.101]
+	call	puts@PLT
+	jmp	.LBB15_38
+.LBB15_37:
+	cmp	r14d, ebx
+	setge	r13b
+.LBB15_38:
+	movzx	eax, r13b
+	mov	rsp, qword ptr [rbp - 64]       # 8-byte Reload
 	mov	rcx, qword ptr fs:[40]
 	cmp	rcx, qword ptr [rbp - 48]
-	jne	.LBB15_43
-# %bb.25:
+	jne	.LBB15_40
+.LBB15_43:
 	lea	rsp, [rbp - 40]
 	pop	rbx
 	pop	r12
@@ -2028,151 +2328,48 @@ initialize_board:                       # @initialize_board
 	pop	rbp
 	.cfi_def_cfa rsp, 8
 	ret
-.LBB15_26:
+.LBB15_19:
 	.cfi_def_cfa rbp, 16
-	mov	r10d, r9d
-	and	r10d, -4
-	xor	ecx, ecx
-	lea	r11, [rip + board]
-	jmp	.LBB15_28
-	.p2align	4, 0x90
-.LBB15_27:                              #   in Loop: Header=BB15_28 Depth=1
-	lea	eax, [rcx + 1]
-	cdq
-	idiv	ebx
-                                        # kill: def $edx killed $edx def $rdx
-                                        # kill: def $eax killed $eax def $rax
-	shl	eax, 4
-	or	eax, edx
-	and	edx, 7
-	shr	eax
-	and	eax, 120
-	add	rax, r11
-	mov	byte ptr [rdx + rax], r14b
-	add	rcx, 2
-	cmp	rcx, r10
-	je	.LBB15_10
-.LBB15_28:                              # =>This Inner Loop Header: Depth=1
-	movzx	r14d, byte ptr [rdi + rcx]
-	cmp	r14b, 45
-	jne	.LBB15_30
-# %bb.29:                               #   in Loop: Header=BB15_28 Depth=1
-	inc	r8d
-	mov	dword ptr [rip + remaining], r8d
-.LBB15_30:                              #   in Loop: Header=BB15_28 Depth=1
-	mov	eax, ecx
-	cdq
-	idiv	ebx
-                                        # kill: def $edx killed $edx def $rdx
-                                        # kill: def $eax killed $eax def $rax
-	shl	eax, 4
-	or	eax, edx
-	and	edx, 7
-	shr	eax
-	and	eax, 120
-	add	rax, r11
-	mov	byte ptr [rdx + rax], r14b
-	movzx	r14d, byte ptr [rdi + rcx + 1]
-	cmp	r14b, 45
-	jne	.LBB15_27
-# %bb.31:                               #   in Loop: Header=BB15_28 Depth=1
-	inc	r8d
-	mov	dword ptr [rip + remaining], r8d
-	jmp	.LBB15_27
-.LBB15_32:
-	mov	ecx, eax
-	and	ecx, 2147483616
-	xor	edx, edx
-	vpbroadcastd	ymm0, dword ptr [rip + .LCPI15_0] # ymm0 = [4294967248,4294967248,4294967248,4294967248,4294967248,4294967248,4294967248,4294967248]
-	.p2align	4, 0x90
-.LBB15_33:                              # =>This Inner Loop Header: Depth=1
-	vpmovsxbd	ymm1, qword ptr [rsi + rdx]
-	vpmovsxbd	ymm2, qword ptr [rsi + rdx + 8]
-	vpmovsxbd	ymm3, qword ptr [rsi + rdx + 16]
-	vpmovsxbd	ymm4, qword ptr [rsi + rdx + 24]
-	vpaddd	ymm1, ymm1, ymm0
-	vpaddd	ymm2, ymm2, ymm0
-	vpaddd	ymm3, ymm3, ymm0
-	vpaddd	ymm4, ymm4, ymm0
-	vmovdqu	ymmword ptr [r14 + 4*rdx], ymm1
-	vmovdqu	ymmword ptr [r14 + 4*rdx + 32], ymm2
-	vmovdqu	ymmword ptr [r14 + 4*rdx + 64], ymm3
-	vmovdqu	ymmword ptr [r14 + 4*rdx + 96], ymm4
-	add	rdx, 32
-	cmp	rcx, rdx
-	jne	.LBB15_33
-# %bb.34:
-	cmp	ecx, eax
-	je	.LBB15_36
-	.p2align	4, 0x90
-.LBB15_35:                              # =>This Inner Loop Header: Depth=1
-	movsx	edx, byte ptr [rsi + rcx]
-	add	edx, -48
-	mov	dword ptr [r14 + 4*rcx], edx
-	inc	rcx
-	cmp	rax, rcx
-	jne	.LBB15_35
-.LBB15_36:
-	mov	r13d, ebx
-	lea	eax, [rbx + rbx]
-	mov	qword ptr [rbp - 56], rax       # 8-byte Spill
-	lea	eax, [rbx + 2*rbx]
-	mov	qword ptr [rbp - 64], rax       # 8-byte Spill
-	lea	r15, [4*r13]
-	lea	rdi, [rip + top_key]
-	mov	rsi, r14
-	mov	rdx, r15
-	vzeroupper
-	call	memcpy@PLT
-	lea	rsi, [r14 + 4*r13]
-	lea	rdi, [rip + bottom_key]
-	mov	rdx, r15
-	call	memcpy@PLT
-	mov	rax, qword ptr [rbp - 56]       # 8-byte Reload
-	lea	rsi, [r14 + 4*rax]
-	lea	rdi, [rip + left_key]
-	mov	rdx, r15
-	call	memcpy@PLT
-	mov	rax, qword ptr [rbp - 64]       # 8-byte Reload
-	lea	rsi, [r14 + 4*rax]
-	lea	rdi, [rip + right_key]
-	mov	rdx, r15
-	call	memcpy@PLT
-	xor	r15d, r15d
-	xor	edi, edi
-	call	check_row
-	mov	r14, rax
-	xor	edi, edi
-	call	check_col
-	or	rax, r14
-	cmp	rax, 3
-	ja	.LBB15_41
-# %bb.37:
-	mov	r14d, 1
-	.p2align	4, 0x90
-.LBB15_38:                              # =>This Inner Loop Header: Depth=1
-	cmp	ebx, r14d
-	je	.LBB15_22
-# %bb.39:                               #   in Loop: Header=BB15_38 Depth=1
-	mov	edi, r14d
-	call	check_row
-	mov	r15, rax
-	mov	edi, r14d
-	call	check_col
-	or	rax, r15
-	inc	r14d
-	cmp	rax, 4
-	jb	.LBB15_38
-# %bb.40:
-	dec	r14d
-	cmp	r14d, ebx
-	setge	r15b
-.LBB15_41:
-	lea	rdi, [rip + .Lstr.29]
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 292
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.55]
+	mov	edx, r15d
+	mov	rcx, r14
+.LBB15_15:
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rsi, qword ptr [r13]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r13]
+	call	fflush@PLT
+	lea	rdi, [rip + .Lstr.101]
 	call	puts@PLT
-	jmp	.LBB15_23
-.LBB15_43:
+	xor	eax, eax
+	mov	rcx, qword ptr fs:[40]
+	cmp	rcx, qword ptr [rbp - 48]
+	je	.LBB15_43
+.LBB15_40:
 	call	__stack_chk_fail@PLT
+.LBB15_41:
+	lea	rdi, [rip + .L.str.47]
+	lea	rsi, [rip + .L.str.1]
+	lea	rcx, [rip + .L__PRETTY_FUNCTION__.initialize_board]
+	mov	edx, 274
+	call	__assert_fail@PLT
+.LBB15_42:
+	lea	rdi, [rip + .L.str.48]
+	lea	rsi, [rip + .L.str.1]
+	lea	rcx, [rip + .L__PRETTY_FUNCTION__.initialize_board]
+	mov	edx, 275
+	call	__assert_fail@PLT
 .Lfunc_end15:
 	.size	initialize_board, .Lfunc_end15-initialize_board
 	.cfi_endproc
@@ -2217,8 +2414,8 @@ bit_to_piece:                           # @bit_to_piece
 .LBB17_2:
 	push	rax
 	.cfi_def_cfa_offset 16
-	lea	rdi, [rip + .L.str.20]
-	lea	rsi, [rip + .L.str.21]
+	lea	rdi, [rip + .L.str.56]
+	lea	rsi, [rip + .L.str.1]
 	lea	rcx, [rip + .L__PRETTY_FUNCTION__.bit_to_piece]
 	mov	edx, 328
 	call	__assert_fail@PLT
@@ -2321,117 +2518,133 @@ place_singles:                          # @place_singles
 	.cfi_offset r14, -32
 	.cfi_offset r15, -24
 	.cfi_offset rbp, -16
-	xor	ebx, ebx
 	lea	r12, [rip + con]
-	mov	ebp, 1
-	lea	r13, [rip + board]
+	mov	r15d, 1
+	xor	ebp, ebp
 	jmp	.LBB21_2
+.LBB21_11:                              #   in Loop: Header=BB21_2 Depth=1
+	mov	edi, ebx
+	xor	esi, esi
+	call	sequence_filtration
 .LBB21_12:                              #   in Loop: Header=BB21_2 Depth=1
-	add	rax, r14
-	mov	byte ptr [rax], cl
 	call	place_singles
 	.p2align	4, 0x90
 .LBB21_13:                              #   in Loop: Header=BB21_2 Depth=1
-	inc	ebx
+	inc	ebp
 	mov	ecx, dword ptr [rip + length]
 	mov	eax, ecx
 	imul	eax, ecx
-	cmp	ebx, eax
+	cmp	ebp, eax
 	jae	.LBB21_14
 .LBB21_2:                               # =>This Loop Header: Depth=1
                                         #     Child Loop BB21_8 Depth 2
-                                        #     Child Loop BB21_11 Depth 2
-	mov	eax, ebx
+	mov	eax, ebp
 	cdq
 	idiv	ecx
-	mov	r14d, edx
-	mov	r15d, eax
-	shl	r15d, 4
-	or	r15d, edx
-	shr	r15d, 4
-	and	r15d, 15
-	and	r14d, 7
-	mov	edi, r15d
-	mov	esi, r14d
+	mov	ebx, edx
+	mov	r14d, eax
+	shl	r14d, 4
+	or	r14d, edx
+	shr	r14d, 4
+	and	r14d, 15
+	and	ebx, 7
+	mov	edi, r14d
+	mov	esi, ebx
 	call	apply_process_of_elimination
-	lea	rax, [r12 + 8*r15]
-	movzx	ecx, byte ptr [r14 + rax]
-	lea	edx, [rcx - 1]
-	mov	esi, ecx
-	xor	sil, dl
-	cmp	sil, dl
+	lea	rax, [r12 + 8*r14]
+	movzx	eax, byte ptr [rbx + rax]
+	lea	ecx, [rax - 1]
+	mov	edx, eax
+	xor	dl, cl
+	cmp	dl, cl
 	jbe	.LBB21_13
 # %bb.3:                                #   in Loop: Header=BB21_2 Depth=1
-	movzx	edx, byte ptr [r15 + r12 + 64]
-	bt	edx, r14d
+	movzx	ecx, byte ptr [r14 + r12 + 64]
+	bt	ecx, ebx
 	jb	.LBB21_13
 # %bb.4:                                #   in Loop: Header=BB21_2 Depth=1
-	shlx	esi, ebp, r14d
-	movzx	edi, cl
-	tzcnt	edi, edi
-	add	dil, 49
-	test	cl, cl
-	movzx	ecx, dil
-	mov	edi, 48
-	cmove	ecx, edi
-	lea	rdi, [8*r15]
-	add	rdi, r13
-	mov	byte ptr [r14 + rdi], cl
-	or	sil, dl
-	mov	byte ptr [r15 + r12 + 64], sil
-	add	cl, -49
-	shlx	ecx, ebp, ecx
-	movsxd	rdx, dword ptr [rip + length]
-	test	rdx, rdx
-	jle	.LBB21_12
+	shlx	r13d, r15d, ebx
+	movzx	ecx, al
+	tzcnt	ecx, ecx
+	add	cl, 49
+	test	al, al
+	movzx	r15d, cl
+	mov	eax, 48
+	cmove	r15d, eax
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 358
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	movzx	r15d, r15b
+	lea	rsi, [rip + .L.str.59]
+	mov	edx, r15d
+	mov	ecx, r14d
+	mov	r8d, ebx
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rsi, qword ptr [rax]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	call	fflush@PLT
+	lea	rax, [rip + board]
+	lea	rax, [rax + 8*r14]
+	mov	byte ptr [rbx + rax], r15b
+	or	byte ptr [r14 + r12 + 64], r13b
+	mov	edi, r14d
+	mov	esi, ebx
+	mov	edx, r15d
+	call	apply_constraint_propagation
+	mov	eax, dword ptr [rip + length]
+	mov	ecx, -1
+	shlx	ecx, ecx, eax
+	xor	cl, byte ptr [r14 + r12 + 64]
+	cmp	cl, -1
+	je	.LBB21_6
 # %bb.5:                                #   in Loop: Header=BB21_2 Depth=1
-	mov	esi, ecx
-	not	sil
-	cmp	edx, 4
-	jae	.LBB21_7
-# %bb.6:                                #   in Loop: Header=BB21_2 Depth=1
-	xor	edi, edi
-	jmp	.LBB21_9
-.LBB21_7:                               #   in Loop: Header=BB21_2 Depth=1
-	mov	r8d, edx
-	and	r8d, 2147483644
-	lea	r9, [r12 + 8*r15]
-	add	r9, 3
-	lea	r10, [r14 + r12]
-	add	r10, 24
-	xor	edi, edi
+	mov	edi, r14d
+	mov	esi, 1
+	call	sequence_filtration
+	mov	eax, dword ptr [rip + length]
+.LBB21_6:                               #   in Loop: Header=BB21_2 Depth=1
+	test	eax, eax
+	mov	r15d, 1
+	jle	.LBB21_12
+# %bb.7:                                #   in Loop: Header=BB21_2 Depth=1
+	mov	eax, eax
+	mov	dl, 1
+	xor	ecx, ecx
+	jmp	.LBB21_8
 	.p2align	4, 0x90
+.LBB21_16:                              #   in Loop: Header=BB21_8 Depth=2
+	inc	rcx
+	xor	edx, edx
+	cmp	rcx, rax
+	je	.LBB21_11
 .LBB21_8:                               #   Parent Loop BB21_2 Depth=1
                                         # =>  This Inner Loop Header: Depth=2
-	and	byte ptr [r9 + rdi - 3], sil
-	and	byte ptr [r10 + 8*rdi - 24], sil
-	and	byte ptr [r9 + rdi - 2], sil
-	and	byte ptr [r10 + 8*rdi - 16], sil
-	and	byte ptr [r9 + rdi - 1], sil
-	and	byte ptr [r10 + 8*rdi - 8], sil
-	and	byte ptr [r9 + rdi], sil
-	and	byte ptr [r10 + 8*rdi], sil
-	add	rdi, 4
-	cmp	r8, rdi
+	test	dl, 1
+	je	.LBB21_16
+# %bb.9:                                #   in Loop: Header=BB21_8 Depth=2
+	movzx	esi, byte ptr [rcx + r12 + 64]
+	test	r13d, esi
+	setne	dl
+	inc	rcx
+	cmp	rcx, rax
 	jne	.LBB21_8
-.LBB21_9:                               #   in Loop: Header=BB21_2 Depth=1
-	and	edx, 3
-	je	.LBB21_12
 # %bb.10:                               #   in Loop: Header=BB21_2 Depth=1
-	lea	r8, [r14 + 8*rdi]
-	add	r8, r12
-	lea	rdi, [rdi + 8*r15]
-	add	rdi, r12
-	xor	r9d, r9d
-	.p2align	4, 0x90
-.LBB21_11:                              #   Parent Loop BB21_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	and	byte ptr [rdi + r9], sil
-	and	byte ptr [r8 + 8*r9], sil
-	inc	r9
-	cmp	rdx, r9
-	jne	.LBB21_11
-	jmp	.LBB21_12
+	test	r13d, esi
+	jne	.LBB21_12
+	jmp	.LBB21_11
 .LBB21_14:
 	add	rsp, 8
 	.cfi_def_cfa_offset 56
@@ -2645,7 +2858,7 @@ apply_process_of_elimination:           # @apply_process_of_elimination
 	push	r13
 	push	r12
 	push	rbx
-	sub	rsp, 24
+	sub	rsp, 40
 	.cfi_offset rbx, -56
 	.cfi_offset r12, -48
 	.cfi_offset r13, -40
@@ -2654,35 +2867,35 @@ apply_process_of_elimination:           # @apply_process_of_elimination
 	mov	rax, qword ptr fs:[40]
 	mov	qword ptr [rbp - 48], rax
 	mov	eax, dword ptr [rip + length]
-	mov	rdx, rsp
-	lea	rcx, [rax + 15]
-	and	rcx, -16
-	sub	rdx, rcx
-	mov	rsp, rdx
+	mov	rcx, rsp
+	lea	rdx, [rax + 15]
+	and	rdx, -16
+	sub	rcx, rdx
+	mov	rsp, rcx
 	test	eax, eax
-	jle	.LBB22_37
+	jle	.LBB22_40
 # %bb.1:
-	movsxd	rcx, esi
+	movsxd	r12, esi
 	cmp	eax, 17
 	jae	.LBB22_3
 # %bb.2:
-	xor	r8d, r8d
+	xor	edx, edx
 	jmp	.LBB22_10
 .LBB22_3:
 	cmp	eax, 33
 	jae	.LBB22_7
 # %bb.4:
-	xor	r8d, r8d
+	xor	edx, edx
 	jmp	.LBB22_5
 .LBB22_7:
-	mov	r8d, eax
-	and	r8d, 31
+	mov	edx, eax
+	and	edx, 31
 	mov	esi, 32
-	cmovne	rsi, r8
-	mov	r8, rax
-	sub	r8, rsi
-	xor	r9d, r9d
-	lea	r10, [rip + con]
+	cmovne	rsi, rdx
+	mov	rdx, rax
+	sub	rdx, rsi
+	xor	r8d, r8d
+	lea	r9, [rip + con]
 	vpbroadcastw	xmm0, word ptr [rip + .LCPI22_7] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm1, word ptr [rip + .LCPI22_7] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm2, word ptr [rip + .LCPI22_7] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
@@ -2692,22 +2905,22 @@ apply_process_of_elimination:           # @apply_process_of_elimination
 	vpbroadcastd	ymm6, dword ptr [rip + .LCPI22_9] # ymm6 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
 	.p2align	4, 0x90
 .LBB22_8:                               # =>This Inner Loop Header: Depth=1
-	lea	r11, [rcx + 8*r9]
-	vmovdqu	xmm7, xmmword ptr [r10 + r11 + 112]
+	lea	r10, [r12 + 8*r8]
+	vmovdqu	xmm7, xmmword ptr [r9 + r10 + 112]
 	vpshufb	xmm7, xmm7, xmm0
-	vmovdqu	xmm8, xmmword ptr [r10 + r11 + 96]
+	vmovdqu	xmm8, xmmword ptr [r9 + r10 + 96]
 	vpshufb	xmm8, xmm8, xmm0
 	vpunpcklwd	xmm7, xmm8, xmm7        # xmm7 = xmm8[0],xmm7[0],xmm8[1],xmm7[1],xmm8[2],xmm7[2],xmm8[3],xmm7[3]
-	vmovdqu	xmm8, xmmword ptr [r10 + r11 + 80]
+	vmovdqu	xmm8, xmmword ptr [r9 + r10 + 80]
 	vpshufb	xmm8, xmm8, xmm1
-	vmovdqu	xmm9, xmmword ptr [r10 + r11 + 64]
+	vmovdqu	xmm9, xmmword ptr [r9 + r10 + 64]
 	vpshufb	xmm9, xmm9, xmm1
 	vpunpcklwd	xmm8, xmm9, xmm8        # xmm8 = xmm9[0],xmm8[0],xmm9[1],xmm8[1],xmm9[2],xmm8[2],xmm9[3],xmm8[3]
 	vpblendd	xmm7, xmm8, xmm7, 8             # xmm7 = xmm8[0,1,2],xmm7[3]
-	vmovdqu	xmm8, xmmword ptr [r10 + r11]
-	vmovdqu	xmm9, xmmword ptr [r10 + r11 + 16]
-	vmovdqu	xmm10, xmmword ptr [r10 + r11 + 32]
-	vmovdqu	xmm11, xmmword ptr [r10 + r11 + 48]
+	vmovdqu	xmm8, xmmword ptr [r9 + r10]
+	vmovdqu	xmm9, xmmword ptr [r9 + r10 + 16]
+	vmovdqu	xmm10, xmmword ptr [r9 + r10 + 32]
+	vmovdqu	xmm11, xmmword ptr [r9 + r10 + 48]
 	vpshufb	xmm11, xmm11, xmm2
 	vpshufb	xmm10, xmm10, xmm2
 	vpunpcklwd	xmm10, xmm10, xmm11     # xmm10 = xmm10[0],xmm11[0],xmm10[1],xmm11[1],xmm10[2],xmm11[2],xmm10[3],xmm11[3]
@@ -2717,64 +2930,64 @@ apply_process_of_elimination:           # @apply_process_of_elimination
 	vpblendd	xmm8, xmm8, xmm10, 2            # xmm8 = xmm8[0],xmm10[1],xmm8[2,3]
 	vpblendd	xmm7, xmm8, xmm7, 12            # xmm7 = xmm8[0,1],xmm7[2,3]
 	vxorps	xmm8, xmm8, xmm8
-	vpermd	ymm8, ymm4, ymmword ptr [r10 + r11 + 224]
+	vpermd	ymm8, ymm4, ymmword ptr [r9 + r10 + 224]
 	vpshufb	ymm8, ymm8, ymm5
 	vxorps	xmm9, xmm9, xmm9
-	vpermd	ymm9, ymm4, ymmword ptr [r10 + r11 + 192]
+	vpermd	ymm9, ymm4, ymmword ptr [r9 + r10 + 192]
 	vpshufb	ymm9, ymm9, ymm5
 	vxorps	xmm10, xmm10, xmm10
-	vpermd	ymm10, ymm4, ymmword ptr [r10 + r11 + 160]
+	vpermd	ymm10, ymm4, ymmword ptr [r9 + r10 + 160]
 	vpblendd	ymm8, ymm9, ymm8, 128           # ymm8 = ymm9[0,1,2,3,4,5,6],ymm8[7]
 	vpshufb	ymm9, ymm10, ymm6
 	vxorps	xmm10, xmm10, xmm10
-	vpermd	ymm10, ymm4, ymmword ptr [r10 + r11 + 128]
+	vpermd	ymm10, ymm4, ymmword ptr [r9 + r10 + 128]
 	vpshufb	ymm10, ymm10, ymm6
 	vpblendd	ymm9, ymm10, ymm9, 32           # ymm9 = ymm10[0,1,2,3,4],ymm9[5],ymm10[6,7]
 	vpblendd	ymm8, ymm9, ymm8, 192           # ymm8 = ymm9[0,1,2,3,4,5],ymm8[6,7]
 	vpblendd	ymm7, ymm8, ymm7, 15            # ymm7 = ymm7[0,1,2,3],ymm8[4,5,6,7]
-	vmovdqu	ymmword ptr [rdx + r9], ymm7
-	add	r9, 32
-	cmp	r8, r9
+	vmovdqu	ymmword ptr [rcx + r8], ymm7
+	add	r8, 32
+	cmp	rdx, r8
 	jne	.LBB22_8
 # %bb.9:
 	cmp	esi, 16
 	jbe	.LBB22_10
 .LBB22_5:
-	mov	r11, r8
-	mov	esi, eax
-	and	esi, 15
-	mov	r9d, 16
-	cmovne	r9, rsi
-	mov	r8, rax
-	sub	r8, r9
-	lea	r9, [rcx + 8*r11]
+	mov	r10, rdx
+	mov	edx, eax
+	and	edx, 15
+	mov	esi, 16
+	cmovne	rsi, rdx
+	mov	rdx, rax
+	sub	rdx, rsi
+	lea	r8, [r12 + 8*r10]
 	lea	rsi, [rip + con]
-	add	rsi, r9
-	lea	r9, [rdx + r11]
-	mov	r10, r8
-	sub	r10, r11
-	xor	r11d, r11d
+	add	rsi, r8
+	lea	r8, [rcx + r10]
+	mov	r9, rdx
+	sub	r9, r10
+	xor	r10d, r10d
 	vpbroadcastw	xmm0, word ptr [rip + .LCPI22_7] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm1, word ptr [rip + .LCPI22_7] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm2, word ptr [rip + .LCPI22_7] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpbroadcastw	xmm3, word ptr [rip + .LCPI22_7] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	.p2align	4, 0x90
 .LBB22_6:                               # =>This Inner Loop Header: Depth=1
-	vmovdqu	xmm4, xmmword ptr [rsi + 8*r11 + 112]
+	vmovdqu	xmm4, xmmword ptr [rsi + 8*r10 + 112]
 	vpshufb	xmm4, xmm4, xmm0
-	vmovdqu	xmm5, xmmword ptr [rsi + 8*r11 + 96]
+	vmovdqu	xmm5, xmmword ptr [rsi + 8*r10 + 96]
 	vpshufb	xmm5, xmm5, xmm0
 	vpunpcklwd	xmm4, xmm5, xmm4        # xmm4 = xmm5[0],xmm4[0],xmm5[1],xmm4[1],xmm5[2],xmm4[2],xmm5[3],xmm4[3]
-	vmovdqu	xmm5, xmmword ptr [rsi + 8*r11 + 80]
+	vmovdqu	xmm5, xmmword ptr [rsi + 8*r10 + 80]
 	vpshufb	xmm5, xmm5, xmm1
-	vmovdqu	xmm6, xmmword ptr [rsi + 8*r11 + 64]
+	vmovdqu	xmm6, xmmword ptr [rsi + 8*r10 + 64]
 	vpshufb	xmm6, xmm6, xmm1
 	vpunpcklwd	xmm5, xmm6, xmm5        # xmm5 = xmm6[0],xmm5[0],xmm6[1],xmm5[1],xmm6[2],xmm5[2],xmm6[3],xmm5[3]
 	vpblendd	xmm4, xmm5, xmm4, 8             # xmm4 = xmm5[0,1,2],xmm4[3]
-	vmovdqu	xmm5, xmmword ptr [rsi + 8*r11]
-	vmovdqu	xmm6, xmmword ptr [rsi + 8*r11 + 16]
-	vmovdqu	xmm7, xmmword ptr [rsi + 8*r11 + 32]
-	vmovdqu	xmm8, xmmword ptr [rsi + 8*r11 + 48]
+	vmovdqu	xmm5, xmmword ptr [rsi + 8*r10]
+	vmovdqu	xmm6, xmmword ptr [rsi + 8*r10 + 16]
+	vmovdqu	xmm7, xmmword ptr [rsi + 8*r10 + 32]
+	vmovdqu	xmm8, xmmword ptr [rsi + 8*r10 + 48]
 	vpshufb	xmm8, xmm8, xmm2
 	vpshufb	xmm7, xmm7, xmm2
 	vpunpcklwd	xmm7, xmm7, xmm8        # xmm7 = xmm7[0],xmm8[0],xmm7[1],xmm8[1],xmm7[2],xmm8[2],xmm7[3],xmm8[3]
@@ -2783,269 +2996,267 @@ apply_process_of_elimination:           # @apply_process_of_elimination
 	vpunpcklwd	xmm5, xmm5, xmm6        # xmm5 = xmm5[0],xmm6[0],xmm5[1],xmm6[1],xmm5[2],xmm6[2],xmm5[3],xmm6[3]
 	vpblendd	xmm5, xmm5, xmm7, 2             # xmm5 = xmm5[0],xmm7[1],xmm5[2,3]
 	vpblendd	xmm4, xmm5, xmm4, 12            # xmm4 = xmm5[0,1],xmm4[2,3]
-	vmovdqu	xmmword ptr [r9 + r11], xmm4
-	add	r11, 16
-	cmp	r10, r11
+	vmovdqu	xmmword ptr [r8 + r10], xmm4
+	add	r10, 16
+	cmp	r9, r10
 	jne	.LBB22_6
 .LBB22_10:
-	lea	r9, [rdx + r8]
-	lea	r10, [rcx + 8*r8]
-	lea	rsi, [rip + con]
-	add	r10, rsi
-	mov	r11, rax
-	sub	r11, r8
-	xor	r8d, r8d
+	lea	rsi, [rcx + rdx]
+	lea	r8, [r12 + 8*rdx]
+	lea	r13, [rip + con]
+	add	r8, r13
+	mov	r9, rax
+	sub	r9, rdx
+	xor	edx, edx
 	.p2align	4, 0x90
 .LBB22_11:                              # =>This Inner Loop Header: Depth=1
-	movzx	ebx, byte ptr [r10 + 8*r8]
-	mov	byte ptr [r9 + r8], bl
-	inc	r8
-	cmp	r11, r8
+	movzx	r10d, byte ptr [r8 + 8*rdx]
+	mov	byte ptr [rsi + rdx], r10b
+	inc	rdx
+	cmp	r9, rdx
 	jne	.LBB22_11
 # %bb.12:
 	test	eax, eax
-	jle	.LBB22_37
-# %bb.13:
-	movsxd	rdi, edi
-	mov	r10d, eax
-	and	r10d, 7
-	cmp	eax, 8
-	jae	.LBB22_15
+	jle	.LBB22_13
 # %bb.14:
-	xor	r11d, r11d
-	xor	r8d, r8d
-	xor	r9d, r9d
-	jmp	.LBB22_17
-.LBB22_15:
-	mov	ebx, eax
-	and	ebx, 2147483640
-	lea	r14, [rsi + 8*rdi]
-	add	r14, 7
-	xor	r11d, r11d
-	xor	r15d, r15d
-	xor	r9d, r9d
-	.p2align	4, 0x90
-.LBB22_16:                              # =>This Inner Loop Header: Depth=1
-	movzx	r8d, byte ptr [r14 + r11 - 7]
-	movzx	r12d, byte ptr [r14 + r11 - 6]
-	mov	r13d, r8d
-	and	r13b, r15b
-	or	r13b, r9b
-	or	r8b, r15b
-	mov	r9d, r12d
-	and	r9b, r8b
-	or	r9b, r13b
-	or	r8b, r12b
-	movzx	r15d, byte ptr [r14 + r11 - 5]
-	mov	r12d, r15d
-	and	r12b, r8b
-	or	r12b, r9b
-	or	r8b, r15b
-	movzx	r9d, byte ptr [r14 + r11 - 4]
-	mov	r15d, r9d
-	and	r15b, r8b
-	or	r15b, r12b
-	or	r8b, r9b
-	movzx	r9d, byte ptr [r14 + r11 - 3]
-	mov	r12d, r9d
-	and	r12b, r8b
-	or	r12b, r15b
-	or	r8b, r9b
-	movzx	r9d, byte ptr [r14 + r11 - 2]
-	mov	r15d, r9d
-	and	r15b, r8b
-	or	r15b, r12b
-	or	r8b, r9b
-	movzx	r9d, byte ptr [r14 + r11 - 1]
-	mov	r12d, r9d
-	and	r12b, r8b
-	or	r12b, r15b
-	movzx	r15d, byte ptr [r14 + r11]
-	or	r8b, r9b
-	mov	r9d, r15d
-	and	r9b, r8b
-	or	r9b, r12b
-	or	r8b, r15b
-	add	r11, 8
-	mov	r15d, r8d
-	cmp	rbx, r11
-	jne	.LBB22_16
-.LBB22_17:
-	test	r10, r10
-	je	.LBB22_20
-# %bb.18:
-	lea	r11, [r11 + 8*rdi]
-	add	r11, rsi
-	xor	ebx, ebx
-	.p2align	4, 0x90
-.LBB22_19:                              # =>This Inner Loop Header: Depth=1
-	movzx	r14d, byte ptr [r11 + rbx]
-	mov	r15d, r14d
-	and	r15b, r8b
-	or	r9b, r15b
-	or	r8b, r14b
-	inc	rbx
-	cmp	r10, rbx
-	jne	.LBB22_19
-.LBB22_20:
-	mov	qword ptr [rbp - 56], rdi       # 8-byte Spill
-	mov	r11d, eax
-	and	r11d, 7
+	mov	qword ptr [rbp - 72], r12       # 8-byte Spill
+	movsxd	r14, edi
+	mov	esi, eax
+	and	esi, 7
 	cmp	eax, 8
-	jae	.LBB22_22
-# %bb.21:
-	xor	r14d, r14d
-	xor	ebx, ebx
-	xor	r10d, r10d
-	jmp	.LBB22_24
-.LBB22_22:
-	mov	r15d, eax
-	and	r15d, 2147483640
-	xor	r14d, r14d
+	jae	.LBB22_16
+# %bb.15:
+	xor	edi, edi
 	xor	r12d, r12d
-	xor	r10d, r10d
-	.p2align	4, 0x90
-.LBB22_23:                              # =>This Inner Loop Header: Depth=1
-	movzx	ebx, byte ptr [rdx + r14]
-	movzx	r13d, byte ptr [rdx + r14 + 1]
-	mov	edi, ebx
-	and	dil, r12b
-	or	dil, r10b
-	or	bl, r12b
-	mov	r10d, r13d
-	and	r10b, bl
-	or	r10b, dil
-	or	bl, r13b
-	movzx	edi, byte ptr [rdx + r14 + 2]
-	mov	r12d, edi
-	and	r12b, bl
-	or	r12b, r10b
-	or	bl, dil
-	movzx	edi, byte ptr [rdx + r14 + 3]
-	mov	r10d, edi
-	and	r10b, bl
-	or	r10b, r12b
-	or	bl, dil
-	movzx	edi, byte ptr [rdx + r14 + 4]
-	mov	r12d, edi
-	and	r12b, bl
-	or	r12b, r10b
-	or	bl, dil
-	movzx	edi, byte ptr [rdx + r14 + 5]
-	mov	r10d, edi
-	and	r10b, bl
-	or	r10b, r12b
-	or	bl, dil
-	movzx	edi, byte ptr [rdx + r14 + 6]
-	mov	r12d, edi
-	and	r12b, bl
-	or	r12b, r10b
-	movzx	r13d, byte ptr [rdx + r14 + 7]
-	or	bl, dil
-	mov	r10d, r13d
-	and	r10b, bl
-	or	r10b, r12b
-	or	bl, r13b
-	add	r14, 8
-	mov	r12d, ebx
-	cmp	r15, r14
-	jne	.LBB22_23
-.LBB22_24:
-	not	r9b
-	test	r11, r11
-	je	.LBB22_27
-# %bb.25:
-	add	rdx, r14
-	xor	r14d, r14d
-	.p2align	4, 0x90
-.LBB22_26:                              # =>This Inner Loop Header: Depth=1
-	movzx	edi, byte ptr [rdx + r14]
-	mov	r15d, edi
-	and	r15b, bl
-	or	r10b, r15b
-	or	bl, dil
-	inc	r14
-	cmp	r11, r14
-	jne	.LBB22_26
-.LBB22_27:
-	test	eax, eax
-	setle	dl
-	and	r8b, r9b
-	not	r10b
-	and	r10b, bl
-	cmp	r8b, -1
-	sete	dil
-	or	dil, dl
-	jne	.LBB22_32
-# %bb.28:
-	mov	rdx, qword ptr [rbp - 56]       # 8-byte Reload
-	lea	r9, [8*rdx]
 	xor	edx, edx
+	jmp	.LBB22_18
+.LBB22_13:
+	xor	r15d, r15d
+	xor	ebx, ebx
+	movsxd	rax, dword ptr [rip + length]
+	test	rax, rax
+	jg	.LBB22_36
+	jmp	.LBB22_40
+.LBB22_16:
+	mov	r8d, eax
+	and	r8d, 2147483640
+	lea	r9, [8*r14 + 7]
+	add	r9, r13
+	xor	edi, edi
+	xor	r10d, r10d
+	xor	edx, edx
+	.p2align	4, 0x90
+.LBB22_17:                              # =>This Inner Loop Header: Depth=1
+	movzx	r12d, byte ptr [r9 + rdi - 7]
+	movzx	r11d, byte ptr [r9 + rdi - 6]
+	mov	ebx, r12d
+	and	bl, r10b
+	or	bl, dl
+	or	r12b, r10b
+	mov	edx, r11d
+	and	dl, r12b
+	or	dl, bl
+	or	r12b, r11b
+	movzx	r10d, byte ptr [r9 + rdi - 5]
+	mov	r11d, r10d
+	and	r11b, r12b
+	or	r11b, dl
+	or	r12b, r10b
+	movzx	edx, byte ptr [r9 + rdi - 4]
+	mov	r10d, edx
+	and	r10b, r12b
+	or	r10b, r11b
+	or	r12b, dl
+	movzx	edx, byte ptr [r9 + rdi - 3]
+	mov	r11d, edx
+	and	r11b, r12b
+	or	r11b, r10b
+	or	r12b, dl
+	movzx	edx, byte ptr [r9 + rdi - 2]
+	mov	r10d, edx
+	and	r10b, r12b
+	or	r10b, r11b
+	or	r12b, dl
+	movzx	edx, byte ptr [r9 + rdi - 1]
+	mov	r11d, edx
+	and	r11b, r12b
+	or	r11b, r10b
+	movzx	r10d, byte ptr [r9 + rdi]
+	or	r12b, dl
+	mov	edx, r10d
+	and	dl, r12b
+	or	dl, r11b
+	or	r12b, r10b
+	add	rdi, 8
+	mov	r10d, r12d
+	cmp	r8, rdi
+	jne	.LBB22_17
+.LBB22_18:
+	test	rsi, rsi
+	je	.LBB22_21
+# %bb.19:
+	lea	rdi, [rdi + 8*r14]
+	add	rdi, r13
+	xor	r8d, r8d
+	.p2align	4, 0x90
+.LBB22_20:                              # =>This Inner Loop Header: Depth=1
+	movzx	r9d, byte ptr [rdi + r8]
+	mov	r10d, r9d
+	and	r10b, r12b
+	or	dl, r10b
+	or	r12b, r9b
+	inc	r8
+	cmp	rsi, r8
+	jne	.LBB22_20
+.LBB22_21:
+	mov	esi, eax
+	and	esi, 7
+	cmp	eax, 8
+	jae	.LBB22_23
+# %bb.22:
+	xor	r8d, r8d
+	xor	edi, edi
+	xor	ebx, ebx
+	jmp	.LBB22_25
+.LBB22_23:
+	mov	r9d, eax
+	and	r9d, 2147483640
+	xor	r8d, r8d
+	xor	r10d, r10d
+	xor	ebx, ebx
+	.p2align	4, 0x90
+.LBB22_24:                              # =>This Inner Loop Header: Depth=1
+	movzx	edi, byte ptr [rcx + r8]
+	movzx	r11d, byte ptr [rcx + r8 + 1]
+	mov	r15d, edi
+	and	r15b, r10b
+	or	r15b, bl
+	or	dil, r10b
+	mov	r10d, r11d
+	and	r10b, dil
+	or	r10b, r15b
+	or	dil, r11b
+	movzx	r11d, byte ptr [rcx + r8 + 2]
+	mov	ebx, r11d
+	and	bl, dil
+	or	bl, r10b
+	or	dil, r11b
+	movzx	r10d, byte ptr [rcx + r8 + 3]
+	mov	r11d, r10d
+	and	r11b, dil
+	or	r11b, bl
+	or	dil, r10b
+	movzx	r10d, byte ptr [rcx + r8 + 4]
+	mov	ebx, r10d
+	and	bl, dil
+	or	bl, r11b
+	or	dil, r10b
+	movzx	r10d, byte ptr [rcx + r8 + 5]
+	mov	r11d, r10d
+	and	r11b, dil
+	or	r11b, bl
+	or	dil, r10b
+	movzx	r10d, byte ptr [rcx + r8 + 6]
+	mov	r15d, r10d
+	and	r15b, dil
+	or	r15b, r11b
+	movzx	r11d, byte ptr [rcx + r8 + 7]
+	or	dil, r10b
+	mov	ebx, r11d
+	and	bl, dil
+	or	bl, r15b
+	or	dil, r11b
+	add	r8, 8
+	mov	r10d, edi
+	cmp	r9, r8
+	jne	.LBB22_24
+.LBB22_25:
+	not	dl
+	test	rsi, rsi
+	je	.LBB22_28
+# %bb.26:
+	add	rcx, r8
+	xor	r8d, r8d
+	.p2align	4, 0x90
+.LBB22_27:                              # =>This Inner Loop Header: Depth=1
+	movzx	r9d, byte ptr [rcx + r8]
+	mov	r10d, r9d
+	and	r10b, dil
+	or	bl, r10b
+	or	dil, r9b
+	inc	r8
+	cmp	rsi, r8
+	jne	.LBB22_27
+.LBB22_28:
+	test	eax, eax
+	setle	cl
+	and	r12b, dl
+	not	bl
+	and	bl, dil
+	cmp	r12b, -1
+	sete	dl
+	or	dl, cl
+	jne	.LBB22_33
+# %bb.29:
+	movzx	r8d, r12b
+	lea	rcx, [8*r14]
+	xor	r15d, r15d
 	.p2align	4, 0x90
 .LBB22_30:                              # =>This Inner Loop Header: Depth=1
-	lea	rdi, [r9 + rdx]
-	movzx	edi, byte ptr [rsi + rdi]
-	mov	r11d, edi
-	and	r11b, r8b
-	lea	ebx, [r11 - 1]
-	mov	r14d, r11d
-	xor	r14b, bl
-	cmp	r14b, bl
-	setbe	bl
-	lea	r14d, [rdi - 1]
-	xor	dil, r14b
-	cmp	dil, r14b
-	seta	dil
-	or	dil, bl
+	lea	rdx, [rcx + r15]
+	movzx	edx, byte ptr [r13 + rdx]
+	mov	esi, edx
+	and	sil, r12b
+	lea	edi, [rsi - 1]
+	xor	sil, dil
+	cmp	sil, dil
+	setbe	sil
+	lea	edi, [rdx - 1]
+	xor	dl, dil
+	cmp	dl, dil
+	seta	dl
+	or	dl, sil
 	je	.LBB22_31
-# %bb.29:                               #   in Loop: Header=BB22_30 Depth=1
-	inc	rdx
-	cmp	rax, rdx
+# %bb.32:                               #   in Loop: Header=BB22_30 Depth=1
+	inc	r15
+	cmp	rax, r15
 	jne	.LBB22_30
-	jmp	.LBB22_32
-.LBB22_31:
-	mov	rdi, qword ptr [rbp - 56]       # 8-byte Reload
-	lea	rdi, [rsi + 8*rdi]
-	mov	byte ptr [rdx + rdi], r11b
-.LBB22_32:
-	test	eax, eax
-	setle	dl
-	cmp	r10b, -1
-	sete	dil
-	or	dil, dl
-	jne	.LBB22_37
-# %bb.33:
-	xor	edx, edx
-	.p2align	4, 0x90
-.LBB22_35:                              # =>This Inner Loop Header: Depth=1
-	lea	rdi, [rcx + 8*rdx]
-	movzx	r8d, byte ptr [rsi + rdi]
-	mov	edi, r8d
-	and	dil, r10b
-	lea	r9d, [rdi - 1]
-	mov	r11d, edi
-	xor	r11b, r9b
-	cmp	r11b, r9b
-	setbe	r9b
-	lea	r11d, [r8 - 1]
-	xor	r8b, r11b
-	cmp	r8b, r11b
-	seta	r8b
-	or	r8b, r9b
-	je	.LBB22_36
-# %bb.34:                               #   in Loop: Header=BB22_35 Depth=1
-	inc	rdx
-	cmp	rax, rdx
-	jne	.LBB22_35
-	jmp	.LBB22_37
+.LBB22_33:
+	cmp	bl, -1
+	mov	r12, qword ptr [rbp - 72]       # 8-byte Reload
+	je	.LBB22_40
+.LBB22_34:
+	movzx	r15d, bl
+	movsxd	rax, dword ptr [rip + length]
+	test	rax, rax
+	jle	.LBB22_40
 .LBB22_36:
-	add	rsi, rcx
-	mov	byte ptr [rsi + 8*rdx], dil
-.LBB22_37:
+	xor	r14d, r14d
+	.p2align	4, 0x90
+.LBB22_37:                              # =>This Inner Loop Header: Depth=1
+	lea	rcx, [r12 + 8*r14]
+	movzx	ecx, byte ptr [r13 + rcx]
+	mov	edx, ecx
+	and	dl, bl
+	lea	esi, [rdx - 1]
+	xor	dl, sil
+	cmp	dl, sil
+	setbe	dl
+	lea	esi, [rcx - 1]
+	xor	cl, sil
+	cmp	cl, sil
+	seta	cl
+	or	cl, dl
+	je	.LBB22_38
+# %bb.39:                               #   in Loop: Header=BB22_37 Depth=1
+	inc	r14
+	cmp	rax, r14
+	jne	.LBB22_37
+.LBB22_40:
 	mov	rax, qword ptr fs:[40]
 	cmp	rax, qword ptr [rbp - 48]
-	jne	.LBB22_39
-# %bb.38:
+	jne	.LBB22_42
+# %bb.41:
 	lea	rsp, [rbp - 40]
 	pop	rbx
 	pop	r12
@@ -3056,8 +3267,73 @@ apply_process_of_elimination:           # @apply_process_of_elimination
 	.cfi_def_cfa rsp, 8
 	vzeroupper
 	ret
-.LBB22_39:
+.LBB22_38:
 	.cfi_def_cfa rbp, 16
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 491
+	xor	eax, eax
+	vzeroupper
+	call	fprintf@PLT
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	add	r13, r12
+	movzx	r9d, byte ptr [r13 + 8*r14]
+	lea	rsi, [rip + .L.str.75]
+	mov	edx, r14d
+	mov	ecx, r12d
+	mov	r8d, r15d
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	r15, qword ptr [rip + stderr@GOTPCREL]
+	mov	rsi, qword ptr [r15]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r15]
+	call	fflush@PLT
+	and	byte ptr [r13 + 8*r14], bl
+	jmp	.LBB22_40
+.LBB22_31:
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	mov	dword ptr [rbp - 52], r8d       # 4-byte Spill
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 481
+	xor	eax, eax
+	vzeroupper
+	call	fprintf@PLT
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	lea	rax, [8*r14]
+	add	rax, r13
+	mov	qword ptr [rbp - 64], rax       # 8-byte Spill
+	movzx	r9d, byte ptr [r15 + rax]
+	lea	rsi, [rip + .L.str.72]
+	mov	edx, r14d
+	mov	ecx, r15d
+	mov	r8d, dword ptr [rbp - 52]       # 4-byte Reload
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	r14, qword ptr [rip + stderr@GOTPCREL]
+	mov	rsi, qword ptr [r14]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r14]
+	call	fflush@PLT
+	mov	rax, qword ptr [rbp - 64]       # 8-byte Reload
+	and	byte ptr [r15 + rax], r12b
+	cmp	bl, -1
+	mov	r12, qword ptr [rbp - 72]       # 8-byte Reload
+	jne	.LBB22_34
+	jmp	.LBB22_40
+.LBB22_42:
 	vzeroupper
 	call	__stack_chk_fail@PLT
 .Lfunc_end22:
@@ -3070,15 +3346,6 @@ apply_process_of_elimination:           # @apply_process_of_elimination
 apply_constraint_propagation:           # @apply_constraint_propagation
 	.cfi_startproc
 # %bb.0:
-	add	dl, -49
-	mov	eax, 1
-	shlx	ecx, eax, edx
-	movsxd	r9, dword ptr [rip + length]
-	movsxd	rdx, edi
-	movsxd	rsi, esi
-	test	r9, r9
-	jle	.LBB23_1
-# %bb.3:
 	push	rbp
 	.cfi_def_cfa_offset 16
 	push	r15
@@ -3091,58 +3358,90 @@ apply_constraint_propagation:           # @apply_constraint_propagation
 	.cfi_def_cfa_offset 48
 	push	rbx
 	.cfi_def_cfa_offset 56
+	sub	rsp, 24
+	.cfi_def_cfa_offset 80
 	.cfi_offset rbx, -56
 	.cfi_offset r12, -48
 	.cfi_offset r13, -40
 	.cfi_offset r14, -32
 	.cfi_offset r15, -24
 	.cfi_offset rbp, -16
-	mov	edi, ecx
-	not	dil
-	cmp	r9d, 1
-	jne	.LBB23_11
+                                        # kill: def $edx killed $edx def $rdx
+	lea	eax, [rdx - 49]
+	mov	ecx, 1
+	shlx	eax, ecx, eax
+	movsxd	r11, dword ptr [rip + length]
+	mov	dword ptr [rsp + 12], edi       # 4-byte Spill
+	movsxd	rdi, edi
+	mov	dword ptr [rsp + 8], esi        # 4-byte Spill
+	movsxd	rcx, esi
+	test	r11, r11
+	jle	.LBB23_1
 # %bb.4:
-	xor	r8d, r8d
-	xor	eax, eax
-.LBB23_5:
-	test	r9b, 1
-	je	.LBB23_10
-# %bb.6:
-	lea	r9, [rip + con]
-	lea	r10, [r9 + 8*rdx]
-	movzx	r11d, byte ptr [r8 + r10]
-	lea	ebx, [r11 - 1]
-	mov	ebp, r11d
-	xor	bpl, bl
-	cmp	bpl, bl
-	seta	bl
-	lea	r14, [r9 + 8*r8]
-	movzx	r9d, byte ptr [rsi + r14]
-	and	r11b, dil
-	mov	byte ptr [r8 + r10], r11b
-	and	dil, byte ptr [rsi + r14]
-	mov	byte ptr [rsi + r14], dil
-	movzx	r8d, byte ptr [r8 + r10]
+	mov	qword ptr [rsp + 16], rdx       # 8-byte Spill
+	mov	dword ptr [rsp + 4], eax        # 4-byte Spill
+	mov	r8d, eax
+	not	r8b
+	cmp	r11d, 1
+	jne	.LBB23_13
+# %bb.5:
+	mov	rdx, rdi
+	xor	r10d, r10d
+	xor	r9d, r9d
+.LBB23_6:
+	test	r11b, 1
+	je	.LBB23_12
+# %bb.7:
+	lea	r14, [rip + con]
+	lea	r11, [r14 + 8*rdx]
+	movzx	r15d, byte ptr [r10 + r11]
+	lea	ebp, [r15 - 1]
+	mov	r12d, r15d
+	xor	r12b, bpl
+	cmp	r12b, bpl
+	seta	r12b
+	lea	r14, [r14 + 8*r10]
+	movzx	ebp, byte ptr [rcx + r14]
+	and	r15b, r8b
+	mov	byte ptr [r10 + r11], r15b
+	and	r8b, byte ptr [rcx + r14]
+	mov	byte ptr [rcx + r14], r8b
+	movzx	r10d, byte ptr [r10 + r11]
+	lea	r14d, [r10 - 1]
+	xor	r10b, r14b
+	cmp	r10b, r14b
+	setbe	r10b
+	or	r10b, r12b
+	cmp	r10b, 1
+	jne	.LBB23_10
+# %bb.8:
 	lea	r10d, [r8 - 1]
 	xor	r8b, r10b
 	cmp	r8b, r10b
-	setbe	r8b
-	or	r8b, bl
+	jbe	.LBB23_12
+# %bb.9:
+	movzx	r8d, bpl
+	popcnt	r8d, r8d
 	cmp	r8b, 1
-	jne	.LBB23_9
-# %bb.7:
-	lea	r8d, [rdi - 1]
-	xor	dil, r8b
-	cmp	dil, r8b
-	jbe	.LBB23_10
-# %bb.8:
-	movzx	edi, r9b
-	popcnt	edi, edi
-	cmp	dil, 1
-	je	.LBB23_10
-.LBB23_9:
-	mov	al, 1
-.LBB23_10:
+	jne	.LBB23_10
+.LBB23_12:
+	lea	r8, [rip + con]
+	lea	rdx, [r8 + 8*rdx]
+	mov	eax, dword ptr [rsp + 4]        # 4-byte Reload
+	mov	byte ptr [rcx + rdx], al
+	test	r9b, 1
+	je	.LBB23_2
+	jmp	.LBB23_11
+.LBB23_1:
+	lea	rsi, [rip + con]
+	lea	rdx, [rsi + 8*rdi]
+	mov	byte ptr [rcx + rdx], al
+.LBB23_2:
+	xor	eax, eax
+.LBB23_3:
+                                        # kill: def $al killed $al killed $eax
+	add	rsp, 24
+	.cfi_def_cfa_offset 56
 	pop	rbx
 	.cfi_def_cfa_offset 48
 	pop	r12
@@ -3155,2668 +3454,480 @@ apply_constraint_propagation:           # @apply_constraint_propagation
 	.cfi_def_cfa_offset 16
 	pop	rbp
 	.cfi_def_cfa_offset 8
-	.cfi_restore rbx
-	.cfi_restore r12
-	.cfi_restore r13
-	.cfi_restore r14
-	.cfi_restore r15
-	.cfi_restore rbp
-	jmp	.LBB23_2
-.LBB23_1:
-	xor	eax, eax
-.LBB23_2:
-	lea	rdi, [rip + con]
-	lea	rdx, [rdi + 8*rdx]
-	mov	byte ptr [rsi + rdx], cl
-	and	al, 1
-                                        # kill: def $al killed $al killed $eax
 	ret
-.LBB23_11:
-	.cfi_def_cfa_offset 56
-	.cfi_offset rbx, -56
-	.cfi_offset rbp, -16
-	.cfi_offset r12, -48
-	.cfi_offset r13, -40
-	.cfi_offset r14, -32
-	.cfi_offset r15, -24
-	mov	r10d, r9d
-	and	r10d, 2147483646
-	lea	rax, [rip + con]
-	lea	r11, [rax + 8*rdx]
-	inc	r11
-	lea	rbx, [rsi + rax]
-	add	rbx, 8
-	xor	r8d, r8d
-	xor	eax, eax
-	jmp	.LBB23_12
+.LBB23_13:
+	.cfi_def_cfa_offset 80
+	mov	r14d, r11d
+	and	r14d, 2147483646
+	lea	r9, [rip + con]
+	mov	rdx, rdi
+	lea	r15, [r9 + 8*rdi]
+	inc	r15
+	lea	r12, [rcx + r9]
+	add	r12, 8
+	xor	r10d, r10d
+	xor	r9d, r9d
+	jmp	.LBB23_14
 	.p2align	4, 0x90
-.LBB23_19:                              #   in Loop: Header=BB23_12 Depth=1
+.LBB23_21:                              #   in Loop: Header=BB23_14 Depth=1
+	mov	r9b, 1
+.LBB23_22:                              #   in Loop: Header=BB23_14 Depth=1
+	add	r10, 2
+	cmp	r14, r10
+	je	.LBB23_6
+.LBB23_14:                              # =>This Inner Loop Header: Depth=1
+	movzx	r13d, byte ptr [r15 + r10 - 1]
+	lea	ebp, [r13 - 1]
+	mov	ebx, r13d
+	xor	bl, bpl
+	cmp	bl, bpl
+	seta	bl
+	movzx	ebp, byte ptr [r12 + 8*r10 - 8]
+	and	r13b, r8b
+	mov	byte ptr [r15 + r10 - 1], r13b
+	movzx	r13d, byte ptr [r12 + 8*r10 - 8]
+	and	r13b, r8b
+	mov	byte ptr [r12 + 8*r10 - 8], r13b
+	movzx	eax, byte ptr [r15 + r10 - 1]
+	lea	esi, [rax - 1]
+	xor	al, sil
+	cmp	al, sil
+	setbe	al
+	or	al, bl
+	cmp	al, 1
+	jne	.LBB23_17
+# %bb.15:                               #   in Loop: Header=BB23_14 Depth=1
+	lea	eax, [r13 - 1]
+	xor	r13b, al
+	cmp	r13b, al
+	jbe	.LBB23_18
+# %bb.16:                               #   in Loop: Header=BB23_14 Depth=1
+	movzx	eax, bpl
+	popcnt	eax, eax
+	cmp	al, 1
+	je	.LBB23_18
+.LBB23_17:                              #   in Loop: Header=BB23_14 Depth=1
+	mov	r9b, 1
+.LBB23_18:                              #   in Loop: Header=BB23_14 Depth=1
+	movzx	eax, byte ptr [r15 + r10]
+	lea	esi, [rax - 1]
+	mov	edi, eax
+	xor	dil, sil
+	cmp	dil, sil
+	seta	sil
+	movzx	ebp, byte ptr [r12 + 8*r10]
+	and	al, r8b
+	mov	byte ptr [r15 + r10], al
+	movzx	r13d, byte ptr [r12 + 8*r10]
+	and	r13b, r8b
+	mov	byte ptr [r12 + 8*r10], r13b
+	movzx	eax, byte ptr [r15 + r10]
+	lea	edi, [rax - 1]
+	xor	al, dil
+	cmp	al, dil
+	setbe	al
+	or	al, sil
+	cmp	al, 1
+	jne	.LBB23_21
+# %bb.19:                               #   in Loop: Header=BB23_14 Depth=1
+	lea	eax, [r13 - 1]
+	xor	r13b, al
+	cmp	r13b, al
+	jbe	.LBB23_22
+# %bb.20:                               #   in Loop: Header=BB23_14 Depth=1
+	movzx	eax, bpl
+	popcnt	eax, eax
+	cmp	al, 1
+	jne	.LBB23_21
+	jmp	.LBB23_22
+.LBB23_10:
+	mov	eax, dword ptr [rsp + 4]        # 4-byte Reload
+	mov	byte ptr [rcx + r11], al
+.LBB23_11:
+	mov	r15, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [r15]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 464
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r15]
+	lea	rsi, [rip + .L.str.69]
+	mov	rdx, qword ptr [rsp + 16]       # 8-byte Reload
+                                        # kill: def $edx killed $edx killed $rdx
+	mov	ecx, dword ptr [rsp + 12]       # 4-byte Reload
+	mov	r8d, dword ptr [rsp + 8]        # 4-byte Reload
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rsi, qword ptr [r15]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r15]
+	call	fflush@PLT
 	mov	al, 1
-.LBB23_20:                              #   in Loop: Header=BB23_12 Depth=1
-	add	r8, 2
-	cmp	r10, r8
-	je	.LBB23_5
-.LBB23_12:                              # =>This Inner Loop Header: Depth=1
-	movzx	r14d, byte ptr [r11 + r8 - 1]
-	lea	ebp, [r14 - 1]
-	mov	r15d, r14d
-	xor	r15b, bpl
-	cmp	r15b, bpl
-	seta	r15b
-	movzx	ebp, byte ptr [rbx + 8*r8 - 8]
-	and	r14b, dil
-	mov	byte ptr [r11 + r8 - 1], r14b
-	movzx	r14d, byte ptr [rbx + 8*r8 - 8]
-	and	r14b, dil
-	mov	byte ptr [rbx + 8*r8 - 8], r14b
-	movzx	r12d, byte ptr [r11 + r8 - 1]
-	lea	r13d, [r12 - 1]
-	xor	r12b, r13b
-	cmp	r12b, r13b
-	setbe	r12b
-	or	r12b, r15b
-	cmp	r12b, 1
-	jne	.LBB23_15
-# %bb.13:                               #   in Loop: Header=BB23_12 Depth=1
-	lea	r15d, [r14 - 1]
-	xor	r14b, r15b
-	cmp	r14b, r15b
-	jbe	.LBB23_16
-# %bb.14:                               #   in Loop: Header=BB23_12 Depth=1
-	movzx	ebp, bpl
-	popcnt	ebp, ebp
-	cmp	bpl, 1
-	je	.LBB23_16
-.LBB23_15:                              #   in Loop: Header=BB23_12 Depth=1
-	mov	al, 1
-.LBB23_16:                              #   in Loop: Header=BB23_12 Depth=1
-	movzx	r14d, byte ptr [r11 + r8]
-	lea	ebp, [r14 - 1]
-	mov	r15d, r14d
-	xor	r15b, bpl
-	cmp	r15b, bpl
-	seta	r15b
-	movzx	ebp, byte ptr [rbx + 8*r8]
-	and	r14b, dil
-	mov	byte ptr [r11 + r8], r14b
-	movzx	r14d, byte ptr [rbx + 8*r8]
-	and	r14b, dil
-	mov	byte ptr [rbx + 8*r8], r14b
-	movzx	r12d, byte ptr [r11 + r8]
-	lea	r13d, [r12 - 1]
-	xor	r12b, r13b
-	cmp	r12b, r13b
-	setbe	r12b
-	or	r12b, r15b
-	cmp	r12b, 1
-	jne	.LBB23_19
-# %bb.17:                               #   in Loop: Header=BB23_12 Depth=1
-	lea	r15d, [r14 - 1]
-	xor	r14b, r15b
-	cmp	r14b, r15b
-	jbe	.LBB23_20
-# %bb.18:                               #   in Loop: Header=BB23_12 Depth=1
-	movzx	ebp, bpl
-	popcnt	ebp, ebp
-	cmp	bpl, 1
-	jne	.LBB23_19
-	jmp	.LBB23_20
+	jmp	.LBB23_3
 .Lfunc_end23:
 	.size	apply_constraint_propagation, .Lfunc_end23-apply_constraint_propagation
 	.cfi_endproc
                                         # -- End function
-	.globl	edge_constraint                 # -- Begin function edge_constraint
+	.globl	row_filled                      # -- Begin function row_filled
 	.p2align	4, 0x90
-	.type	edge_constraint,@function
-edge_constraint:                        # @edge_constraint
+	.type	row_filled,@function
+row_filled:                             # @row_filled
 	.cfi_startproc
 # %bb.0:
-	push	rbx
-	.cfi_def_cfa_offset 16
-	.cfi_offset rbx, -16
-	mov	r8d, dword ptr [rip + length]
-	movsxd	rax, esi
-	lea	rsi, [rip + top_key]
-	lea	r9, [rip + bottom_key]
-	movsxd	rcx, edi
-	lea	rdi, [rip + left_key]
-	lea	rdx, [rip + right_key]
-	lea	r10d, [r8 + rcx]
-	inc	r10d
-	sub	r10d, dword ptr [rsi + 4*rax]
+	movsxd	rax, edi
+	lea	rcx, [rip + con]
+	movzx	edx, byte ptr [rip + length]
 	mov	esi, -1
-	shlx	r10d, esi, r10d
-	lea	r11d, [r8 + rax]
-	inc	r11d
-                                        # kill: def $r8d killed $r8d killed $r8
-	add	r8d, r8d
-	mov	r9d, dword ptr [r9 + 4*rax]
-	add	r9d, ecx
-	mov	ebx, r8d
-	sub	ebx, r9d
-	shlx	r9d, esi, ebx
-	or	r9d, r10d
-	sub	r11d, dword ptr [rdi + 4*rcx]
-	add	eax, dword ptr [rdx + 4*rcx]
-	shlx	ecx, esi, r11d
-	sub	r8d, eax
-	shlx	eax, esi, r8d
-	or	eax, ecx
-	or	eax, r9d
-	not	al
-                                        # kill: def $al killed $al killed $eax
-	pop	rbx
-	.cfi_def_cfa_offset 8
+	shlx	edx, esi, edx
+	xor	dl, byte ptr [rax + rcx + 64]
+	cmp	dl, -1
+	sete	al
 	ret
 .Lfunc_end24:
-	.size	edge_constraint, .Lfunc_end24-edge_constraint
+	.size	row_filled, .Lfunc_end24-row_filled
 	.cfi_endproc
                                         # -- End function
-	.section	.rodata.cst32,"aM",@progbits,32
-	.p2align	5, 0x0                          # -- Begin function edge_clue_initialization
+	.section	.rodata.cst16,"aM",@progbits,16
+	.p2align	4, 0x0                          # -- Begin function sequence_filtration
 .LCPI25_0:
-	.long	8                               # 0x8
-	.long	9                               # 0x9
-	.long	10                              # 0xa
-	.long	11                              # 0xb
-	.long	12                              # 0xc
-	.long	13                              # 0xd
-	.long	14                              # 0xe
-	.long	15                              # 0xf
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	8                               # 0x8
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
 .LCPI25_1:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	8                               # 0x8
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI25_2:
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	8                               # 0x8
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI25_3:
+	.byte	0                               # 0x0
+	.byte	8                               # 0x8
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI25_15:
+	.zero	16,1
+	.section	.rodata.cst32,"aM",@progbits,32
+	.p2align	5, 0x0
+.LCPI25_4:
 	.long	0                               # 0x0
-	.long	1                               # 0x1
+	.long	2                               # 0x2
 	.long	2                               # 0x2
 	.long	3                               # 0x3
+	.long	0                               # 0x0
+	.long	2                               # 0x2
 	.long	4                               # 0x4
-	.long	5                               # 0x5
 	.long	6                               # 0x6
-	.long	7                               # 0x7
-.LCPI25_7:
-	.long	24                              # 0x18
-	.long	25                              # 0x19
-	.long	26                              # 0x1a
-	.long	27                              # 0x1b
-	.long	28                              # 0x1c
-	.long	29                              # 0x1d
-	.long	30                              # 0x1e
-	.long	31                              # 0x1f
-.LCPI25_8:
-	.long	16                              # 0x10
-	.long	17                              # 0x11
-	.long	18                              # 0x12
-	.long	19                              # 0x13
-	.long	20                              # 0x14
-	.long	21                              # 0x15
-	.long	22                              # 0x16
-	.long	23                              # 0x17
+.LCPI25_5:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+.LCPI25_6:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI25_10:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+.LCPI25_11:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI25_12:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI25_13:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI25_14:
+	.byte	1                               # 0x1
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	1                               # 0x1
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	1                               # 0x1
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	1                               # 0x1
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
 	.section	.rodata.cst4,"aM",@progbits,4
 	.p2align	2, 0x0
-.LCPI25_2:
-	.long	822083584                       # 0x31000000
-.LCPI25_3:
+.LCPI25_7:
 	.long	4294967247                      # 0xffffffcf
-.LCPI25_4:
+.LCPI25_8:
 	.long	1                               # 0x1
-.LCPI25_5:
-	.long	16                              # 0x10
-.LCPI25_6:
-	.long	8                               # 0x8
 .LCPI25_9:
 	.byte	255                             # 0xff
 	.byte	0                               # 0x0
 	.byte	0                               # 0x0
 	.byte	0                               # 0x0
-.LCPI25_10:
-	.long	32                              # 0x20
-	.section	.rodata.cst8,"aM",@progbits,8
-.LCPI25_11:
-	.byte	0                               # 0x0
-	.byte	1                               # 0x1
-	.byte	2                               # 0x2
-	.byte	3                               # 0x3
-	.byte	4                               # 0x4
-	.byte	5                               # 0x5
-	.byte	6                               # 0x6
-	.byte	7                               # 0x7
-.LCPI25_12:
-	.byte	8                               # 0x8
-	.byte	9                               # 0x9
-	.byte	10                              # 0xa
-	.byte	11                              # 0xb
-	.byte	12                              # 0xc
-	.byte	13                              # 0xd
-	.byte	14                              # 0xe
-	.byte	15                              # 0xf
-.LCPI25_13:
-	.byte	16                              # 0x10
-	.byte	17                              # 0x11
-	.byte	18                              # 0x12
-	.byte	19                              # 0x13
-	.byte	20                              # 0x14
-	.byte	21                              # 0x15
-	.byte	22                              # 0x16
-	.byte	23                              # 0x17
-.LCPI25_14:
-	.byte	24                              # 0x18
-	.byte	25                              # 0x19
-	.byte	26                              # 0x1a
-	.byte	27                              # 0x1b
-	.byte	28                              # 0x1c
-	.byte	29                              # 0x1d
-	.byte	30                              # 0x1e
-	.byte	31                              # 0x1f
-	.text
-	.globl	edge_clue_initialization
-	.p2align	4, 0x90
-	.type	edge_clue_initialization,@function
-edge_clue_initialization:               # @edge_clue_initialization
-	.cfi_startproc
-# %bb.0:
-	push	rbp
-	.cfi_def_cfa_offset 16
-	push	r15
-	.cfi_def_cfa_offset 24
-	push	r14
-	.cfi_def_cfa_offset 32
-	push	r13
-	.cfi_def_cfa_offset 40
-	push	r12
-	.cfi_def_cfa_offset 48
-	push	rbx
-	.cfi_def_cfa_offset 56
-	.cfi_offset rbx, -56
-	.cfi_offset r12, -48
-	.cfi_offset r13, -40
-	.cfi_offset r14, -32
-	.cfi_offset r15, -24
-	.cfi_offset rbp, -16
-	movsxd	rsi, dword ptr [rip + length]
-	test	rsi, rsi
-	jle	.LBB25_17
-# %bb.1:
-	lea	eax, [rsi + 48]
-	mov	ecx, esi
-	and	ecx, 2147483632
-	mov	qword ptr [rsp - 16], rcx       # 8-byte Spill
-	mov	r10d, esi
-	and	r10d, 2147483640
-	mov	dword ptr [rsp - 4], eax        # 4-byte Spill
-	vmovd	xmm0, eax
-	vpbroadcastd	ymm0, xmm0
-	mov	r11d, esi
-	and	r11d, 2147483616
-	mov	ebx, esi
-	shr	ebx, 4
-	and	ebx, 134217727
-	shl	rbx, 7
-	lea	r14, [rip + con+120]
-	lea	r15, [rip + con+32]
-	lea	r12, [rip + con]
-	xor	r13d, r13d
-	mov	ebp, 1
-	vpmovsxbd	ymm1, qword ptr [rip + .LCPI25_11] # ymm1 = [0,1,2,3,4,5,6,7]
-	vpbroadcastd	ymm2, dword ptr [rip + .LCPI25_2] # ymm2 = [822083584,822083584,822083584,822083584,822083584,822083584,822083584,822083584]
-	vpbroadcastd	ymm3, dword ptr [rip + .LCPI25_3] # ymm3 = [4294967247,4294967247,4294967247,4294967247,4294967247,4294967247,4294967247,4294967247]
-	vpbroadcastd	ymm4, dword ptr [rip + .LCPI25_4] # ymm4 = [1,1,1,1,1,1,1,1]
-	vpbroadcastd	ymm5, dword ptr [rip + .LCPI25_6] # ymm5 = [8,8,8,8,8,8,8,8]
-	vpmovsxbd	ymm6, qword ptr [rip + .LCPI25_12] # ymm6 = [8,9,10,11,12,13,14,15]
-	mov	rax, r12
-	jmp	.LBB25_2
-	.p2align	4, 0x90
-.LBB25_72:                              #   in Loop: Header=BB25_2 Depth=1
-	inc	r13
-	inc	r14
-	inc	r15
-	inc	rax
-	add	r12, 8
-	cmp	r13, rsi
-	je	.LBB25_5
-.LBB25_2:                               # =>This Loop Header: Depth=1
-                                        #     Child Loop BB25_23 Depth 2
-                                        #     Child Loop BB25_27 Depth 2
-                                        #     Child Loop BB25_30 Depth 2
-                                        #     Child Loop BB25_36 Depth 2
-                                        #     Child Loop BB25_40 Depth 2
-                                        #     Child Loop BB25_43 Depth 2
-                                        #     Child Loop BB25_50 Depth 2
-                                        #     Child Loop BB25_54 Depth 2
-                                        #     Child Loop BB25_57 Depth 2
-                                        #     Child Loop BB25_64 Depth 2
-                                        #     Child Loop BB25_68 Depth 2
-                                        #     Child Loop BB25_71 Depth 2
-	lea	rcx, [rip + top_key]
-	cmp	dword ptr [rcx + 4*r13], esi
-	jne	.LBB25_31
-# %bb.3:                                #   in Loop: Header=BB25_2 Depth=1
-	cmp	esi, 8
-	jae	.LBB25_21
-# %bb.4:                                #   in Loop: Header=BB25_2 Depth=1
-	xor	r8d, r8d
-	jmp	.LBB25_29
-	.p2align	4, 0x90
-.LBB25_21:                              #   in Loop: Header=BB25_2 Depth=1
-	xor	ecx, ecx
-	cmp	esi, 16
-	jae	.LBB25_22
-.LBB25_26:                              #   in Loop: Header=BB25_2 Depth=1
-	vmovd	xmm9, ecx
-	vpbroadcastd	ymm9, xmm9
-	vpor	ymm9, ymm9, ymm1
-	.p2align	4, 0x90
-.LBB25_27:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpslld	ymm10, ymm9, 24
-	vpaddd	ymm10, ymm10, ymm2
-	vpsrad	ymm10, ymm10, 24
-	vpaddd	ymm10, ymm10, ymm3
-	vpsllvd	ymm10, ymm4, ymm10
-	vextracti128	xmm11, ymm10, 1
-	vpextrb	byte ptr [r15 + 8*rcx - 32], xmm10, 0
-	vpextrb	byte ptr [r15 + 8*rcx - 24], xmm10, 4
-	vpextrb	byte ptr [r15 + 8*rcx - 16], xmm10, 8
-	vpextrb	byte ptr [r15 + 8*rcx - 8], xmm10, 12
-	vpextrb	byte ptr [r15 + 8*rcx], xmm11, 0
-	vpextrb	byte ptr [r15 + 8*rcx + 8], xmm11, 4
-	vpextrb	byte ptr [r15 + 8*rcx + 16], xmm11, 8
-	vpextrb	byte ptr [r15 + 8*rcx + 24], xmm11, 12
-	add	rcx, 8
-	vpaddd	ymm9, ymm9, ymm5
-	cmp	r10, rcx
-	jne	.LBB25_27
-# %bb.28:                               #   in Loop: Header=BB25_2 Depth=1
-	mov	r8, r10
-	cmp	r10, rsi
-	jne	.LBB25_29
-	jmp	.LBB25_31
-.LBB25_22:                              #   in Loop: Header=BB25_2 Depth=1
-	vmovdqa	ymm9, ymm1
-	vmovdqa	ymm10, ymm6
-	.p2align	4, 0x90
-.LBB25_23:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpslld	ymm11, ymm9, 24
-	vpslld	ymm12, ymm10, 24
-	vpaddd	ymm12, ymm12, ymm2
-	vpaddd	ymm11, ymm11, ymm2
-	vpsrad	ymm11, ymm11, 24
-	vpsrad	ymm12, ymm12, 24
-	vpaddd	ymm12, ymm12, ymm3
-	vpaddd	ymm11, ymm11, ymm3
-	vpsllvd	ymm11, ymm4, ymm11
-	vpsllvd	ymm12, ymm4, ymm12
-	vextracti128	xmm13, ymm12, 1
-	vextracti128	xmm14, ymm11, 1
-	vpextrb	byte ptr [r14 + rcx - 120], xmm11, 0
-	vpextrb	byte ptr [r14 + rcx - 112], xmm11, 4
-	vpextrb	byte ptr [r14 + rcx - 104], xmm11, 8
-	vpextrb	byte ptr [r14 + rcx - 96], xmm11, 12
-	vpextrb	byte ptr [r14 + rcx - 88], xmm14, 0
-	vpextrb	byte ptr [r14 + rcx - 80], xmm14, 4
-	vpextrb	byte ptr [r14 + rcx - 72], xmm14, 8
-	vpextrb	byte ptr [r14 + rcx - 64], xmm14, 12
-	vpextrb	byte ptr [r14 + rcx - 56], xmm12, 0
-	vpextrb	byte ptr [r14 + rcx - 48], xmm12, 4
-	vpextrb	byte ptr [r14 + rcx - 40], xmm12, 8
-	vpextrb	byte ptr [r14 + rcx - 32], xmm12, 12
-	vpextrb	byte ptr [r14 + rcx - 24], xmm13, 0
-	vpextrb	byte ptr [r14 + rcx - 16], xmm13, 4
-	vpextrb	byte ptr [r14 + rcx - 8], xmm13, 8
-	vpextrb	byte ptr [r14 + rcx], xmm13, 12
-	vpbroadcastd	ymm11, dword ptr [rip + .LCPI25_5] # ymm11 = [16,16,16,16,16,16,16,16]
-	vpaddd	ymm9, ymm9, ymm11
-	vpaddd	ymm10, ymm10, ymm11
-	sub	rcx, -128
-	cmp	rbx, rcx
-	jne	.LBB25_23
-# %bb.24:                               #   in Loop: Header=BB25_2 Depth=1
-	cmp	qword ptr [rsp - 16], rsi       # 8-byte Folded Reload
-	je	.LBB25_31
-# %bb.25:                               #   in Loop: Header=BB25_2 Depth=1
-	mov	r8, qword ptr [rsp - 16]        # 8-byte Reload
-	mov	rcx, r8
-	test	sil, 8
-	jne	.LBB25_26
-	.p2align	4, 0x90
-.LBB25_29:                              #   in Loop: Header=BB25_2 Depth=1
-	mov	edx, r8d
-	shl	edx, 24
-	add	edx, 822083584
-	lea	rdi, [rax + 8*r8]
-	mov	r9, rsi
-	sub	r9, r8
-	xor	r8d, r8d
-	.p2align	4, 0x90
-.LBB25_30:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	mov	ecx, edx
-	shr	ecx, 24
-	add	cl, -49
-	shlx	ecx, ebp, ecx
-	mov	byte ptr [rdi + 8*r8], cl
-	add	edx, 16777216
-	inc	r8
-	cmp	r9, r8
-	jne	.LBB25_30
-.LBB25_31:                              #   in Loop: Header=BB25_2 Depth=1
-	lea	rcx, [rip + bottom_key]
-	cmp	dword ptr [rcx + 4*r13], esi
-	jne	.LBB25_44
-# %bb.32:                               #   in Loop: Header=BB25_2 Depth=1
-	cmp	esi, 8
-	jae	.LBB25_34
-# %bb.33:                               #   in Loop: Header=BB25_2 Depth=1
-	xor	r8d, r8d
-	jmp	.LBB25_42
-	.p2align	4, 0x90
-.LBB25_34:                              #   in Loop: Header=BB25_2 Depth=1
-	xor	ecx, ecx
-	cmp	esi, 16
-	jae	.LBB25_35
-.LBB25_39:                              #   in Loop: Header=BB25_2 Depth=1
-	vmovd	xmm9, ecx
-	vpbroadcastd	ymm9, xmm9
-	vpor	ymm9, ymm9, ymm1
-	.p2align	4, 0x90
-.LBB25_40:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpsubd	ymm10, ymm0, ymm9
-	vpslld	ymm10, ymm10, 24
-	vpsrad	ymm10, ymm10, 24
-	vpaddd	ymm10, ymm10, ymm3
-	vpsllvd	ymm10, ymm4, ymm10
-	vextracti128	xmm11, ymm10, 1
-	vpextrb	byte ptr [r15 + 8*rcx - 32], xmm10, 0
-	vpextrb	byte ptr [r15 + 8*rcx - 24], xmm10, 4
-	vpextrb	byte ptr [r15 + 8*rcx - 16], xmm10, 8
-	vpextrb	byte ptr [r15 + 8*rcx - 8], xmm10, 12
-	vpextrb	byte ptr [r15 + 8*rcx], xmm11, 0
-	vpextrb	byte ptr [r15 + 8*rcx + 8], xmm11, 4
-	vpextrb	byte ptr [r15 + 8*rcx + 16], xmm11, 8
-	vpextrb	byte ptr [r15 + 8*rcx + 24], xmm11, 12
-	add	rcx, 8
-	vpaddd	ymm9, ymm9, ymm5
-	cmp	r10, rcx
-	jne	.LBB25_40
-# %bb.41:                               #   in Loop: Header=BB25_2 Depth=1
-	mov	r8, r10
-	cmp	r10, rsi
-	jne	.LBB25_42
-	jmp	.LBB25_44
-.LBB25_35:                              #   in Loop: Header=BB25_2 Depth=1
-	vmovdqa	ymm9, ymm1
-	vmovdqa	ymm10, ymm6
-	.p2align	4, 0x90
-.LBB25_36:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpsubd	ymm11, ymm0, ymm10
-	vpsubd	ymm12, ymm0, ymm9
-	vpslld	ymm12, ymm12, 24
-	vpsrad	ymm12, ymm12, 24
-	vpslld	ymm11, ymm11, 24
-	vpsrad	ymm11, ymm11, 24
-	vpaddd	ymm11, ymm11, ymm3
-	vpaddd	ymm12, ymm12, ymm3
-	vpsllvd	ymm12, ymm4, ymm12
-	vpsllvd	ymm11, ymm4, ymm11
-	vextracti128	xmm13, ymm11, 1
-	vextracti128	xmm14, ymm12, 1
-	vpextrb	byte ptr [r14 + rcx - 120], xmm12, 0
-	vpextrb	byte ptr [r14 + rcx - 112], xmm12, 4
-	vpextrb	byte ptr [r14 + rcx - 104], xmm12, 8
-	vpextrb	byte ptr [r14 + rcx - 96], xmm12, 12
-	vpextrb	byte ptr [r14 + rcx - 88], xmm14, 0
-	vpextrb	byte ptr [r14 + rcx - 80], xmm14, 4
-	vpextrb	byte ptr [r14 + rcx - 72], xmm14, 8
-	vpextrb	byte ptr [r14 + rcx - 64], xmm14, 12
-	vpextrb	byte ptr [r14 + rcx - 56], xmm11, 0
-	vpextrb	byte ptr [r14 + rcx - 48], xmm11, 4
-	vpextrb	byte ptr [r14 + rcx - 40], xmm11, 8
-	vpextrb	byte ptr [r14 + rcx - 32], xmm11, 12
-	vpextrb	byte ptr [r14 + rcx - 24], xmm13, 0
-	vpextrb	byte ptr [r14 + rcx - 16], xmm13, 4
-	vpextrb	byte ptr [r14 + rcx - 8], xmm13, 8
-	vpextrb	byte ptr [r14 + rcx], xmm13, 12
-	vpbroadcastd	ymm11, dword ptr [rip + .LCPI25_5] # ymm11 = [16,16,16,16,16,16,16,16]
-	vpaddd	ymm9, ymm9, ymm11
-	vpaddd	ymm10, ymm10, ymm11
-	sub	rcx, -128
-	cmp	rbx, rcx
-	jne	.LBB25_36
-# %bb.37:                               #   in Loop: Header=BB25_2 Depth=1
-	cmp	qword ptr [rsp - 16], rsi       # 8-byte Folded Reload
-	je	.LBB25_44
-# %bb.38:                               #   in Loop: Header=BB25_2 Depth=1
-	mov	r8, qword ptr [rsp - 16]        # 8-byte Reload
-	mov	rcx, r8
-	test	sil, 8
-	jne	.LBB25_39
-	.p2align	4, 0x90
-.LBB25_42:                              #   in Loop: Header=BB25_2 Depth=1
-	mov	ecx, dword ptr [rsp - 4]        # 4-byte Reload
-	sub	ecx, r8d
-	shl	ecx, 24
-	lea	rdi, [rax + 8*r8]
-	mov	r9, rsi
-	sub	r9, r8
-	xor	r8d, r8d
-	.p2align	4, 0x90
-.LBB25_43:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	mov	edx, ecx
-	shr	edx, 24
-	add	dl, -49
-	shlx	edx, ebp, edx
-	mov	byte ptr [rdi + 8*r8], dl
-	add	ecx, -16777216
-	inc	r8
-	cmp	r9, r8
-	jne	.LBB25_43
-.LBB25_44:                              #   in Loop: Header=BB25_2 Depth=1
-	lea	rcx, [rip + left_key]
-	cmp	dword ptr [rcx + 4*r13], esi
-	jne	.LBB25_58
-# %bb.45:                               #   in Loop: Header=BB25_2 Depth=1
-	cmp	esi, 16
-	jae	.LBB25_47
-# %bb.46:                               #   in Loop: Header=BB25_2 Depth=1
-	xor	r8d, r8d
-	jmp	.LBB25_56
-	.p2align	4, 0x90
-.LBB25_47:                              #   in Loop: Header=BB25_2 Depth=1
-	cmp	esi, 32
-	jae	.LBB25_49
-# %bb.48:                               #   in Loop: Header=BB25_2 Depth=1
-	xor	edi, edi
-.LBB25_53:                              #   in Loop: Header=BB25_2 Depth=1
-	vmovd	xmm7, edi
-	vpbroadcastd	ymm7, xmm7
-	vpor	ymm9, ymm7, ymm6
-	vpor	ymm10, ymm7, ymm1
-	lea	rcx, [r12 + rdi]
-	mov	r9, qword ptr [rsp - 16]        # 8-byte Reload
-	sub	r9, rdi
-	xor	edi, edi
-	.p2align	4, 0x90
-.LBB25_54:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpslld	ymm7, ymm9, 24
-	vpslld	ymm8, ymm10, 24
-	vpaddd	ymm8, ymm8, ymm2
-	vpaddd	ymm7, ymm7, ymm2
-	vpsrad	ymm7, ymm7, 24
-	vpsrad	ymm8, ymm8, 24
-	vpaddd	ymm8, ymm8, ymm3
-	vpaddd	ymm7, ymm7, ymm3
-	vpsllvd	ymm7, ymm4, ymm7
-	vpsllvd	ymm8, ymm4, ymm8
-	vpbroadcastd	ymm11, dword ptr [rip + .LCPI25_9] # ymm11 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
-	vpand	ymm8, ymm8, ymm11
-	vpand	ymm7, ymm11, ymm7
-	vpackusdw	ymm7, ymm8, ymm7
-	vextracti128	xmm8, ymm7, 1
-	vpackuswb	xmm7, xmm7, xmm8
-	vpshufd	xmm7, xmm7, 216                 # xmm7 = xmm7[0,2,1,3]
-	vmovdqu	xmmword ptr [rcx + rdi], xmm7
-	vpbroadcastd	ymm7, dword ptr [rip + .LCPI25_5] # ymm7 = [16,16,16,16,16,16,16,16]
-	vpaddd	ymm10, ymm10, ymm7
-	vpaddd	ymm9, ymm9, ymm7
-	add	rdi, 16
-	cmp	r9, rdi
-	jne	.LBB25_54
-# %bb.55:                               #   in Loop: Header=BB25_2 Depth=1
-	mov	rcx, qword ptr [rsp - 16]       # 8-byte Reload
-	mov	r8, rcx
-	cmp	rcx, rsi
-	jne	.LBB25_56
-	jmp	.LBB25_58
-.LBB25_49:                              #   in Loop: Header=BB25_2 Depth=1
-	xor	ecx, ecx
-	vmovdqa	ymm9, ymm1
-	vmovdqa	ymm10, ymm6
-	vpmovsxbd	ymm11, qword ptr [rip + .LCPI25_13] # ymm11 = [16,17,18,19,20,21,22,23]
-	vpmovsxbd	ymm12, qword ptr [rip + .LCPI25_14] # ymm12 = [24,25,26,27,28,29,30,31]
-	.p2align	4, 0x90
-.LBB25_50:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpslld	ymm13, ymm12, 24
-	vpslld	ymm14, ymm11, 24
-	vpslld	ymm15, ymm10, 24
-	vpslld	ymm7, ymm9, 24
-	vpaddd	ymm7, ymm7, ymm2
-	vpaddd	ymm15, ymm15, ymm2
-	vpaddd	ymm14, ymm14, ymm2
-	vpaddd	ymm13, ymm13, ymm2
-	vpsrad	ymm13, ymm13, 24
-	vpsrad	ymm14, ymm14, 24
-	vpsrad	ymm15, ymm15, 24
-	vpsrad	ymm7, ymm7, 24
-	vpaddd	ymm7, ymm7, ymm3
-	vpaddd	ymm15, ymm15, ymm3
-	vpaddd	ymm14, ymm14, ymm3
-	vpaddd	ymm13, ymm13, ymm3
-	vpsllvd	ymm13, ymm4, ymm13
-	vpsllvd	ymm14, ymm4, ymm14
-	vpsllvd	ymm15, ymm4, ymm15
-	vpsllvd	ymm7, ymm4, ymm7
-	vpbroadcastd	ymm8, dword ptr [rip + .LCPI25_9] # ymm8 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
-	vpand	ymm7, ymm8, ymm7
-	vpand	ymm15, ymm15, ymm8
-	vpackusdw	ymm7, ymm7, ymm15
-	vpermq	ymm7, ymm7, 216                 # ymm7 = ymm7[0,2,1,3]
-	vpand	ymm14, ymm14, ymm8
-	vpand	ymm8, ymm13, ymm8
-	vpackusdw	ymm8, ymm14, ymm8
-	vpermq	ymm8, ymm8, 216                 # ymm8 = ymm8[0,2,1,3]
-	vpackuswb	ymm7, ymm7, ymm8
-	vpermq	ymm7, ymm7, 216                 # ymm7 = ymm7[0,2,1,3]
-	vmovdqu	ymmword ptr [r12 + rcx], ymm7
-	add	rcx, 32
-	vpbroadcastd	ymm7, dword ptr [rip + .LCPI25_10] # ymm7 = [32,32,32,32,32,32,32,32]
-	vpaddd	ymm9, ymm9, ymm7
-	vpaddd	ymm10, ymm10, ymm7
-	vpaddd	ymm11, ymm11, ymm7
-	vpaddd	ymm12, ymm12, ymm7
-	cmp	r11, rcx
-	jne	.LBB25_50
-# %bb.51:                               #   in Loop: Header=BB25_2 Depth=1
-	cmp	r11, rsi
-	je	.LBB25_58
-# %bb.52:                               #   in Loop: Header=BB25_2 Depth=1
-	mov	rdi, r11
-	mov	r8, r11
-	test	sil, 16
-	jne	.LBB25_53
-	.p2align	4, 0x90
-.LBB25_56:                              #   in Loop: Header=BB25_2 Depth=1
-	mov	ecx, r8d
-	shl	ecx, 24
-	add	ecx, 822083584
-	lea	rdi, [r12 + r8]
-	mov	r9, rsi
-	sub	r9, r8
-	xor	r8d, r8d
-	.p2align	4, 0x90
-.LBB25_57:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	mov	edx, ecx
-	shr	edx, 24
-	add	dl, -49
-	shlx	edx, ebp, edx
-	mov	byte ptr [rdi + r8], dl
-	add	ecx, 16777216
-	inc	r8
-	cmp	r9, r8
-	jne	.LBB25_57
-.LBB25_58:                              #   in Loop: Header=BB25_2 Depth=1
-	lea	rcx, [rip + right_key]
-	cmp	dword ptr [rcx + 4*r13], esi
-	jne	.LBB25_72
-# %bb.59:                               #   in Loop: Header=BB25_2 Depth=1
-	cmp	esi, 16
-	jae	.LBB25_61
-# %bb.60:                               #   in Loop: Header=BB25_2 Depth=1
-	xor	r8d, r8d
-	jmp	.LBB25_70
-	.p2align	4, 0x90
-.LBB25_61:                              #   in Loop: Header=BB25_2 Depth=1
-	cmp	esi, 32
-	jae	.LBB25_63
-# %bb.62:                               #   in Loop: Header=BB25_2 Depth=1
-	xor	edi, edi
-.LBB25_67:                              #   in Loop: Header=BB25_2 Depth=1
-	vmovd	xmm7, edi
-	vpbroadcastd	ymm7, xmm7
-	vpor	ymm9, ymm7, ymm6
-	vpor	ymm10, ymm7, ymm1
-	lea	rcx, [r12 + rdi]
-	mov	r9, qword ptr [rsp - 16]        # 8-byte Reload
-	sub	r9, rdi
-	xor	edi, edi
-	.p2align	4, 0x90
-.LBB25_68:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpsubd	ymm7, ymm0, ymm10
-	vpsubd	ymm8, ymm0, ymm9
-	vpslld	ymm8, ymm8, 24
-	vpsrad	ymm8, ymm8, 24
-	vpslld	ymm7, ymm7, 24
-	vpsrad	ymm7, ymm7, 24
-	vpaddd	ymm7, ymm7, ymm3
-	vpaddd	ymm8, ymm8, ymm3
-	vpsllvd	ymm8, ymm4, ymm8
-	vpsllvd	ymm7, ymm4, ymm7
-	vpbroadcastd	ymm11, dword ptr [rip + .LCPI25_9] # ymm11 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
-	vpand	ymm7, ymm11, ymm7
-	vpand	ymm8, ymm8, ymm11
-	vpackusdw	ymm7, ymm7, ymm8
-	vextracti128	xmm8, ymm7, 1
-	vpackuswb	xmm7, xmm7, xmm8
-	vpshufd	xmm7, xmm7, 216                 # xmm7 = xmm7[0,2,1,3]
-	vmovdqu	xmmword ptr [rcx + rdi], xmm7
-	vpbroadcastd	ymm7, dword ptr [rip + .LCPI25_5] # ymm7 = [16,16,16,16,16,16,16,16]
-	vpaddd	ymm10, ymm10, ymm7
-	vpaddd	ymm9, ymm9, ymm7
-	add	rdi, 16
-	cmp	r9, rdi
-	jne	.LBB25_68
-# %bb.69:                               #   in Loop: Header=BB25_2 Depth=1
-	mov	rcx, qword ptr [rsp - 16]       # 8-byte Reload
-	mov	r8, rcx
-	cmp	rcx, rsi
-	je	.LBB25_72
-	jmp	.LBB25_70
-.LBB25_63:                              #   in Loop: Header=BB25_2 Depth=1
-	xor	ecx, ecx
-	vmovdqa	ymm9, ymm1
-	vmovdqa	ymm10, ymm6
-	vpmovsxbd	ymm11, qword ptr [rip + .LCPI25_13] # ymm11 = [16,17,18,19,20,21,22,23]
-	vpmovsxbd	ymm12, qword ptr [rip + .LCPI25_14] # ymm12 = [24,25,26,27,28,29,30,31]
-	.p2align	4, 0x90
-.LBB25_64:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpsubd	ymm7, ymm0, ymm9
-	vpsubd	ymm8, ymm0, ymm10
-	vpsubd	ymm13, ymm0, ymm11
-	vpsubd	ymm14, ymm0, ymm12
-	vpslld	ymm14, ymm14, 24
-	vpsrad	ymm14, ymm14, 24
-	vpslld	ymm13, ymm13, 24
-	vpsrad	ymm13, ymm13, 24
-	vpslld	ymm8, ymm8, 24
-	vpsrad	ymm8, ymm8, 24
-	vpslld	ymm7, ymm7, 24
-	vpsrad	ymm7, ymm7, 24
-	vpaddd	ymm7, ymm7, ymm3
-	vpaddd	ymm8, ymm8, ymm3
-	vpaddd	ymm13, ymm13, ymm3
-	vpaddd	ymm14, ymm14, ymm3
-	vpsllvd	ymm14, ymm4, ymm14
-	vpsllvd	ymm13, ymm4, ymm13
-	vpsllvd	ymm8, ymm4, ymm8
-	vpsllvd	ymm7, ymm4, ymm7
-	vpbroadcastd	ymm15, dword ptr [rip + .LCPI25_9] # ymm15 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
-	vpand	ymm7, ymm15, ymm7
-	vpand	ymm8, ymm8, ymm15
-	vpackusdw	ymm7, ymm7, ymm8
-	vpermq	ymm7, ymm7, 216                 # ymm7 = ymm7[0,2,1,3]
-	vpand	ymm8, ymm13, ymm15
-	vpand	ymm13, ymm14, ymm15
-	vpackusdw	ymm8, ymm8, ymm13
-	vpermq	ymm8, ymm8, 216                 # ymm8 = ymm8[0,2,1,3]
-	vpackuswb	ymm7, ymm7, ymm8
-	vpermq	ymm7, ymm7, 216                 # ymm7 = ymm7[0,2,1,3]
-	vmovdqu	ymmword ptr [r12 + rcx], ymm7
-	add	rcx, 32
-	vpbroadcastd	ymm7, dword ptr [rip + .LCPI25_10] # ymm7 = [32,32,32,32,32,32,32,32]
-	vpaddd	ymm9, ymm9, ymm7
-	vpaddd	ymm10, ymm10, ymm7
-	vpaddd	ymm11, ymm11, ymm7
-	vpaddd	ymm12, ymm12, ymm7
-	cmp	r11, rcx
-	jne	.LBB25_64
-# %bb.65:                               #   in Loop: Header=BB25_2 Depth=1
-	cmp	r11, rsi
-	je	.LBB25_72
-# %bb.66:                               #   in Loop: Header=BB25_2 Depth=1
-	mov	rdi, r11
-	mov	r8, r11
-	test	sil, 16
-	jne	.LBB25_67
-	.p2align	4, 0x90
-.LBB25_70:                              #   in Loop: Header=BB25_2 Depth=1
-	mov	ecx, dword ptr [rsp - 4]        # 4-byte Reload
-	sub	ecx, r8d
-	shl	ecx, 24
-	lea	rdi, [r12 + r8]
-	mov	r9, rsi
-	sub	r9, r8
-	xor	r8d, r8d
-	.p2align	4, 0x90
-.LBB25_71:                              #   Parent Loop BB25_2 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	mov	edx, ecx
-	shr	edx, 24
-	add	dl, -49
-	shlx	edx, ebp, edx
-	mov	byte ptr [rdi + r8], dl
-	add	ecx, -16777216
-	inc	r8
-	cmp	r9, r8
-	jne	.LBB25_71
-	jmp	.LBB25_72
-.LBB25_5:
-	test	esi, esi
-	jle	.LBB25_17
-# %bb.6:
-	mov	eax, esi
-	shl	eax, 24
-	add	eax, 805306368
-	shr	eax, 24
-	add	al, -49
-	mov	ecx, 1
-	shlx	eax, ecx, eax
-	lea	r8d, [rsi - 1]
-	cmp	esi, 1
-	jne	.LBB25_73
-# %bb.7:
-	xor	r9d, r9d
-.LBB25_8:
-	test	sil, 1
-	je	.LBB25_17
-# %bb.9:
-	lea	rcx, [rip + top_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	je	.LBB25_10
-# %bb.11:
-	lea	rcx, [rip + bottom_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	je	.LBB25_12
-.LBB25_13:
-	lea	rcx, [rip + left_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	je	.LBB25_14
-.LBB25_15:
-	lea	rcx, [rip + right_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	jne	.LBB25_17
-.LBB25_16:
-	lea	rcx, [rip + con]
-	lea	rcx, [rcx + 8*r9]
-	mov	byte ptr [r8 + rcx], al
-.LBB25_17:
-	test	esi, esi
-	je	.LBB25_20
-# %bb.18:
-	mov	edi, esi
-	imul	edi, esi
-	lea	r8d, [rsi + 1]
-	lea	r11d, [rsi + rsi]
-	cmp	edi, 1
-	adc	edi, 0
-	xor	ecx, ecx
-	lea	rbx, [rip + left_key]
-	lea	r14, [rip + right_key]
-	mov	ebp, -1
-	lea	r15, [rip + con]
-	.p2align	4, 0x90
-.LBB25_19:                              # =>This Inner Loop Header: Depth=1
-	mov	eax, ecx
-	cdq
-	idiv	esi
-                                        # kill: def $edx killed $edx def $rdx
-                                        # kill: def $eax killed $eax def $rax
-	shl	eax, 4
-	or	eax, edx
-	shr	eax, 4
-	and	eax, 15
-	and	edx, 7
-	lea	r12d, [4*rdx]
-	lea	r13d, [4*rax]
-	mov	r10d, r8d
-	lea	r9, [rip + top_key]
-	sub	r10d, dword ptr [r12 + r9]
-	add	r10d, eax
-	shlx	r10d, ebp, r10d
-	lea	r9, [rip + bottom_key]
-	mov	r12d, dword ptr [r12 + r9]
-	add	r12d, eax
-	mov	r9d, r11d
-	sub	r9d, r12d
-	shlx	r9d, ebp, r9d
-	or	r9d, r10d
-	lea	r10d, [rdx + r8]
-	sub	r10d, dword ptr [r13 + rbx]
-	mov	r12d, edx
-	add	r12d, dword ptr [r13 + r14]
-	shlx	r10d, ebp, r10d
-	or	r10d, r9d
-	mov	r9d, r11d
-	sub	r9d, r12d
-	shlx	r9d, ebp, r9d
-	or	r9d, r10d
-	not	r9b
-	lea	rax, [r15 + 8*rax]
-	and	byte ptr [rdx + rax], r9b
-	inc	ecx
-	cmp	edi, ecx
-	jne	.LBB25_19
-.LBB25_20:
-	pop	rbx
-	.cfi_def_cfa_offset 48
-	pop	r12
-	.cfi_def_cfa_offset 40
-	pop	r13
-	.cfi_def_cfa_offset 32
-	pop	r14
-	.cfi_def_cfa_offset 24
-	pop	r15
-	.cfi_def_cfa_offset 16
-	pop	rbp
-	.cfi_def_cfa_offset 8
-	vzeroupper
-	jmp	place_singles                   # TAILCALL
-.LBB25_73:
-	.cfi_def_cfa_offset 56
-	mov	r10d, esi
-	and	r10d, 2147483646
-	lea	r11, [rip + con]
-	lea	rbx, [r11 + 8*r8]
-	inc	rbx
-	lea	r14, [r8 + r11]
-	add	r14, 8
-	xor	r9d, r9d
-	jmp	.LBB25_74
-	.p2align	4, 0x90
-.LBB25_90:                              #   in Loop: Header=BB25_74 Depth=1
-	add	r9, 2
-	cmp	r10, r9
-	je	.LBB25_8
-.LBB25_74:                              # =>This Inner Loop Header: Depth=1
-	lea	rcx, [rip + top_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	je	.LBB25_75
-# %bb.76:                               #   in Loop: Header=BB25_74 Depth=1
-	lea	rcx, [rip + bottom_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	je	.LBB25_77
-.LBB25_78:                              #   in Loop: Header=BB25_74 Depth=1
-	lea	rcx, [rip + left_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	je	.LBB25_79
-.LBB25_80:                              #   in Loop: Header=BB25_74 Depth=1
-	lea	rcx, [rip + right_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	je	.LBB25_81
-.LBB25_82:                              #   in Loop: Header=BB25_74 Depth=1
-	lea	rcx, [rip + top_key]
-	cmp	dword ptr [rcx + 4*r9 + 4], 1
-	je	.LBB25_83
-.LBB25_84:                              #   in Loop: Header=BB25_74 Depth=1
-	lea	rcx, [rip + bottom_key]
-	cmp	dword ptr [rcx + 4*r9 + 4], 1
-	je	.LBB25_85
-.LBB25_86:                              #   in Loop: Header=BB25_74 Depth=1
-	lea	rcx, [rip + left_key]
-	cmp	dword ptr [rcx + 4*r9 + 4], 1
-	je	.LBB25_87
-.LBB25_88:                              #   in Loop: Header=BB25_74 Depth=1
-	lea	rcx, [rip + right_key]
-	cmp	dword ptr [rcx + 4*r9 + 4], 1
-	jne	.LBB25_90
-	jmp	.LBB25_89
-	.p2align	4, 0x90
-.LBB25_75:                              #   in Loop: Header=BB25_74 Depth=1
-	mov	byte ptr [r9 + r11], al
-	lea	rcx, [rip + bottom_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	jne	.LBB25_78
-.LBB25_77:                              #   in Loop: Header=BB25_74 Depth=1
-	mov	byte ptr [rbx + r9 - 1], al
-	lea	rcx, [rip + left_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	jne	.LBB25_80
-.LBB25_79:                              #   in Loop: Header=BB25_74 Depth=1
-	mov	byte ptr [r11 + 8*r9], al
-	lea	rcx, [rip + right_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	jne	.LBB25_82
-.LBB25_81:                              #   in Loop: Header=BB25_74 Depth=1
-	mov	byte ptr [r14 + 8*r9 - 8], al
-	lea	rcx, [rip + top_key]
-	cmp	dword ptr [rcx + 4*r9 + 4], 1
-	jne	.LBB25_84
-.LBB25_83:                              #   in Loop: Header=BB25_74 Depth=1
-	mov	byte ptr [r9 + r11 + 1], al
-	lea	rcx, [rip + bottom_key]
-	cmp	dword ptr [rcx + 4*r9 + 4], 1
-	jne	.LBB25_86
-.LBB25_85:                              #   in Loop: Header=BB25_74 Depth=1
-	mov	byte ptr [rbx + r9], al
-	lea	rcx, [rip + left_key]
-	cmp	dword ptr [rcx + 4*r9 + 4], 1
-	jne	.LBB25_88
-.LBB25_87:                              #   in Loop: Header=BB25_74 Depth=1
-	mov	byte ptr [r11 + 8*r9 + 8], al
-	lea	rcx, [rip + right_key]
-	cmp	dword ptr [rcx + 4*r9 + 4], 1
-	jne	.LBB25_90
-.LBB25_89:                              #   in Loop: Header=BB25_74 Depth=1
-	mov	byte ptr [r14 + 8*r9], al
-	jmp	.LBB25_90
-.LBB25_10:
-	lea	rcx, [rip + con]
-	mov	byte ptr [r9 + rcx], al
-	lea	rcx, [rip + bottom_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	jne	.LBB25_13
-.LBB25_12:
-	lea	rcx, [rip + con]
-	lea	rcx, [rcx + 8*r8]
-	mov	byte ptr [r9 + rcx], al
-	lea	rcx, [rip + left_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	jne	.LBB25_15
-.LBB25_14:
-	lea	rcx, [rip + con]
-	mov	byte ptr [rcx + 8*r9], al
-	lea	rcx, [rip + right_key]
-	cmp	dword ptr [rcx + 4*r9], 1
-	je	.LBB25_16
-	jmp	.LBB25_17
-.Lfunc_end25:
-	.size	edge_clue_initialization, .Lfunc_end25-edge_clue_initialization
-	.cfi_endproc
-                                        # -- End function
-	.globl	unique_bits                     # -- Begin function unique_bits
-	.p2align	4, 0x90
-	.type	unique_bits,@function
-unique_bits:                            # @unique_bits
-	.cfi_startproc
-# %bb.0:
-	test	edi, edi
-	jle	.LBB26_1
-# %bb.2:
-	mov	r8d, edi
-	mov	ecx, r8d
-	and	ecx, 7
-	cmp	edi, 8
-	jae	.LBB26_9
-# %bb.3:
-	xor	edi, edi
-	xor	edx, edx
-	xor	eax, eax
-	jmp	.LBB26_4
-.LBB26_1:
-	xor	eax, eax
-                                        # kill: def $al killed $al killed $eax
-	ret
-.LBB26_9:
-	and	r8d, 2147483640
-	xor	edi, edi
-	xor	r9d, r9d
-	xor	eax, eax
-	.p2align	4, 0x90
-.LBB26_10:                              # =>This Inner Loop Header: Depth=1
-	movzx	edx, byte ptr [rsi + rdi]
-	movzx	r10d, byte ptr [rsi + rdi + 1]
-	mov	r11d, edx
-	and	r11b, r9b
-	or	r11b, al
-	or	dl, r9b
-	mov	eax, r10d
-	and	al, dl
-	or	al, r11b
-	or	dl, r10b
-	movzx	r9d, byte ptr [rsi + rdi + 2]
-	mov	r10d, r9d
-	and	r10b, dl
-	or	r10b, al
-	or	dl, r9b
-	movzx	eax, byte ptr [rsi + rdi + 3]
-	mov	r9d, eax
-	and	r9b, dl
-	or	r9b, r10b
-	or	dl, al
-	movzx	eax, byte ptr [rsi + rdi + 4]
-	mov	r10d, eax
-	and	r10b, dl
-	or	r10b, r9b
-	or	dl, al
-	movzx	eax, byte ptr [rsi + rdi + 5]
-	mov	r9d, eax
-	and	r9b, dl
-	or	r9b, r10b
-	or	dl, al
-	movzx	eax, byte ptr [rsi + rdi + 6]
-	mov	r10d, eax
-	and	r10b, dl
-	or	r10b, r9b
-	movzx	r9d, byte ptr [rsi + rdi + 7]
-	or	dl, al
-	mov	eax, r9d
-	and	al, dl
-	or	al, r10b
-	or	dl, r9b
-	add	rdi, 8
-	mov	r9d, edx
-	cmp	r8, rdi
-	jne	.LBB26_10
-.LBB26_4:
-	test	rcx, rcx
-	je	.LBB26_7
-# %bb.5:
-	add	rsi, rdi
-	xor	edi, edi
-	.p2align	4, 0x90
-.LBB26_6:                               # =>This Inner Loop Header: Depth=1
-	movzx	r8d, byte ptr [rsi + rdi]
-	mov	r9d, r8d
-	and	r9b, dl
-	or	al, r9b
-	or	dl, r8b
-	inc	rdi
-	cmp	rcx, rdi
-	jne	.LBB26_6
-.LBB26_7:
-	not	al
-	and	al, dl
-                                        # kill: def $al killed $al killed $eax
-	ret
-.Lfunc_end26:
-	.size	unique_bits, .Lfunc_end26-unique_bits
-	.cfi_endproc
-                                        # -- End function
-	.globl	pp_constraints                  # -- Begin function pp_constraints
-	.p2align	4, 0x90
-	.type	pp_constraints,@function
-pp_constraints:                         # @pp_constraints
-	.cfi_startproc
-# %bb.0:
-	ret
-.Lfunc_end27:
-	.size	pp_constraints, .Lfunc_end27-pp_constraints
-	.cfi_endproc
-                                        # -- End function
-	.section	.rodata.cst32,"aM",@progbits,32
-	.p2align	5, 0x0                          # -- Begin function solver_win
-.LCPI28_0:
-	.zero	1
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.section	.rodata.cst16,"aM",@progbits,16
-	.p2align	4, 0x0
-.LCPI28_1:
-	.zero	1
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.byte	255                             # 0xff
-	.section	.rodata,"a",@progbits
-.LCPI28_2:
-	.byte	255                             # 0xff
-	.text
-	.globl	solver_win
-	.p2align	4, 0x90
-	.type	solver_win,@function
-solver_win:                             # @solver_win
-	.cfi_startproc
-# %bb.0:
-	movsxd	rcx, dword ptr [rip + length]
-	mov	eax, -1
-	shlx	eax, eax, ecx
-	not	al
-	mov	esi, eax
-	test	rcx, rcx
-	jle	.LBB28_8
-# %bb.1:
-	cmp	ecx, 16
-	jae	.LBB28_3
-# %bb.2:
-	xor	edx, edx
-	mov	esi, eax
-	jmp	.LBB28_13
-.LBB28_3:
-	cmp	ecx, 128
-	jae	.LBB28_9
-# %bb.4:
-	xor	edx, edx
-	mov	esi, eax
-	jmp	.LBB28_5
-.LBB28_9:
-	mov	edx, ecx
-	and	edx, 2147483520
-	vpbroadcastb	ymm0, byte ptr [rip + .LCPI28_2] # ymm0 = [255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255]
-	vpinsrb	xmm1, xmm0, eax, 0
-	vpblendd	ymm0, ymm0, ymm1, 15            # ymm0 = ymm1[0,1,2,3],ymm0[4,5,6,7]
-	vpcmpeqd	ymm1, ymm1, ymm1
-	xor	esi, esi
-	lea	rdi, [rip + con]
-	vpcmpeqd	ymm2, ymm2, ymm2
-	vpcmpeqd	ymm3, ymm3, ymm3
-	.p2align	4, 0x90
-.LBB28_10:                              # =>This Inner Loop Header: Depth=1
-	vpand	ymm0, ymm0, ymmword ptr [rsi + rdi + 64]
-	vpand	ymm1, ymm1, ymmword ptr [rsi + rdi + 96]
-	vpand	ymm2, ymm2, ymmword ptr [rsi + rdi + 128]
-	vpand	ymm3, ymm3, ymmword ptr [rsi + rdi + 160]
-	sub	rsi, -128
-	cmp	rdx, rsi
-	jne	.LBB28_10
-# %bb.11:
-	vpand	ymm0, ymm1, ymm0
-	vpand	ymm1, ymm3, ymm2
-	vpand	ymm0, ymm1, ymm0
-	vextracti128	xmm1, ymm0, 1
-	vpand	xmm0, xmm0, xmm1
-	vpshufd	xmm1, xmm0, 238                 # xmm1 = xmm0[2,3,2,3]
-	vpand	xmm0, xmm0, xmm1
-	vpshufd	xmm1, xmm0, 85                  # xmm1 = xmm0[1,1,1,1]
-	vpand	xmm0, xmm0, xmm1
-	vpsrld	xmm1, xmm0, 16
-	vpand	xmm0, xmm0, xmm1
-	vpsrlw	xmm1, xmm0, 8
-	vpand	xmm0, xmm0, xmm1
-	vmovd	esi, xmm0
-	cmp	rdx, rcx
-	je	.LBB28_8
-# %bb.12:
-	test	cl, 112
-	je	.LBB28_13
-.LBB28_5:
-	mov	rdi, rdx
-	mov	edx, ecx
-	and	edx, 2147483632
-	vpbroadcastb	xmm0, byte ptr [rip + .LCPI28_2] # xmm0 = [255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255]
-	vpinsrb	xmm0, xmm0, esi, 0
-	lea	rsi, [rip + con]
-	.p2align	4, 0x90
-.LBB28_6:                               # =>This Inner Loop Header: Depth=1
-	vpand	xmm0, xmm0, xmmword ptr [rdi + rsi + 64]
-	add	rdi, 16
-	cmp	rdx, rdi
-	jne	.LBB28_6
-# %bb.7:
-	vpshufd	xmm1, xmm0, 238                 # xmm1 = xmm0[2,3,2,3]
-	vpand	xmm0, xmm0, xmm1
-	vpshufd	xmm1, xmm0, 85                  # xmm1 = xmm0[1,1,1,1]
-	vpand	xmm0, xmm0, xmm1
-	vpsrld	xmm1, xmm0, 16
-	vpand	xmm0, xmm0, xmm1
-	vpsrlw	xmm1, xmm0, 8
-	vpand	xmm0, xmm0, xmm1
-	vmovd	esi, xmm0
-	cmp	rdx, rcx
-	je	.LBB28_8
-.LBB28_13:
-	lea	rdi, [rip + con]
-	.p2align	4, 0x90
-.LBB28_14:                              # =>This Inner Loop Header: Depth=1
-	and	sil, byte ptr [rdx + rdi + 64]
-	inc	rdx
-	cmp	rcx, rdx
-	jne	.LBB28_14
-.LBB28_8:
-	cmp	sil, al
-	sete	al
-	vzeroupper
-	ret
-.Lfunc_end28:
-	.size	solver_win, .Lfunc_end28-solver_win
-	.cfi_endproc
-                                        # -- End function
-	.globl	swap                            # -- Begin function swap
-	.p2align	4, 0x90
-	.type	swap,@function
-swap:                                   # @swap
-	.cfi_startproc
-# %bb.0:
-	movzx	eax, byte ptr [rdi]
-	movzx	ecx, byte ptr [rsi]
-	mov	byte ptr [rdi], cl
-	mov	byte ptr [rsi], al
-	ret
-.Lfunc_end29:
-	.size	swap, .Lfunc_end29-swap
-	.cfi_endproc
-                                        # -- End function
-	.globl	permutations                    # -- Begin function permutations
-	.p2align	4, 0x90
-	.type	permutations,@function
-permutations:                           # @permutations
-	.cfi_startproc
-# %bb.0:
-	push	rbp
-	.cfi_def_cfa_offset 16
-	push	r15
-	.cfi_def_cfa_offset 24
-	push	r14
-	.cfi_def_cfa_offset 32
-	push	r13
-	.cfi_def_cfa_offset 40
-	push	r12
-	.cfi_def_cfa_offset 48
-	push	rbx
-	.cfi_def_cfa_offset 56
-	push	rax
-	.cfi_def_cfa_offset 64
-	.cfi_offset rbx, -56
-	.cfi_offset r12, -48
-	.cfi_offset r13, -40
-	.cfi_offset r14, -32
-	.cfi_offset r15, -24
-	.cfi_offset rbp, -16
-	mov	rbx, rdx
-	mov	ebp, esi
-	mov	r14, rdi
-	cmp	ecx, 1
-	jne	.LBB30_1
-# %bb.6:
-	movsxd	rax, dword ptr [rip + sequence_pos]
-	lea	rdi, [r14 + 8*rax]
-	movsxd	rdx, ebp
-	mov	rsi, rbx
-	call	memcpy@PLT
-	inc	dword ptr [rip + sequence_pos]
-	jmp	.LBB30_7
-.LBB30_1:
-	jl	.LBB30_7
-# %bb.2:
-	mov	r12d, ecx
-	lea	r15d, [r12 - 1]
-	test	r12b, 1
-	jne	.LBB30_5
-# %bb.3:
-	mov	r12d, r12d
-	xor	r13d, r13d
-	.p2align	4, 0x90
-.LBB30_4:                               # =>This Inner Loop Header: Depth=1
-	mov	rdi, r14
-	mov	esi, ebp
-	mov	rdx, rbx
-	mov	ecx, r15d
-	call	permutations
-	movzx	eax, byte ptr [rbx + r13]
-	movzx	ecx, byte ptr [rbx + r15]
-	mov	byte ptr [rbx + r13], cl
-	mov	byte ptr [rbx + r15], al
-	inc	r13
-	cmp	r12, r13
-	jne	.LBB30_4
-	jmp	.LBB30_7
-	.p2align	4, 0x90
-.LBB30_5:                               # =>This Inner Loop Header: Depth=1
-	mov	rdi, r14
-	mov	esi, ebp
-	mov	rdx, rbx
-	mov	ecx, r15d
-	call	permutations
-	movzx	eax, byte ptr [rbx]
-	movzx	ecx, byte ptr [rbx + r15]
-	mov	byte ptr [rbx], cl
-	mov	byte ptr [rbx + r15], al
-	dec	r12d
-	jne	.LBB30_5
-.LBB30_7:
-	add	rsp, 8
-	.cfi_def_cfa_offset 56
-	pop	rbx
-	.cfi_def_cfa_offset 48
-	pop	r12
-	.cfi_def_cfa_offset 40
-	pop	r13
-	.cfi_def_cfa_offset 32
-	pop	r14
-	.cfi_def_cfa_offset 24
-	pop	r15
-	.cfi_def_cfa_offset 16
-	pop	rbp
-	.cfi_def_cfa_offset 8
-	ret
-.Lfunc_end30:
-	.size	permutations, .Lfunc_end30-permutations
-	.cfi_endproc
-                                        # -- End function
-	.section	.rodata.cst16,"aM",@progbits,16
-	.p2align	4, 0x0                          # -- Begin function generate_valid_sequences
-.LCPI31_0:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	8                               # 0x8
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI31_1:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	8                               # 0x8
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI31_2:
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	8                               # 0x8
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI31_3:
-	.byte	0                               # 0x0
-	.byte	8                               # 0x8
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.section	.rodata.cst32,"aM",@progbits,32
-	.p2align	5, 0x0
-.LCPI31_4:
-	.long	0                               # 0x0
-	.long	2                               # 0x2
-	.long	2                               # 0x2
-	.long	3                               # 0x3
-	.long	0                               # 0x0
-	.long	2                               # 0x2
-	.long	4                               # 0x4
-	.long	6                               # 0x6
-.LCPI31_5:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-.LCPI31_6:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.section	.rodata,"a",@progbits
-	.p2align	1, 0x0
-.LCPI31_7:
-	.byte	0                               # 0x0
-	.byte	8                               # 0x8
-	.section	.rodata.cst8,"aM",@progbits,8
-.LCPI31_8:
-	.byte	0                               # 0x0
-	.byte	2                               # 0x2
-	.byte	2                               # 0x2
-	.byte	3                               # 0x3
-	.byte	0                               # 0x0
-	.byte	2                               # 0x2
-	.byte	4                               # 0x4
-	.byte	6                               # 0x6
-	.section	.rodata.cst4,"aM",@progbits,4
-	.p2align	2, 0x0
-.LCPI31_9:
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.text
-	.globl	generate_valid_sequences
-	.p2align	4, 0x90
-	.type	generate_valid_sequences,@function
-generate_valid_sequences:               # @generate_valid_sequences
-	.cfi_startproc
-# %bb.0:
-	push	rbp
-	.cfi_def_cfa_offset 16
-	push	r15
-	.cfi_def_cfa_offset 24
-	push	r14
-	.cfi_def_cfa_offset 32
-	push	r12
-	.cfi_def_cfa_offset 40
-	push	rbx
-	.cfi_def_cfa_offset 48
-	sub	rsp, 16
-	.cfi_def_cfa_offset 64
-	.cfi_offset rbx, -48
-	.cfi_offset r12, -40
-	.cfi_offset r14, -32
-	.cfi_offset r15, -24
-	.cfi_offset rbp, -16
-	mov	rax, qword ptr fs:[40]
-	mov	qword ptr [rsp + 8], rax
-	test	esi, esi
-	je	.LBB31_1
-# %bb.25:
-	movsxd	rax, edi
-	lea	rcx, [rip + con]
-	lea	rsi, [rcx + 8*rax]
-	mov	ebx, dword ptr [rip + length]
-	movsxd	rdx, ebx
-	mov	rdi, rsp
-	call	memcpy@PLT
-	jmp	.LBB31_13
-.LBB31_1:
-	movsxd	rax, dword ptr [rip + length]
-	mov	ebx, eax
-	test	rax, rax
-	jle	.LBB31_13
-# %bb.2:
-	movsxd	rcx, edi
-	cmp	ebx, 17
-	jae	.LBB31_4
-# %bb.3:
-	xor	edx, edx
-	jmp	.LBB31_11
-.LBB31_4:
-	cmp	ebx, 33
-	jae	.LBB31_8
-# %bb.5:
-	xor	edx, edx
-	jmp	.LBB31_6
-.LBB31_8:
-	mov	edx, eax
-	and	edx, 31
-	mov	esi, 32
-	cmovne	rsi, rdx
-	mov	rdx, rax
-	sub	rdx, rsi
-	xor	edi, edi
-	lea	r8, [rip + con]
-	vpbroadcastw	xmm0, word ptr [rip + .LCPI31_7] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm1, word ptr [rip + .LCPI31_7] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm2, word ptr [rip + .LCPI31_7] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm3, word ptr [rip + .LCPI31_7] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpmovsxbd	ymm4, qword ptr [rip + .LCPI31_8] # ymm4 = [0,2,2,3,0,2,4,6]
-	vpbroadcastd	ymm5, dword ptr [rip + .LCPI31_9] # ymm5 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
-	vpbroadcastd	ymm6, dword ptr [rip + .LCPI31_9] # ymm6 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
-	.p2align	4, 0x90
-.LBB31_9:                               # =>This Inner Loop Header: Depth=1
-	lea	r9, [rcx + 8*rdi]
-	vmovdqu	xmm7, xmmword ptr [r8 + r9 + 112]
-	vpshufb	xmm7, xmm7, xmm0
-	vmovdqu	xmm8, xmmword ptr [r8 + r9 + 96]
-	vpshufb	xmm8, xmm8, xmm0
-	vpunpcklwd	xmm7, xmm8, xmm7        # xmm7 = xmm8[0],xmm7[0],xmm8[1],xmm7[1],xmm8[2],xmm7[2],xmm8[3],xmm7[3]
-	vmovdqu	xmm8, xmmword ptr [r8 + r9 + 80]
-	vpshufb	xmm8, xmm8, xmm1
-	vmovdqu	xmm9, xmmword ptr [r8 + r9 + 64]
-	vpshufb	xmm9, xmm9, xmm1
-	vpunpcklwd	xmm8, xmm9, xmm8        # xmm8 = xmm9[0],xmm8[0],xmm9[1],xmm8[1],xmm9[2],xmm8[2],xmm9[3],xmm8[3]
-	vpblendd	xmm7, xmm8, xmm7, 8             # xmm7 = xmm8[0,1,2],xmm7[3]
-	vmovdqu	xmm8, xmmword ptr [r8 + r9]
-	vmovdqu	xmm9, xmmword ptr [r8 + r9 + 16]
-	vmovdqu	xmm10, xmmword ptr [r8 + r9 + 32]
-	vmovdqu	xmm11, xmmword ptr [r8 + r9 + 48]
-	vpshufb	xmm11, xmm11, xmm2
-	vpshufb	xmm10, xmm10, xmm2
-	vpunpcklwd	xmm10, xmm10, xmm11     # xmm10 = xmm10[0],xmm11[0],xmm10[1],xmm11[1],xmm10[2],xmm11[2],xmm10[3],xmm11[3]
-	vpshufb	xmm9, xmm9, xmm3
-	vpshufb	xmm8, xmm8, xmm3
-	vpunpcklwd	xmm8, xmm8, xmm9        # xmm8 = xmm8[0],xmm9[0],xmm8[1],xmm9[1],xmm8[2],xmm9[2],xmm8[3],xmm9[3]
-	vpblendd	xmm8, xmm8, xmm10, 2            # xmm8 = xmm8[0],xmm10[1],xmm8[2,3]
-	vpblendd	xmm7, xmm8, xmm7, 12            # xmm7 = xmm8[0,1],xmm7[2,3]
-	vxorps	xmm8, xmm8, xmm8
-	vpermd	ymm8, ymm4, ymmword ptr [r8 + r9 + 224]
-	vpshufb	ymm8, ymm8, ymm5
-	vxorps	xmm9, xmm9, xmm9
-	vpermd	ymm9, ymm4, ymmword ptr [r8 + r9 + 192]
-	vpshufb	ymm9, ymm9, ymm5
-	vxorps	xmm10, xmm10, xmm10
-	vpermd	ymm10, ymm4, ymmword ptr [r8 + r9 + 160]
-	vpblendd	ymm8, ymm9, ymm8, 128           # ymm8 = ymm9[0,1,2,3,4,5,6],ymm8[7]
-	vpshufb	ymm9, ymm10, ymm6
-	vxorps	xmm10, xmm10, xmm10
-	vpermd	ymm10, ymm4, ymmword ptr [r8 + r9 + 128]
-	vpshufb	ymm10, ymm10, ymm6
-	vpblendd	ymm9, ymm10, ymm9, 32           # ymm9 = ymm10[0,1,2,3,4],ymm9[5],ymm10[6,7]
-	vpblendd	ymm8, ymm9, ymm8, 192           # ymm8 = ymm9[0,1,2,3,4,5],ymm8[6,7]
-	vpblendd	ymm7, ymm8, ymm7, 15            # ymm7 = ymm7[0,1,2,3],ymm8[4,5,6,7]
-	vmovdqu	ymmword ptr [rsp + rdi], ymm7
-	add	rdi, 32
-	cmp	rdx, rdi
-	jne	.LBB31_9
-# %bb.10:
-	cmp	esi, 16
-	jbe	.LBB31_11
-.LBB31_6:
-	mov	r9, rdx
-	mov	edx, eax
-	and	edx, 15
-	mov	esi, 16
-	cmovne	rsi, rdx
-	mov	rdx, rax
-	sub	rdx, rsi
-	lea	rdi, [rcx + 8*r9]
-	lea	rsi, [rip + con]
-	add	rsi, rdi
-	lea	rdi, [rsp + r9]
-	mov	r8, rdx
-	sub	r8, r9
-	xor	r9d, r9d
-	vpbroadcastw	xmm0, word ptr [rip + .LCPI31_7] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm1, word ptr [rip + .LCPI31_7] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm2, word ptr [rip + .LCPI31_7] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm3, word ptr [rip + .LCPI31_7] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	.p2align	4, 0x90
-.LBB31_7:                               # =>This Inner Loop Header: Depth=1
-	vmovdqu	xmm4, xmmword ptr [rsi + 8*r9 + 112]
-	vpshufb	xmm4, xmm4, xmm0
-	vmovdqu	xmm5, xmmword ptr [rsi + 8*r9 + 96]
-	vpshufb	xmm5, xmm5, xmm0
-	vpunpcklwd	xmm4, xmm5, xmm4        # xmm4 = xmm5[0],xmm4[0],xmm5[1],xmm4[1],xmm5[2],xmm4[2],xmm5[3],xmm4[3]
-	vmovdqu	xmm5, xmmword ptr [rsi + 8*r9 + 80]
-	vpshufb	xmm5, xmm5, xmm1
-	vmovdqu	xmm6, xmmword ptr [rsi + 8*r9 + 64]
-	vpshufb	xmm6, xmm6, xmm1
-	vpunpcklwd	xmm5, xmm6, xmm5        # xmm5 = xmm6[0],xmm5[0],xmm6[1],xmm5[1],xmm6[2],xmm5[2],xmm6[3],xmm5[3]
-	vpblendd	xmm4, xmm5, xmm4, 8             # xmm4 = xmm5[0,1,2],xmm4[3]
-	vmovdqu	xmm5, xmmword ptr [rsi + 8*r9]
-	vmovdqu	xmm6, xmmword ptr [rsi + 8*r9 + 16]
-	vmovdqu	xmm7, xmmword ptr [rsi + 8*r9 + 32]
-	vmovdqu	xmm8, xmmword ptr [rsi + 8*r9 + 48]
-	vpshufb	xmm8, xmm8, xmm2
-	vpshufb	xmm7, xmm7, xmm2
-	vpunpcklwd	xmm7, xmm7, xmm8        # xmm7 = xmm7[0],xmm8[0],xmm7[1],xmm8[1],xmm7[2],xmm8[2],xmm7[3],xmm8[3]
-	vpshufb	xmm6, xmm6, xmm3
-	vpshufb	xmm5, xmm5, xmm3
-	vpunpcklwd	xmm5, xmm5, xmm6        # xmm5 = xmm5[0],xmm6[0],xmm5[1],xmm6[1],xmm5[2],xmm6[2],xmm5[3],xmm6[3]
-	vpblendd	xmm5, xmm5, xmm7, 2             # xmm5 = xmm5[0],xmm7[1],xmm5[2,3]
-	vpblendd	xmm4, xmm5, xmm4, 12            # xmm4 = xmm5[0,1],xmm4[2,3]
-	vmovdqu	xmmword ptr [rdi + r9], xmm4
-	add	r9, 16
-	cmp	r8, r9
-	jne	.LBB31_7
-.LBB31_11:
-	lea	rsi, [rsp + rdx]
-	lea	rdi, [rcx + 8*rdx]
-	lea	rcx, [rip + con]
-	add	rcx, rdi
-	sub	rax, rdx
-	xor	edx, edx
-	.p2align	4, 0x90
-.LBB31_12:                              # =>This Inner Loop Header: Depth=1
-	movzx	edi, byte ptr [rcx + 8*rdx]
-	mov	byte ptr [rsi + rdx], dil
-	inc	rdx
-	cmp	rax, rdx
-	jne	.LBB31_12
-.LBB31_13:
-	movsxd	rdx, ebx
-	xor	r14d, r14d
-	mov	rax, qword ptr [rip + all_sequences]
-	mov	ebp, 1
-	lea	r12, [rip + .Lconstinit.24]
-	xor	r15d, r15d
-	jmp	.LBB31_14
-	.p2align	4, 0x90
-.LBB31_19:                              #   in Loop: Header=BB31_14 Depth=1
-	movsxd	r15, r15d
-	lea	rdi, [8*r15]
-	add	rdi, qword ptr [rip + valid_sequences]
-	lea	rsi, [rax + 8*r14]
-	vzeroupper
-	call	memcpy@PLT
-	inc	r15d
-	mov	ebx, dword ptr [rip + length]
-	mov	rax, qword ptr [rip + all_sequences]
-.LBB31_23:                              #   in Loop: Header=BB31_14 Depth=1
-	inc	r14
-	movsxd	rdx, ebx
-	mov	ecx, dword ptr [r12 + 4*rdx]
-	cmp	r14, rcx
-	jae	.LBB31_20
-.LBB31_14:                              # =>This Loop Header: Depth=1
-                                        #     Child Loop BB31_16 Depth 2
-	test	ebx, ebx
-	jle	.LBB31_19
-# %bb.15:                               #   in Loop: Header=BB31_14 Depth=1
-	mov	ecx, ebx
-	mov	r8b, 1
-	lea	rsi, [rax + 8*r14]
-	xor	edi, edi
-	jmp	.LBB31_16
-	.p2align	4, 0x90
-.LBB31_22:                              #   in Loop: Header=BB31_16 Depth=2
-	inc	rdi
-	xor	r8d, r8d
-	cmp	rdi, rcx
-	je	.LBB31_23
-.LBB31_16:                              #   Parent Loop BB31_14 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	test	r8b, 1
-	je	.LBB31_22
-# %bb.17:                               #   in Loop: Header=BB31_16 Depth=2
-	movzx	r8d, byte ptr [rdi + rsi]
-	add	r8b, -49
-	shlx	r9d, ebp, r8d
-	and	r9b, byte ptr [rsp + rdi]
-	setne	r8b
-	inc	rdi
-	cmp	rdi, rcx
-	jne	.LBB31_16
-# %bb.18:                               #   in Loop: Header=BB31_14 Depth=1
-	test	r9b, r9b
-	jne	.LBB31_19
-	jmp	.LBB31_23
-.LBB31_20:
-	mov	rax, qword ptr fs:[40]
-	cmp	rax, qword ptr [rsp + 8]
-	jne	.LBB31_24
-# %bb.21:
-	movsxd	rax, r15d
-	add	rsp, 16
-	.cfi_def_cfa_offset 48
-	pop	rbx
-	.cfi_def_cfa_offset 40
-	pop	r12
-	.cfi_def_cfa_offset 32
-	pop	r14
-	.cfi_def_cfa_offset 24
-	pop	r15
-	.cfi_def_cfa_offset 16
-	pop	rbp
-	.cfi_def_cfa_offset 8
-	vzeroupper
-	ret
-.LBB31_24:
-	.cfi_def_cfa_offset 64
-	vzeroupper
-	call	__stack_chk_fail@PLT
-.Lfunc_end31:
-	.size	generate_valid_sequences, .Lfunc_end31-generate_valid_sequences
-	.cfi_endproc
-                                        # -- End function
-	.globl	generate_filtered_sequences     # -- Begin function generate_filtered_sequences
-	.p2align	4, 0x90
-	.type	generate_filtered_sequences,@function
-generate_filtered_sequences:            # @generate_filtered_sequences
-	.cfi_startproc
-# %bb.0:
-	push	rbp
-	.cfi_def_cfa_offset 16
-	push	r15
-	.cfi_def_cfa_offset 24
-	push	r14
-	.cfi_def_cfa_offset 32
-	push	r13
-	.cfi_def_cfa_offset 40
-	push	r12
-	.cfi_def_cfa_offset 48
-	push	rbx
-	.cfi_def_cfa_offset 56
-	sub	rsp, 104
-	.cfi_def_cfa_offset 160
-	.cfi_offset rbx, -56
-	.cfi_offset r12, -48
-	.cfi_offset r13, -40
-	.cfi_offset r14, -32
-	.cfi_offset r15, -24
-	.cfi_offset rbp, -16
-	mov	qword ptr [rsp + 96], rdi       # 8-byte Spill
-	test	rdi, rdi
-	je	.LBB32_1
-# %bb.2:
-	movsxd	rax, esi
-	mov	qword ptr [rsp + 88], rax       # 8-byte Spill
-	mov	r9d, dword ptr [rip + length]
-	mov	r14, qword ptr [rip + valid_sequences]
-	mov	r15d, 3
-	mov	r12, -1
-	xor	r13d, r13d
-	test	dl, dl
-	je	.LBB32_3
-# %bb.6:
-	mov	qword ptr [rsp + 16], 0         # 8-byte Folded Spill
-	xor	ebp, ebp
-	jmp	.LBB32_7
-	.p2align	4, 0x90
-.LBB32_22:                              #   in Loop: Header=BB32_7 Depth=1
-	inc	rbp
-	add	r15, 8
-	add	r12, 8
-	add	r13, 8
-	cmp	rbp, qword ptr [rsp + 96]       # 8-byte Folded Reload
-	je	.LBB32_23
-.LBB32_7:                               # =>This Loop Header: Depth=1
-                                        #     Child Loop BB32_12 Depth 2
-                                        #     Child Loop BB32_17 Depth 2
-	lea	rsi, [r14 + 8*rbp]
-	test	r9d, r9d
-	jle	.LBB32_8
-# %bb.9:                                #   in Loop: Header=BB32_7 Depth=1
-	mov	qword ptr [rsp + 40], rbp       # 8-byte Spill
-	mov	qword ptr [rsp + 48], r13       # 8-byte Spill
-	mov	edx, r9d
-	mov	dword ptr [rsp + 28], r9d       # 4-byte Spill
-	cmp	r9d, 4
-	mov	qword ptr [rsp + 72], r14       # 8-byte Spill
-	mov	qword ptr [rsp + 64], r15       # 8-byte Spill
-	mov	qword ptr [rsp + 56], r12       # 8-byte Spill
-	mov	qword ptr [rsp + 32], rsi       # 8-byte Spill
-	jae	.LBB32_11
-# %bb.10:                               #   in Loop: Header=BB32_7 Depth=1
-	mov	bpl, 48
-	xor	edi, edi
-	mov	r10b, 48
-	xor	r9d, r9d
-	xor	r8d, r8d
-.LBB32_15:                              #   in Loop: Header=BB32_7 Depth=1
-	mov	eax, edx
-	and	eax, 3
-	mov	r14, qword ptr [rsp + 72]       # 8-byte Reload
-	mov	r12, qword ptr [rsp + 56]       # 8-byte Reload
-	mov	r13, qword ptr [rsp + 48]       # 8-byte Reload
-	je	.LBB32_18
-# %bb.16:                               #   in Loop: Header=BB32_7 Depth=1
-	add	rdx, r12
-	sub	rdx, rdi
-	add	rdx, r14
-	add	rdi, r13
-	add	rdi, r14
-	xor	ecx, ecx
-	.p2align	4, 0x90
-.LBB32_17:                              #   Parent Loop BB32_7 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	movzx	esi, byte ptr [rdi + rcx]
-	movzx	r11d, byte ptr [rdx]
-	cmp	sil, bpl
-	setg	bl
-	movzx	ebp, bpl
-	cmovg	ebp, esi
-	add	r8b, bl
-	cmp	r11b, r10b
-	setg	sil
-	movzx	r10d, r10b
-	cmovg	r10d, r11d
-	add	r9b, sil
-	inc	rcx
-	dec	rdx
-	cmp	rax, rcx
-	jne	.LBB32_17
-.LBB32_18:                              #   in Loop: Header=BB32_7 Depth=1
-	shl	r8b, 4
-	or	r8b, r9b
-	mov	r9d, dword ptr [rsp + 28]       # 4-byte Reload
-	mov	r15, qword ptr [rsp + 64]       # 8-byte Reload
-	mov	rbp, qword ptr [rsp + 40]       # 8-byte Reload
-	mov	rsi, qword ptr [rsp + 32]       # 8-byte Reload
-	jmp	.LBB32_19
-	.p2align	4, 0x90
-.LBB32_8:                               #   in Loop: Header=BB32_7 Depth=1
-	xor	r8d, r8d
-.LBB32_19:                              #   in Loop: Header=BB32_7 Depth=1
-	movzx	ecx, r8b
-	mov	eax, ecx
-	shr	eax, 4
-	and	ecx, 7
-	mov	rdi, qword ptr [rsp + 88]       # 8-byte Reload
-	lea	rdx, [rip + left_key]
-	mov	edx, dword ptr [rdx + 4*rdi]
-	test	edx, edx
-	sete	r8b
-	cmp	eax, edx
-	sete	dl
-	or	dl, r8b
-	lea	rax, [rip + right_key]
-	mov	edi, dword ptr [rax + 4*rdi]
-	test	edi, edi
-	sete	al
-	cmp	ecx, edi
-	sete	cl
-	cmp	dl, 1
-	jne	.LBB32_22
-# %bb.20:                               #   in Loop: Header=BB32_7 Depth=1
-	or	al, cl
-	je	.LBB32_22
-# %bb.21:                               #   in Loop: Header=BB32_7 Depth=1
-	mov	rbx, qword ptr [rsp + 16]       # 8-byte Reload
-	lea	rdi, [8*rbx]
-	add	rdi, qword ptr [rip + filtered_sequences]
-	movsxd	rdx, r9d
-	call	memcpy@PLT
-	inc	rbx
-	mov	qword ptr [rsp + 16], rbx       # 8-byte Spill
-	mov	r9d, dword ptr [rip + length]
-	mov	r14, qword ptr [rip + valid_sequences]
-	jmp	.LBB32_22
-	.p2align	4, 0x90
-.LBB32_11:                              #   in Loop: Header=BB32_7 Depth=1
-	lea	rax, [rsi + rdx]
-	mov	ecx, edx
-	and	ecx, 2147483644
-	mov	qword ptr [rsp + 80], rcx       # 8-byte Spill
-	lea	rcx, [r14 + r15]
-	mov	r15, rax
-	lea	rsi, [r12 + rdx]
-	add	rsi, r14
-	mov	bpl, 48
-	xor	edi, edi
-	mov	r10b, 48
-	xor	r9d, r9d
-	xor	r8d, r8d
-	jmp	.LBB32_12
-	.p2align	4, 0x90
-.LBB32_14:                              #   in Loop: Header=BB32_12 Depth=2
-	add	r8b, byte ptr [rsp + 14]        # 1-byte Folded Reload
-	add	r8b, bl
-	add	r8b, r14b
-	add	r8b, al
-	add	r9b, byte ptr [rsp + 15]        # 1-byte Folded Reload
-	add	r9b, r13b
-	add	r9b, r15b
-	mov	rax, rdi
-	xor	rax, -4
-	mov	r15, r12
-	movzx	eax, byte ptr [r12 + rax]
-	cmp	al, r10b
-	setg	r11b
-	cmovg	r10d, eax
-	add	r9b, r11b
-	add	rdi, 4
-	add	rsi, -4
-	cmp	qword ptr [rsp + 80], rdi       # 8-byte Folded Reload
-	je	.LBB32_15
-.LBB32_12:                              #   Parent Loop BB32_7 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	movzx	eax, byte ptr [rcx + rdi - 3]
-	cmp	al, bpl
-	setg	byte ptr [rsp + 14]             # 1-byte Folded Spill
-	movzx	ebx, byte ptr [rsi]
-	movzx	r11d, bpl
-	cmovg	r11d, eax
-	cmp	bl, r10b
-	setg	byte ptr [rsp + 15]             # 1-byte Folded Spill
-	movzx	r10d, r10b
-	cmovg	r10d, ebx
-	movzx	eax, byte ptr [rcx + rdi - 2]
-	mov	rbx, rdi
-	xor	rbx, -2
-	movzx	ebp, byte ptr [r15 + rbx]
-	cmp	al, r11b
-	setg	bl
-	cmovg	r11d, eax
-	cmp	bpl, r10b
-	setg	r13b
-	cmovg	r10d, ebp
-	movzx	eax, byte ptr [rcx + rdi - 1]
-	mov	r14, rdi
-	xor	r14, -3
-	mov	r12, r15
-	movzx	ebp, byte ptr [r15 + r14]
-	cmp	al, r11b
-	setg	r14b
-	cmovg	r11d, eax
-	cmp	bpl, r10b
-	setg	r15b
-	cmovg	r10d, ebp
-	movzx	ebp, byte ptr [rcx + rdi]
-	cmp	bpl, r11b
-	setg	al
-	jg	.LBB32_14
-# %bb.13:                               #   in Loop: Header=BB32_12 Depth=2
-	mov	ebp, r11d
-	jmp	.LBB32_14
-.LBB32_1:
-	mov	qword ptr [rsp + 16], 0         # 8-byte Folded Spill
-.LBB32_23:
-	mov	rax, qword ptr [rsp + 16]       # 8-byte Reload
-	add	rsp, 104
-	.cfi_def_cfa_offset 56
-	pop	rbx
-	.cfi_def_cfa_offset 48
-	pop	r12
-	.cfi_def_cfa_offset 40
-	pop	r13
-	.cfi_def_cfa_offset 32
-	pop	r14
-	.cfi_def_cfa_offset 24
-	pop	r15
-	.cfi_def_cfa_offset 16
-	pop	rbp
-	.cfi_def_cfa_offset 8
-	ret
-.LBB32_3:
-	.cfi_def_cfa_offset 160
-	mov	qword ptr [rsp + 16], 0         # 8-byte Folded Spill
-	xor	ebp, ebp
-	jmp	.LBB32_4
-	.p2align	4, 0x90
-.LBB32_33:                              #   in Loop: Header=BB32_4 Depth=1
-	inc	rbp
-	add	r15, 8
-	add	r12, 8
-	add	r13, 8
-	cmp	rbp, qword ptr [rsp + 96]       # 8-byte Folded Reload
-	je	.LBB32_23
-.LBB32_4:                               # =>This Loop Header: Depth=1
-                                        #     Child Loop BB32_35 Depth 2
-                                        #     Child Loop BB32_28 Depth 2
-	lea	rsi, [r14 + 8*rbp]
-	test	r9d, r9d
-	jle	.LBB32_5
-# %bb.24:                               #   in Loop: Header=BB32_4 Depth=1
-	mov	qword ptr [rsp + 40], rbp       # 8-byte Spill
-	mov	qword ptr [rsp + 48], r13       # 8-byte Spill
-	mov	edx, r9d
-	mov	dword ptr [rsp + 28], r9d       # 4-byte Spill
-	cmp	r9d, 4
-	mov	qword ptr [rsp + 72], r14       # 8-byte Spill
-	mov	qword ptr [rsp + 64], r15       # 8-byte Spill
-	mov	qword ptr [rsp + 56], r12       # 8-byte Spill
-	mov	qword ptr [rsp + 32], rsi       # 8-byte Spill
-	jae	.LBB32_34
-# %bb.25:                               #   in Loop: Header=BB32_4 Depth=1
-	mov	bpl, 48
-	xor	edi, edi
-	mov	r9b, 48
-	xor	eax, eax
-	xor	r8d, r8d
-.LBB32_26:                              #   in Loop: Header=BB32_4 Depth=1
-	mov	ecx, edx
-	and	ecx, 3
-	mov	r14, qword ptr [rsp + 72]       # 8-byte Reload
-	mov	r12, qword ptr [rsp + 56]       # 8-byte Reload
-	mov	r13, qword ptr [rsp + 48]       # 8-byte Reload
-	je	.LBB32_29
-# %bb.27:                               #   in Loop: Header=BB32_4 Depth=1
-	add	rdx, r12
-	sub	rdx, rdi
-	add	rdx, r14
-	add	rdi, r13
-	add	rdi, r14
-	xor	esi, esi
-	.p2align	4, 0x90
-.LBB32_28:                              #   Parent Loop BB32_4 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	movzx	r10d, byte ptr [rdi + rsi]
-	movzx	r11d, byte ptr [rdx]
-	cmp	r10b, bpl
-	setg	bl
-	movzx	ebp, bpl
-	cmovg	ebp, r10d
-	add	r8b, bl
-	cmp	r11b, r9b
-	setg	r10b
-	movzx	r9d, r9b
-	cmovg	r9d, r11d
-	add	al, r10b
-	inc	rsi
-	dec	rdx
-	cmp	rcx, rsi
-	jne	.LBB32_28
-.LBB32_29:                              #   in Loop: Header=BB32_4 Depth=1
-	shl	r8b, 4
-	or	r8b, al
-	mov	r9d, dword ptr [rsp + 28]       # 4-byte Reload
-	mov	r15, qword ptr [rsp + 64]       # 8-byte Reload
-	mov	rbp, qword ptr [rsp + 40]       # 8-byte Reload
-	mov	rsi, qword ptr [rsp + 32]       # 8-byte Reload
-	jmp	.LBB32_30
-	.p2align	4, 0x90
-.LBB32_5:                               #   in Loop: Header=BB32_4 Depth=1
-	xor	r8d, r8d
-.LBB32_30:                              #   in Loop: Header=BB32_4 Depth=1
-	movzx	ecx, r8b
-	mov	eax, ecx
-	shr	eax, 4
-	and	ecx, 7
-	mov	rdi, qword ptr [rsp + 88]       # 8-byte Reload
-	lea	rdx, [rip + top_key]
-	mov	edx, dword ptr [rdx + 4*rdi]
-	test	edx, edx
-	sete	r8b
-	cmp	eax, edx
-	sete	dl
-	or	dl, r8b
-	lea	rax, [rip + bottom_key]
-	mov	edi, dword ptr [rax + 4*rdi]
-	test	edi, edi
-	sete	al
-	cmp	ecx, edi
-	sete	cl
-	cmp	dl, 1
-	jne	.LBB32_33
-# %bb.31:                               #   in Loop: Header=BB32_4 Depth=1
-	or	al, cl
-	je	.LBB32_33
-# %bb.32:                               #   in Loop: Header=BB32_4 Depth=1
-	mov	rbx, qword ptr [rsp + 16]       # 8-byte Reload
-	lea	rdi, [8*rbx]
-	add	rdi, qword ptr [rip + filtered_sequences]
-	movsxd	rdx, r9d
-	call	memcpy@PLT
-	inc	rbx
-	mov	qword ptr [rsp + 16], rbx       # 8-byte Spill
-	mov	r9d, dword ptr [rip + length]
-	mov	r14, qword ptr [rip + valid_sequences]
-	jmp	.LBB32_33
-	.p2align	4, 0x90
-.LBB32_34:                              #   in Loop: Header=BB32_4 Depth=1
-	lea	rax, [rsi + rdx]
-	mov	ecx, edx
-	and	ecx, 2147483644
-	mov	qword ptr [rsp + 80], rcx       # 8-byte Spill
-	add	r15, r14
-	lea	rcx, [r12 + rdx]
-	add	rcx, r14
-	mov	r14, rax
-	mov	bpl, 48
-	xor	edi, edi
-	mov	r9b, 48
-	xor	esi, esi
-	xor	r8d, r8d
-	jmp	.LBB32_35
-	.p2align	4, 0x90
-.LBB32_37:                              #   in Loop: Header=BB32_35 Depth=2
-	add	r8b, byte ptr [rsp + 14]        # 1-byte Folded Reload
-	add	r8b, bl
-	add	r8b, r11b
-	add	r8b, al
-	add	sil, byte ptr [rsp + 15]        # 1-byte Folded Reload
-	add	sil, r13b
-	add	sil, r14b
-	mov	rax, rdi
-	xor	rax, -4
-	mov	r14, r12
-	movzx	r10d, byte ptr [r12 + rax]
-	cmp	r10b, r9b
-	setg	al
-	cmovg	r9d, r10d
-	add	al, sil
-	add	rdi, 4
-	add	rcx, -4
-	mov	esi, eax
-	cmp	qword ptr [rsp + 80], rdi       # 8-byte Folded Reload
-	je	.LBB32_26
-.LBB32_35:                              #   Parent Loop BB32_4 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	movzx	eax, byte ptr [r15 + rdi - 3]
-	cmp	al, bpl
-	setg	byte ptr [rsp + 14]             # 1-byte Folded Spill
-	movzx	r11d, byte ptr [rcx]
-	movzx	r10d, bpl
-	cmovg	r10d, eax
-	cmp	r11b, r9b
-	setg	byte ptr [rsp + 15]             # 1-byte Folded Spill
-	movzx	r9d, r9b
-	cmovg	r9d, r11d
-	movzx	eax, byte ptr [r15 + rdi - 2]
-	mov	r11, rdi
-	xor	r11, -2
-	movzx	r11d, byte ptr [r14 + r11]
-	cmp	al, r10b
-	setg	bl
-	cmovg	r10d, eax
-	cmp	r11b, r9b
-	setg	r13b
-	cmovg	r9d, r11d
-	movzx	eax, byte ptr [r15 + rdi - 1]
-	mov	r11, rdi
-	xor	r11, -3
-	mov	r12, r14
-	movzx	ebp, byte ptr [r14 + r11]
-	cmp	al, r10b
-	setg	r11b
-	cmovg	r10d, eax
-	cmp	bpl, r9b
-	setg	r14b
-	cmovg	r9d, ebp
-	movzx	ebp, byte ptr [r15 + rdi]
-	cmp	bpl, r10b
-	setg	al
-	jg	.LBB32_37
-# %bb.36:                               #   in Loop: Header=BB32_35 Depth=2
-	mov	ebp, r10d
-	jmp	.LBB32_37
-.Lfunc_end32:
-	.size	generate_filtered_sequences, .Lfunc_end32-generate_filtered_sequences
-	.cfi_endproc
-                                        # -- End function
-	.section	.rodata.cst16,"aM",@progbits,16
-	.p2align	4, 0x0                          # -- Begin function sequence_filtration
-.LCPI33_0:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	8                               # 0x8
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI33_1:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	8                               # 0x8
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI33_2:
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	8                               # 0x8
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI33_3:
-	.byte	0                               # 0x0
-	.byte	8                               # 0x8
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI33_15:
-	.zero	16,1
-	.section	.rodata.cst32,"aM",@progbits,32
-	.p2align	5, 0x0
-.LCPI33_4:
-	.long	0                               # 0x0
-	.long	2                               # 0x2
-	.long	2                               # 0x2
-	.long	3                               # 0x3
-	.long	0                               # 0x0
-	.long	2                               # 0x2
-	.long	4                               # 0x4
-	.long	6                               # 0x6
-.LCPI33_5:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-.LCPI33_6:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI33_10:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-.LCPI33_11:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI33_12:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI33_13:
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.byte	0                               # 0x0
-	.byte	4                               # 0x4
-	.byte	8                               # 0x8
-	.byte	12                              # 0xc
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-	.zero	1
-.LCPI33_14:
-	.byte	1                               # 0x1
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	1                               # 0x1
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	1                               # 0x1
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	1                               # 0x1
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.section	.rodata.cst4,"aM",@progbits,4
-	.p2align	2, 0x0
-.LCPI33_7:
-	.long	4294967247                      # 0xffffffcf
-.LCPI33_8:
-	.long	1                               # 0x1
-.LCPI33_9:
-	.byte	255                             # 0xff
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-	.byte	0                               # 0x0
-.LCPI33_18:
+.LCPI25_18:
 	.byte	0                               # 0x0
 	.byte	4                               # 0x4
 	.byte	8                               # 0x8
 	.byte	12                              # 0xc
 	.section	.rodata,"a",@progbits
 	.p2align	1, 0x0
-.LCPI33_16:
+.LCPI25_16:
 	.byte	0                               # 0x0
 	.byte	8                               # 0x8
 	.section	.rodata.cst8,"aM",@progbits,8
-.LCPI33_17:
+.LCPI25_17:
 	.byte	0                               # 0x0
 	.byte	2                               # 0x2
 	.byte	2                               # 0x2
@@ -5848,12 +3959,12 @@ sequence_filtration:                    # @sequence_filtration
 	.cfi_offset r13, -40
 	.cfi_offset r14, -32
 	.cfi_offset r15, -24
+	mov	dword ptr [rbp - 96], esi       # 4-byte Spill
 	mov	rax, qword ptr fs:[40]
 	mov	qword ptr [rbp - 48], rax
 	test	esi, esi
-	mov	dword ptr [rbp - 96], edi       # 4-byte Spill
-	mov	dword ptr [rbp - 128], esi      # 4-byte Spill
-	je	.LBB33_2
+	mov	dword ptr [rbp - 128], edi      # 4-byte Spill
+	je	.LBB25_2
 # %bb.1:
 	movsxd	rax, edi
 	lea	rcx, [rip + con]
@@ -5862,43 +3973,43 @@ sequence_filtration:                    # @sequence_filtration
 	movsxd	rdx, ebx
 	lea	rdi, [rbp - 56]
 	call	memcpy@PLT
-	jmp	.LBB33_14
-.LBB33_2:
+	jmp	.LBB25_14
+.LBB25_2:
 	movsxd	rax, dword ptr [rip + length]
 	mov	ebx, eax
 	test	rax, rax
-	jle	.LBB33_14
+	jle	.LBB25_14
 # %bb.3:
 	movsxd	rcx, edi
 	cmp	ebx, 17
-	jae	.LBB33_5
+	jae	.LBB25_5
 # %bb.4:
 	xor	edx, edx
-	jmp	.LBB33_12
-.LBB33_5:
+	jmp	.LBB25_12
+.LBB25_5:
 	cmp	ebx, 33
-	jae	.LBB33_7
+	jae	.LBB25_7
 # %bb.6:
 	xor	edx, edx
-	jmp	.LBB33_10
-.LBB33_7:
+	jmp	.LBB25_10
+.LBB25_7:
 	mov	edx, eax
 	and	edx, 31
-	mov	r11d, 32
-	cmovne	r11, rdx
+	mov	esi, 32
+	cmovne	rsi, rdx
 	mov	rdx, rax
-	sub	rdx, r11
+	sub	rdx, rsi
 	xor	r10d, r10d
 	lea	r8, [rip + con]
-	vpbroadcastw	xmm0, word ptr [rip + .LCPI33_16] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm1, word ptr [rip + .LCPI33_16] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm2, word ptr [rip + .LCPI33_16] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm3, word ptr [rip + .LCPI33_16] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpmovsxbd	ymm4, qword ptr [rip + .LCPI33_17] # ymm4 = [0,2,2,3,0,2,4,6]
-	vpbroadcastd	ymm5, dword ptr [rip + .LCPI33_18] # ymm5 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
-	vpbroadcastd	ymm6, dword ptr [rip + .LCPI33_18] # ymm6 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
+	vpbroadcastw	xmm0, word ptr [rip + .LCPI25_16] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm1, word ptr [rip + .LCPI25_16] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm2, word ptr [rip + .LCPI25_16] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm3, word ptr [rip + .LCPI25_16] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpmovsxbd	ymm4, qword ptr [rip + .LCPI25_17] # ymm4 = [0,2,2,3,0,2,4,6]
+	vpbroadcastd	ymm5, dword ptr [rip + .LCPI25_18] # ymm5 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
+	vpbroadcastd	ymm6, dword ptr [rip + .LCPI25_18] # ymm6 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
 	.p2align	4, 0x90
-.LBB33_8:                               # =>This Inner Loop Header: Depth=1
+.LBB25_8:                               # =>This Inner Loop Header: Depth=1
 	lea	r9, [rcx + 8*r10]
 	vmovdqu	xmm7, xmmword ptr [r8 + r9 + 112]
 	vpshufb	xmm7, xmm7, xmm0
@@ -5942,47 +4053,47 @@ sequence_filtration:                    # @sequence_filtration
 	vmovdqu	ymmword ptr [rbp + r10 - 56], ymm7
 	add	r10, 32
 	cmp	rdx, r10
-	jne	.LBB33_8
+	jne	.LBB25_8
 # %bb.9:
-	cmp	r11d, 16
-	jbe	.LBB33_12
-.LBB33_10:
+	cmp	esi, 16
+	jbe	.LBB25_12
+.LBB25_10:
 	mov	r9, rdx
 	mov	edx, eax
 	and	edx, 15
-	mov	r8d, 16
-	cmovne	r8, rdx
+	mov	esi, 16
+	cmovne	rsi, rdx
 	mov	rdx, rax
-	sub	rdx, r8
+	sub	rdx, rsi
 	lea	r8, [rcx + 8*r9]
-	lea	r11, [rip + con]
-	add	r11, r8
+	lea	rsi, [rip + con]
+	add	rsi, r8
 	lea	r10, [r9 + rbp]
 	add	r10, -56
 	mov	r8, rdx
 	sub	r8, r9
 	xor	r9d, r9d
-	vpbroadcastw	xmm0, word ptr [rip + .LCPI33_16] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm1, word ptr [rip + .LCPI33_16] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm2, word ptr [rip + .LCPI33_16] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm3, word ptr [rip + .LCPI33_16] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm0, word ptr [rip + .LCPI25_16] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm1, word ptr [rip + .LCPI25_16] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm2, word ptr [rip + .LCPI25_16] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm3, word ptr [rip + .LCPI25_16] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	.p2align	4, 0x90
-.LBB33_11:                              # =>This Inner Loop Header: Depth=1
-	vmovdqu	xmm4, xmmword ptr [r11 + 8*r9 + 112]
+.LBB25_11:                              # =>This Inner Loop Header: Depth=1
+	vmovdqu	xmm4, xmmword ptr [rsi + 8*r9 + 112]
 	vpshufb	xmm4, xmm4, xmm0
-	vmovdqu	xmm5, xmmword ptr [r11 + 8*r9 + 96]
+	vmovdqu	xmm5, xmmword ptr [rsi + 8*r9 + 96]
 	vpshufb	xmm5, xmm5, xmm0
 	vpunpcklwd	xmm4, xmm5, xmm4        # xmm4 = xmm5[0],xmm4[0],xmm5[1],xmm4[1],xmm5[2],xmm4[2],xmm5[3],xmm4[3]
-	vmovdqu	xmm5, xmmword ptr [r11 + 8*r9 + 80]
+	vmovdqu	xmm5, xmmword ptr [rsi + 8*r9 + 80]
 	vpshufb	xmm5, xmm5, xmm1
-	vmovdqu	xmm6, xmmword ptr [r11 + 8*r9 + 64]
+	vmovdqu	xmm6, xmmword ptr [rsi + 8*r9 + 64]
 	vpshufb	xmm6, xmm6, xmm1
 	vpunpcklwd	xmm5, xmm6, xmm5        # xmm5 = xmm6[0],xmm5[0],xmm6[1],xmm5[1],xmm6[2],xmm5[2],xmm6[3],xmm5[3]
 	vpblendd	xmm4, xmm5, xmm4, 8             # xmm4 = xmm5[0,1,2],xmm4[3]
-	vmovdqu	xmm5, xmmword ptr [r11 + 8*r9]
-	vmovdqu	xmm6, xmmword ptr [r11 + 8*r9 + 16]
-	vmovdqu	xmm7, xmmword ptr [r11 + 8*r9 + 32]
-	vmovdqu	xmm8, xmmword ptr [r11 + 8*r9 + 48]
+	vmovdqu	xmm5, xmmword ptr [rsi + 8*r9]
+	vmovdqu	xmm6, xmmword ptr [rsi + 8*r9 + 16]
+	vmovdqu	xmm7, xmmword ptr [rsi + 8*r9 + 32]
+	vmovdqu	xmm8, xmmword ptr [rsi + 8*r9 + 48]
 	vpshufb	xmm8, xmm8, xmm2
 	vpshufb	xmm7, xmm7, xmm2
 	vpunpcklwd	xmm7, xmm7, xmm8        # xmm7 = xmm7[0],xmm8[0],xmm7[1],xmm8[1],xmm7[2],xmm8[2],xmm7[3],xmm8[3]
@@ -5994,32 +4105,32 @@ sequence_filtration:                    # @sequence_filtration
 	vmovdqu	xmmword ptr [r10 + r9], xmm4
 	add	r9, 16
 	cmp	r8, r9
-	jne	.LBB33_11
-.LBB33_12:
+	jne	.LBB25_11
+.LBB25_12:
 	sub	rax, rdx
-	lea	r9, [rdx + rbp]
-	add	r9, -56
+	lea	rsi, [rdx + rbp]
+	add	rsi, -56
 	lea	rdx, [rcx + 8*rdx]
 	lea	rcx, [rip + con]
 	add	rcx, rdx
 	xor	edx, edx
 	.p2align	4, 0x90
-.LBB33_13:                              # =>This Inner Loop Header: Depth=1
+.LBB25_13:                              # =>This Inner Loop Header: Depth=1
 	movzx	r8d, byte ptr [rcx + 8*rdx]
-	mov	byte ptr [r9 + rdx], r8b
+	mov	byte ptr [rsi + rdx], r8b
 	inc	rdx
 	cmp	rax, rdx
-	jne	.LBB33_13
-.LBB33_14:
+	jne	.LBB25_13
+.LBB25_14:
 	movsxd	rdx, ebx
 	xor	r12d, r12d
 	mov	rax, qword ptr [rip + all_sequences]
 	mov	r13d, 1
-	lea	r14, [rip + .Lconstinit.24]
+	lea	r14, [rip + .Lconstinit.96]
 	xor	r15d, r15d
-	jmp	.LBB33_17
+	jmp	.LBB25_17
 	.p2align	4, 0x90
-.LBB33_15:                              #   in Loop: Header=BB33_17 Depth=1
+.LBB25_15:                              #   in Loop: Header=BB25_17 Depth=1
 	movsxd	r15, r15d
 	lea	rdi, [8*r15]
 	add	rdi, qword ptr [rip + valid_sequences]
@@ -6029,33 +4140,33 @@ sequence_filtration:                    # @sequence_filtration
 	inc	r15d
 	mov	ebx, dword ptr [rip + length]
 	mov	rax, qword ptr [rip + all_sequences]
-.LBB33_16:                              #   in Loop: Header=BB33_17 Depth=1
+.LBB25_16:                              #   in Loop: Header=BB25_17 Depth=1
 	inc	r12
 	movsxd	rdx, ebx
 	mov	ecx, dword ptr [r14 + 4*rdx]
 	cmp	r12, rcx
-	jae	.LBB33_23
-.LBB33_17:                              # =>This Loop Header: Depth=1
-                                        #     Child Loop BB33_20 Depth 2
+	jae	.LBB25_23
+.LBB25_17:                              # =>This Loop Header: Depth=1
+                                        #     Child Loop BB25_20 Depth 2
 	test	ebx, ebx
-	jle	.LBB33_15
-# %bb.18:                               #   in Loop: Header=BB33_17 Depth=1
+	jle	.LBB25_15
+# %bb.18:                               #   in Loop: Header=BB25_17 Depth=1
 	mov	ecx, ebx
 	mov	r8b, 1
 	lea	rsi, [rax + 8*r12]
 	xor	edi, edi
-	jmp	.LBB33_20
+	jmp	.LBB25_20
 	.p2align	4, 0x90
-.LBB33_19:                              #   in Loop: Header=BB33_20 Depth=2
+.LBB25_19:                              #   in Loop: Header=BB25_20 Depth=2
 	inc	rdi
 	xor	r8d, r8d
 	cmp	rdi, rcx
-	je	.LBB33_16
-.LBB33_20:                              #   Parent Loop BB33_17 Depth=1
+	je	.LBB25_16
+.LBB25_20:                              #   Parent Loop BB25_17 Depth=1
                                         # =>  This Inner Loop Header: Depth=2
 	test	r8b, 1
-	je	.LBB33_19
-# %bb.21:                               #   in Loop: Header=BB33_20 Depth=2
+	je	.LBB25_19
+# %bb.21:                               #   in Loop: Header=BB25_20 Depth=2
 	movzx	r8d, byte ptr [rdi + rsi]
 	add	r8b, -49
 	shlx	r9d, r13d, r8d
@@ -6063,20 +4174,78 @@ sequence_filtration:                    # @sequence_filtration
 	setne	r8b
 	inc	rdi
 	cmp	rdi, rcx
-	jne	.LBB33_20
-# %bb.22:                               #   in Loop: Header=BB33_17 Depth=1
+	jne	.LBB25_20
+# %bb.22:                               #   in Loop: Header=BB25_17 Depth=1
 	test	r9b, r9b
-	jne	.LBB33_15
-	jmp	.LBB33_16
-.LBB33_23:
-	movsxd	rdi, r15d
-	mov	r15d, dword ptr [rbp - 128]     # 4-byte Reload
-	movzx	edx, r15b
+	jne	.LBB25_15
+	jmp	.LBB25_16
+.LBB25_23:
+	movsxd	r13, r15d
 	mov	r14d, dword ptr [rbp - 96]      # 4-byte Reload
-	mov	esi, r14d
+	movzx	edx, r14b
+	mov	rdi, r13
+	mov	r15d, dword ptr [rbp - 128]     # 4-byte Reload
+	mov	esi, r15d
 	vzeroupper
 	call	generate_filtered_sequences
 	mov	r12, rax
+	lea	rax, [rip + .L.str.86]
+	lea	rbx, [rip + .L.str.87]
+	cmp	r12, r13
+	jne	.LBB25_25
+# %bb.24:
+	test	r14b, r14b
+	cmovne	rbx, rax
+	jmp	.LBB25_26
+.LBB25_25:
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 631
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rax, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	test	r14b, r14b
+	lea	rax, [rip + .L.str.86]
+	cmovne	rbx, rax
+	lea	rsi, [rip + .L.str.85]
+	mov	rdx, r13
+	mov	rcx, rbx
+	mov	r8d, r15d
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	r14, qword ptr [rip + stderr@GOTPCREL]
+	mov	rsi, qword ptr [r14]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r14]
+	call	fflush@PLT
+.LBB25_26:
+	mov	r14, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [r14]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 635
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r14]
+	lea	rsi, [rip + .L.str.90]
+	mov	rdx, r12
+	mov	rcx, rbx
+	mov	r8d, r15d
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rsi, qword ptr [r14]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r14]
+	call	fflush@PLT
 	movsxd	rdx, dword ptr [rip + length]
 	mov	r13d, edx
 	mov	rbx, rsp
@@ -6088,11 +4257,12 @@ sequence_filtration:                    # @sequence_filtration
 	xor	esi, esi
 	call	memset@PLT
 	test	r12, r12
-	je	.LBB33_36
-# %bb.24:
+	mov	r10d, dword ptr [rbp - 96]      # 4-byte Reload
+	je	.LBB25_39
+# %bb.27:
 	test	r13d, r13d
-	jle	.LBB33_36
-# %bb.25:
+	jle	.LBB25_39
+# %bb.28:
 	mov	rax, qword ptr [rip + filtered_sequences]
 	mov	ecx, r13d
 	and	ecx, 2147483616
@@ -6100,32 +4270,32 @@ sequence_filtration:                    # @sequence_filtration
 	and	edx, 2147483632
 	xor	esi, esi
 	mov	edi, 1
-	vpbroadcastd	ymm0, dword ptr [rip + .LCPI33_7] # ymm0 = [4294967247,4294967247,4294967247,4294967247,4294967247,4294967247,4294967247,4294967247]
-	vpbroadcastd	ymm1, dword ptr [rip + .LCPI33_8] # ymm1 = [1,1,1,1,1,1,1,1]
-	vpbroadcastd	ymm2, dword ptr [rip + .LCPI33_9] # ymm2 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
-	jmp	.LBB33_27
+	vpbroadcastd	ymm0, dword ptr [rip + .LCPI25_7] # ymm0 = [4294967247,4294967247,4294967247,4294967247,4294967247,4294967247,4294967247,4294967247]
+	vpbroadcastd	ymm1, dword ptr [rip + .LCPI25_8] # ymm1 = [1,1,1,1,1,1,1,1]
+	vpbroadcastd	ymm2, dword ptr [rip + .LCPI25_9] # ymm2 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
+	jmp	.LBB25_30
 	.p2align	4, 0x90
-.LBB33_26:                              #   in Loop: Header=BB33_27 Depth=1
+.LBB25_29:                              #   in Loop: Header=BB25_30 Depth=1
 	inc	rsi
 	add	rax, 8
 	cmp	rsi, r12
-	je	.LBB33_36
-.LBB33_27:                              # =>This Loop Header: Depth=1
-                                        #     Child Loop BB33_32 Depth 2
-                                        #     Child Loop BB33_30 Depth 2
-                                        #     Child Loop BB33_35 Depth 2
+	je	.LBB25_39
+.LBB25_30:                              # =>This Loop Header: Depth=1
+                                        #     Child Loop BB25_35 Depth 2
+                                        #     Child Loop BB25_33 Depth 2
+                                        #     Child Loop BB25_38 Depth 2
 	cmp	r13d, 16
-	jae	.LBB33_29
-# %bb.28:                               #   in Loop: Header=BB33_27 Depth=1
+	jae	.LBB25_32
+# %bb.31:                               #   in Loop: Header=BB25_30 Depth=1
 	xor	r9d, r9d
-	jmp	.LBB33_35
+	jmp	.LBB25_38
 	.p2align	4, 0x90
-.LBB33_29:                              #   in Loop: Header=BB33_27 Depth=1
+.LBB25_32:                              #   in Loop: Header=BB25_30 Depth=1
 	xor	r8d, r8d
 	cmp	r13d, 32
-	jae	.LBB33_32
+	jae	.LBB25_35
 	.p2align	4, 0x90
-.LBB33_30:                              #   Parent Loop BB33_27 Depth=1
+.LBB25_33:                              #   Parent Loop BB25_30 Depth=1
                                         # =>  This Inner Loop Header: Depth=2
 	vpmovsxbd	ymm3, qword ptr [rax + r8]
 	vpmovsxbd	ymm4, qword ptr [rax + r8 + 8]
@@ -6143,14 +4313,14 @@ sequence_filtration:                    # @sequence_filtration
 	vmovdqa	xmmword ptr [rbx + r8], xmm3
 	add	r8, 16
 	cmp	rdx, r8
-	jne	.LBB33_30
-# %bb.31:                               #   in Loop: Header=BB33_27 Depth=1
+	jne	.LBB25_33
+# %bb.34:                               #   in Loop: Header=BB25_30 Depth=1
 	mov	r9, rdx
 	cmp	edx, r13d
-	jne	.LBB33_35
-	jmp	.LBB33_26
+	jne	.LBB25_38
+	jmp	.LBB25_29
 	.p2align	4, 0x90
-.LBB33_32:                              #   Parent Loop BB33_27 Depth=1
+.LBB25_35:                              #   Parent Loop BB25_30 Depth=1
                                         # =>  This Inner Loop Header: Depth=2
 	vpmovsxbd	ymm3, qword ptr [rax + r8]
 	vpmovsxbd	ymm4, qword ptr [rax + r8 + 8]
@@ -6178,17 +4348,17 @@ sequence_filtration:                    # @sequence_filtration
 	vmovdqu	ymmword ptr [rbx + r8], ymm3
 	add	r8, 32
 	cmp	rcx, r8
-	jne	.LBB33_32
-# %bb.33:                               #   in Loop: Header=BB33_27 Depth=1
+	jne	.LBB25_35
+# %bb.36:                               #   in Loop: Header=BB25_30 Depth=1
 	cmp	ecx, r13d
-	je	.LBB33_26
-# %bb.34:                               #   in Loop: Header=BB33_27 Depth=1
+	je	.LBB25_29
+# %bb.37:                               #   in Loop: Header=BB25_30 Depth=1
 	mov	r8, rcx
 	mov	r9, rcx
 	test	r13b, 16
-	jne	.LBB33_30
+	jne	.LBB25_33
 	.p2align	4, 0x90
-.LBB33_35:                              #   Parent Loop BB33_27 Depth=1
+.LBB25_38:                              #   Parent Loop BB25_30 Depth=1
                                         # =>  This Inner Loop Header: Depth=2
 	movzx	r8d, byte ptr [rax + r9]
 	add	r8b, -49
@@ -6196,51 +4366,51 @@ sequence_filtration:                    # @sequence_filtration
 	or	byte ptr [rbx + r9], r8b
 	inc	r9
 	cmp	r13, r9
-	jne	.LBB33_35
-	jmp	.LBB33_26
-.LBB33_36:
-	test	r15b, r15b
-	je	.LBB33_40
-# %bb.37:
+	jne	.LBB25_38
+	jmp	.LBB25_29
+.LBB25_39:
+	test	r10b, r10b
+	je	.LBB25_43
+# %bb.40:
 	test	r13d, r13d
-	jle	.LBB33_44
-# %bb.38:
-	movsxd	rcx, r14d
-	cmp	r13d, 16
-	jae	.LBB33_45
-# %bb.39:
-	xor	edx, edx
-	xor	eax, eax
-	jmp	.LBB33_56
-.LBB33_40:
-	test	r13d, r13d
-	jle	.LBB33_44
+	jle	.LBB25_47
 # %bb.41:
-	movsxd	rcx, r14d
-	cmp	r13d, 17
-	jae	.LBB33_47
+	movsxd	rcx, r15d
+	cmp	r13d, 16
+	jae	.LBB25_48
 # %bb.42:
 	xor	edx, edx
 	xor	eax, eax
-	jmp	.LBB33_64
-.LBB33_44:
+	jmp	.LBB25_59
+.LBB25_43:
+	test	r13d, r13d
+	jle	.LBB25_47
+# %bb.44:
+	movsxd	rcx, r15d
+	cmp	r13d, 17
+	jae	.LBB25_50
+# %bb.45:
+	xor	edx, edx
 	xor	eax, eax
-	jmp	.LBB33_66
-.LBB33_45:
+	jmp	.LBB25_67
+.LBB25_47:
+	xor	eax, eax
+	jmp	.LBB25_69
+.LBB25_48:
 	cmp	r13d, 128
-	jae	.LBB33_49
-# %bb.46:
+	jae	.LBB25_52
+# %bb.49:
 	xor	eax, eax
 	xor	edx, edx
-	jmp	.LBB33_53
-.LBB33_47:
+	jmp	.LBB25_56
+.LBB25_50:
 	cmp	r13d, 129
-	jae	.LBB33_58
-# %bb.48:
+	jae	.LBB25_61
+# %bb.51:
 	xor	eax, eax
 	xor	edx, edx
-	jmp	.LBB33_61
-.LBB33_49:
+	jmp	.LBB25_64
+.LBB25_52:
 	mov	edx, r13d
 	and	edx, 2147483520
 	lea	rax, [rip + con]
@@ -6253,7 +4423,7 @@ sequence_filtration:                    # @sequence_filtration
 	vpxor	xmm3, xmm3, xmm3
 	vpxor	xmm4, xmm4, xmm4
 	.p2align	4, 0x90
-.LBB33_50:                              # =>This Inner Loop Header: Depth=1
+.LBB25_53:                              # =>This Inner Loop Header: Depth=1
 	vmovdqu	ymm5, ymmword ptr [rax + rsi - 96]
 	vmovdqu	ymm6, ymmword ptr [rax + rsi - 64]
 	vmovdqu	ymm7, ymmword ptr [rax + rsi - 32]
@@ -6280,21 +4450,21 @@ sequence_filtration:                    # @sequence_filtration
 	vmovdqu	ymmword ptr [rax + rsi], ymm12
 	sub	rsi, -128
 	cmp	rdx, rsi
-	jne	.LBB33_50
-# %bb.51:
+	jne	.LBB25_53
+# %bb.54:
 	vpor	ymm0, ymm2, ymm0
 	vpor	ymm0, ymm3, ymm0
 	vpor	ymm0, ymm4, ymm0
-	vgf2p8affineqb	ymm0, ymm0, ymmword ptr [rip + .LCPI33_14], 0
+	vgf2p8affineqb	ymm0, ymm0, ymmword ptr [rip + .LCPI25_14], 0
 	vpmovmskb	eax, ymm0
 	test	eax, eax
 	setne	al
 	cmp	edx, r13d
-	je	.LBB33_66
-# %bb.52:
+	je	.LBB25_69
+# %bb.55:
 	test	r13b, 112
-	je	.LBB33_56
-.LBB33_53:
+	je	.LBB25_59
+.LBB25_56:
 	mov	r8, rdx
 	mov	edx, r13d
 	and	edx, 2147483632
@@ -6309,7 +4479,7 @@ sequence_filtration:                    # @sequence_filtration
 	xor	r8d, r8d
 	vpcmpeqd	xmm1, xmm1, xmm1
 	.p2align	4, 0x90
-.LBB33_54:                              # =>This Inner Loop Header: Depth=1
+.LBB25_57:                              # =>This Inner Loop Header: Depth=1
 	vmovdqu	xmm2, xmmword ptr [rax + r8]
 	vpand	xmm3, xmm2, xmmword ptr [rsi + r8]
 	vpcmpeqb	xmm2, xmm3, xmm2
@@ -6318,13 +4488,13 @@ sequence_filtration:                    # @sequence_filtration
 	vmovdqu	xmmword ptr [rax + r8], xmm3
 	add	r8, 16
 	cmp	rdi, r8
-	jne	.LBB33_54
-# %bb.55:
-	vptest	xmm0, xmmword ptr [rip + .LCPI33_15]
+	jne	.LBB25_57
+# %bb.58:
+	vptest	xmm0, xmmword ptr [rip + .LCPI25_15]
 	setne	al
 	cmp	edx, r13d
-	je	.LBB33_66
-.LBB33_56:
+	je	.LBB25_69
+.LBB25_59:
 	add	rbx, rdx
 	lea	rsi, [rdx + 8*rcx]
 	lea	rcx, [rip + con]
@@ -6332,7 +4502,7 @@ sequence_filtration:                    # @sequence_filtration
 	sub	r13, rdx
 	xor	edx, edx
 	.p2align	4, 0x90
-.LBB33_57:                              # =>This Inner Loop Header: Depth=1
+.LBB25_60:                              # =>This Inner Loop Header: Depth=1
 	movzx	esi, byte ptr [rcx + rdx]
 	movzx	edi, byte ptr [rbx + rdx]
 	and	dil, sil
@@ -6342,9 +4512,9 @@ sequence_filtration:                    # @sequence_filtration
 	mov	byte ptr [rcx + rdx], dil
 	inc	rdx
 	cmp	r13, rdx
-	jne	.LBB33_57
-	jmp	.LBB33_66
-.LBB33_58:
+	jne	.LBB25_60
+	jmp	.LBB25_69
+.LBB25_61:
 	mov	eax, r13d
 	and	eax, 127
 	mov	esi, 128
@@ -6355,25 +4525,25 @@ sequence_filtration:                    # @sequence_filtration
 	add	rax, rcx
 	vpxor	xmm0, xmm0, xmm0
 	xor	edi, edi
-	vpmovsxbd	ymm1, qword ptr [rip + .LCPI33_17] # ymm1 = [0,2,2,3,0,2,4,6]
+	vpmovsxbd	ymm1, qword ptr [rip + .LCPI25_17] # ymm1 = [0,2,2,3,0,2,4,6]
 	vpxor	xmm4, xmm4, xmm4
 	vpxor	xmm6, xmm6, xmm6
 	vpxor	xmm3, xmm3, xmm3
-	vpbroadcastd	ymm7, dword ptr [rip + .LCPI33_18] # ymm7 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
-	vpbroadcastd	ymm8, dword ptr [rip + .LCPI33_18] # ymm8 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
-	vpbroadcastd	ymm9, dword ptr [rip + .LCPI33_18] # ymm9 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
-	vpbroadcastw	xmm11, word ptr [rip + .LCPI33_16] # xmm11 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm12, word ptr [rip + .LCPI33_16] # xmm12 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm13, word ptr [rip + .LCPI33_16] # xmm13 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastd	ymm7, dword ptr [rip + .LCPI25_18] # ymm7 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
+	vpbroadcastd	ymm8, dword ptr [rip + .LCPI25_18] # ymm8 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
+	vpbroadcastd	ymm9, dword ptr [rip + .LCPI25_18] # ymm9 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
+	vpbroadcastw	xmm11, word ptr [rip + .LCPI25_16] # xmm11 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm12, word ptr [rip + .LCPI25_16] # xmm12 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm13, word ptr [rip + .LCPI25_16] # xmm13 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	.p2align	4, 0x90
-.LBB33_59:                              # =>This Inner Loop Header: Depth=1
+.LBB25_62:                              # =>This Inner Loop Header: Depth=1
 	vmovdqu	ymmword ptr [rbp - 96], ymm3    # 32-byte Spill
 	vmovdqu	ymmword ptr [rbp - 160], ymm6   # 32-byte Spill
 	vmovdqu	ymmword ptr [rbp - 192], ymm4   # 32-byte Spill
 	vmovdqu	ymmword ptr [rbp - 128], ymm0   # 32-byte Spill
 	vxorps	xmm2, xmm2, xmm2
 	vpermd	ymm2, ymm1, ymmword ptr [rax + 8*rdi + 224]
-	vpbroadcastd	ymm6, dword ptr [rip + .LCPI33_18] # ymm6 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
+	vpbroadcastd	ymm6, dword ptr [rip + .LCPI25_18] # ymm6 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
 	vpshufb	ymm2, ymm2, ymm6
 	vxorps	xmm3, xmm3, xmm3
 	vpermd	ymm3, ymm1, ymmword ptr [rax + 8*rdi + 192]
@@ -6388,7 +4558,7 @@ sequence_filtration:                    # @sequence_filtration
 	vpblendd	ymm3, ymm4, ymm3, 32            # ymm3 = ymm4[0,1,2,3,4],ymm3[5],ymm4[6,7]
 	vpblendd	ymm2, ymm3, ymm2, 192           # ymm2 = ymm3[0,1,2,3,4,5],ymm2[6,7]
 	vmovdqu	xmm3, xmmword ptr [rax + 8*rdi + 112]
-	vpbroadcastw	xmm0, word ptr [rip + .LCPI33_16] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm0, word ptr [rip + .LCPI25_16] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpshufb	xmm3, xmm3, xmm0
 	vmovdqu	xmm4, xmmword ptr [rax + 8*rdi + 96]
 	vpshufb	xmm4, xmm4, xmm0
@@ -6686,18 +4856,18 @@ sequence_filtration:                    # @sequence_filtration
 	vpextrb	byte ptr [rax + 8*rdi + 1016], xmm2, 15
 	sub	rdi, -128
 	cmp	rdx, rdi
-	jne	.LBB33_59
-# %bb.60:
+	jne	.LBB25_62
+# %bb.63:
 	vpor	ymm0, ymm4, ymm0
 	vpor	ymm0, ymm6, ymm0
 	vpor	ymm0, ymm3, ymm0
-	vgf2p8affineqb	ymm0, ymm0, ymmword ptr [rip + .LCPI33_14], 0
+	vgf2p8affineqb	ymm0, ymm0, ymmword ptr [rip + .LCPI25_14], 0
 	vpmovmskb	eax, ymm0
 	test	eax, eax
 	setne	al
 	cmp	esi, 16
-	jbe	.LBB33_64
-.LBB33_61:
+	jbe	.LBB25_67
+.LBB25_64:
 	mov	rsi, rdx
 	mov	edx, r13d
 	and	edx, 15
@@ -6709,13 +4879,13 @@ sequence_filtration:                    # @sequence_filtration
 	vpbroadcastb	xmm0, xmm0
 	lea	rax, [rip + con]
 	add	rax, rcx
-	vpbroadcastw	xmm1, word ptr [rip + .LCPI33_16] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm2, word ptr [rip + .LCPI33_16] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm3, word ptr [rip + .LCPI33_16] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
-	vpbroadcastw	xmm4, word ptr [rip + .LCPI33_16] # xmm4 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm1, word ptr [rip + .LCPI25_16] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm2, word ptr [rip + .LCPI25_16] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm3, word ptr [rip + .LCPI25_16] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm4, word ptr [rip + .LCPI25_16] # xmm4 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
 	vpcmpeqd	xmm5, xmm5, xmm5
 	.p2align	4, 0x90
-.LBB33_62:                              # =>This Inner Loop Header: Depth=1
+.LBB25_65:                              # =>This Inner Loop Header: Depth=1
 	vmovdqu	ymm6, ymmword ptr [rax + 8*rsi]
 	vmovdqu	ymm7, ymmword ptr [rax + 8*rsi + 32]
 	vmovdqu	ymm8, ymmword ptr [rax + 8*rsi + 64]
@@ -6761,11 +4931,11 @@ sequence_filtration:                    # @sequence_filtration
 	vpextrb	byte ptr [rax + 8*rsi + 120], xmm7, 15
 	add	rsi, 16
 	cmp	rdx, rsi
-	jne	.LBB33_62
-# %bb.63:
-	vptest	xmm0, xmmword ptr [rip + .LCPI33_15]
+	jne	.LBB25_65
+# %bb.66:
+	vptest	xmm0, xmmword ptr [rip + .LCPI25_15]
 	setne	al
-.LBB33_64:
+.LBB25_67:
 	add	rbx, rdx
 	lea	rsi, [rcx + 8*rdx]
 	lea	rcx, [rip + con]
@@ -6773,7 +4943,7 @@ sequence_filtration:                    # @sequence_filtration
 	sub	r13, rdx
 	xor	edx, edx
 	.p2align	4, 0x90
-.LBB33_65:                              # =>This Inner Loop Header: Depth=1
+.LBB25_68:                              # =>This Inner Loop Header: Depth=1
 	movzx	esi, byte ptr [rcx + 8*rdx]
 	movzx	edi, byte ptr [rbx + rdx]
 	and	dil, sil
@@ -6783,12 +4953,12 @@ sequence_filtration:                    # @sequence_filtration
 	mov	byte ptr [rcx + 8*rdx], dil
 	inc	rdx
 	cmp	r13, rdx
-	jne	.LBB33_65
-.LBB33_66:
+	jne	.LBB25_68
+.LBB25_69:
 	mov	rcx, qword ptr fs:[40]
 	cmp	rcx, qword ptr [rbp - 48]
-	jne	.LBB33_68
-# %bb.67:
+	jne	.LBB25_71
+# %bb.70:
 	and	al, 1
                                         # kill: def $al killed $al killed $rax
 	lea	rsp, [rbp - 40]
@@ -6801,74 +4971,240 @@ sequence_filtration:                    # @sequence_filtration
 	.cfi_def_cfa rsp, 8
 	vzeroupper
 	ret
-.LBB33_68:
+.LBB25_71:
 	.cfi_def_cfa rbp, 16
 	vzeroupper
 	call	__stack_chk_fail@PLT
-.Lfunc_end33:
-	.size	sequence_filtration, .Lfunc_end33-sequence_filtration
+.Lfunc_end25:
+	.size	sequence_filtration, .Lfunc_end25-sequence_filtration
 	.cfi_endproc
                                         # -- End function
-	.globl	apply_sequence_filtration       # -- Begin function apply_sequence_filtration
+	.globl	col_filled                      # -- Begin function col_filled
 	.p2align	4, 0x90
-	.type	apply_sequence_filtration,@function
-apply_sequence_filtration:              # @apply_sequence_filtration
+	.type	col_filled,@function
+col_filled:                             # @col_filled
 	.cfi_startproc
 # %bb.0:
-	push	rbp
-	.cfi_def_cfa_offset 16
-	push	rbx
-	.cfi_def_cfa_offset 24
-	push	rax
-	.cfi_def_cfa_offset 32
-	.cfi_offset rbx, -24
-	.cfi_offset rbp, -16
-	xor	ebx, ebx
-	cmp	dword ptr [rip + length], 0
-	jle	.LBB34_1
-# %bb.3:
-	xor	ebp, ebp
-	jmp	.LBB34_4
+	movsxd	rsi, dword ptr [rip + length]
+	test	rsi, rsi
+	jle	.LBB26_9
+# %bb.1:
+	mov	eax, 1
+	shlx	ecx, eax, edi
+	mov	edx, esi
+	and	edx, 7
+	cmp	esi, 8
+	jae	.LBB26_10
+# %bb.2:
+	mov	al, 1
+	xor	edi, edi
+	jmp	.LBB26_3
+.LBB26_9:
+	mov	al, 1
+	and	al, 1
+                                        # kill: def $al killed $al killed $eax
+	ret
+.LBB26_10:
+	and	esi, 2147483640
+	mov	al, 1
+	xor	edi, edi
+	lea	r8, [rip + con]
 	.p2align	4, 0x90
-.LBB34_7:                               #   in Loop: Header=BB34_4 Depth=1
-	inc	ebx
-	cmp	ebx, dword ptr [rip + length]
-	jge	.LBB34_2
-.LBB34_4:                               # =>This Inner Loop Header: Depth=1
-	mov	eax, ebp
-	mov	bpl, 1
+.LBB26_13:                              # =>This Inner Loop Header: Depth=1
 	test	al, 1
-	jne	.LBB34_7
-# %bb.5:                                #   in Loop: Header=BB34_4 Depth=1
-	mov	edi, ebx
-	mov	esi, 1
-	call	sequence_filtration
-	test	al, al
-	jne	.LBB34_7
-# %bb.6:                                #   in Loop: Header=BB34_4 Depth=1
-	mov	edi, ebx
-	xor	esi, esi
-	call	sequence_filtration
-	mov	ebp, eax
-	jmp	.LBB34_7
-.LBB34_1:
-	xor	ebp, ebp
-.LBB34_2:
-	mov	eax, ebp
-	add	rsp, 8
-	.cfi_def_cfa_offset 24
-	pop	rbx
+	je	.LBB26_11
+# %bb.14:                               #   in Loop: Header=BB26_13 Depth=1
+	movzx	eax, byte ptr [rdi + r8 + 64]
+	test	ecx, eax
+	je	.LBB26_11
+# %bb.15:                               #   in Loop: Header=BB26_13 Depth=1
+	movzx	eax, byte ptr [rdi + r8 + 65]
+	test	ecx, eax
+	je	.LBB26_11
+# %bb.16:                               #   in Loop: Header=BB26_13 Depth=1
+	movzx	eax, byte ptr [rdi + r8 + 66]
+	test	ecx, eax
+	je	.LBB26_11
+# %bb.17:                               #   in Loop: Header=BB26_13 Depth=1
+	movzx	eax, byte ptr [rdi + r8 + 67]
+	test	ecx, eax
+	je	.LBB26_11
+# %bb.18:                               #   in Loop: Header=BB26_13 Depth=1
+	movzx	eax, byte ptr [rdi + r8 + 68]
+	test	ecx, eax
+	je	.LBB26_11
+# %bb.19:                               #   in Loop: Header=BB26_13 Depth=1
+	movzx	eax, byte ptr [rdi + r8 + 69]
+	test	ecx, eax
+	je	.LBB26_11
+# %bb.20:                               #   in Loop: Header=BB26_13 Depth=1
+	movzx	eax, byte ptr [rdi + r8 + 70]
+	test	ecx, eax
+	je	.LBB26_11
+# %bb.21:                               #   in Loop: Header=BB26_13 Depth=1
+	movzx	eax, byte ptr [rdi + r8 + 71]
+	test	ecx, eax
+	setne	al
+	add	rdi, 8
+	cmp	rsi, rdi
+	jne	.LBB26_13
+	jmp	.LBB26_3
+	.p2align	4, 0x90
+.LBB26_11:                              #   in Loop: Header=BB26_13 Depth=1
+	xor	eax, eax
+	add	rdi, 8
+	cmp	rsi, rdi
+	jne	.LBB26_13
+.LBB26_3:
+	test	rdx, rdx
+	je	.LBB26_8
+# %bb.4:
+	lea	rsi, [rip + con]
+	add	rsi, rdi
+	add	rsi, 64
+	xor	edi, edi
+	jmp	.LBB26_6
+	.p2align	4, 0x90
+.LBB26_5:                               #   in Loop: Header=BB26_6 Depth=1
+	movzx	eax, byte ptr [rsi + rdi]
+	test	ecx, eax
+	setne	al
+	inc	rdi
+	cmp	rdx, rdi
+	je	.LBB26_8
+.LBB26_6:                               # =>This Inner Loop Header: Depth=1
+	test	al, 1
+	jne	.LBB26_5
+# %bb.7:                                #   in Loop: Header=BB26_6 Depth=1
+	xor	eax, eax
+	inc	rdi
+	cmp	rdx, rdi
+	jne	.LBB26_6
+.LBB26_8:
+	and	al, 1
+                                        # kill: def $al killed $al killed $eax
+	ret
+.Lfunc_end26:
+	.size	col_filled, .Lfunc_end26-col_filled
+	.cfi_endproc
+                                        # -- End function
+	.globl	edge_constraint                 # -- Begin function edge_constraint
+	.p2align	4, 0x90
+	.type	edge_constraint,@function
+edge_constraint:                        # @edge_constraint
+	.cfi_startproc
+# %bb.0:
+	push	rbx
 	.cfi_def_cfa_offset 16
-	pop	rbp
+	.cfi_offset rbx, -16
+	mov	r8d, dword ptr [rip + length]
+	movsxd	rax, esi
+	lea	rsi, [rip + top_key]
+	lea	r9, [rip + bottom_key]
+	movsxd	rcx, edi
+	lea	rdi, [rip + left_key]
+	lea	rdx, [rip + right_key]
+	lea	r10d, [r8 + rcx]
+	inc	r10d
+	sub	r10d, dword ptr [rsi + 4*rax]
+	mov	esi, -1
+	shlx	r10d, esi, r10d
+	lea	r11d, [r8 + rax]
+	inc	r11d
+                                        # kill: def $r8d killed $r8d killed $r8
+	add	r8d, r8d
+	mov	r9d, dword ptr [r9 + 4*rax]
+	add	r9d, ecx
+	mov	ebx, r8d
+	sub	ebx, r9d
+	shlx	r9d, esi, ebx
+	or	r9d, r10d
+	sub	r11d, dword ptr [rdi + 4*rcx]
+	add	eax, dword ptr [rdx + 4*rcx]
+	shlx	ecx, esi, r11d
+	sub	r8d, eax
+	shlx	eax, esi, r8d
+	or	eax, ecx
+	or	eax, r9d
+	cmp	al, -1
+	je	.LBB27_2
+# %bb.1:
+	not	al
+                                        # kill: def $al killed $al killed $eax
+	pop	rbx
 	.cfi_def_cfa_offset 8
 	ret
-.Lfunc_end34:
-	.size	apply_sequence_filtration, .Lfunc_end34-apply_sequence_filtration
+.LBB27_2:
+	.cfi_def_cfa_offset 16
+	lea	rdi, [rip + .L.str.60]
+	lea	rsi, [rip + .L.str.1]
+	lea	rcx, [rip + .L__PRETTY_FUNCTION__.edge_constraint]
+	mov	edx, 386
+	call	__assert_fail@PLT
+.Lfunc_end27:
+	.size	edge_constraint, .Lfunc_end27-edge_constraint
 	.cfi_endproc
                                         # -- End function
 	.section	.rodata.cst32,"aM",@progbits,32
-	.p2align	5, 0x0                          # -- Begin function solve
-.LCPI35_0:
+	.p2align	5, 0x0                          # -- Begin function edge_clue_initialization
+.LCPI28_0:
+	.long	8                               # 0x8
+	.long	9                               # 0x9
+	.long	10                              # 0xa
+	.long	11                              # 0xb
+	.long	12                              # 0xc
+	.long	13                              # 0xd
+	.long	14                              # 0xe
+	.long	15                              # 0xf
+.LCPI28_1:
+	.long	0                               # 0x0
+	.long	1                               # 0x1
+	.long	2                               # 0x2
+	.long	3                               # 0x3
+	.long	4                               # 0x4
+	.long	5                               # 0x5
+	.long	6                               # 0x6
+	.long	7                               # 0x7
+.LCPI28_7:
+	.long	24                              # 0x18
+	.long	25                              # 0x19
+	.long	26                              # 0x1a
+	.long	27                              # 0x1b
+	.long	28                              # 0x1c
+	.long	29                              # 0x1d
+	.long	30                              # 0x1e
+	.long	31                              # 0x1f
+.LCPI28_8:
+	.long	16                              # 0x10
+	.long	17                              # 0x11
+	.long	18                              # 0x12
+	.long	19                              # 0x13
+	.long	20                              # 0x14
+	.long	21                              # 0x15
+	.long	22                              # 0x16
+	.long	23                              # 0x17
+	.section	.rodata.cst4,"aM",@progbits,4
+	.p2align	2, 0x0
+.LCPI28_2:
+	.long	822083584                       # 0x31000000
+.LCPI28_3:
+	.long	4294967247                      # 0xffffffcf
+.LCPI28_4:
+	.long	1                               # 0x1
+.LCPI28_5:
+	.long	16                              # 0x10
+.LCPI28_6:
+	.long	8                               # 0x8
+.LCPI28_9:
+	.byte	255                             # 0xff
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+	.byte	0                               # 0x0
+.LCPI28_10:
+	.long	32                              # 0x20
+	.section	.rodata.cst8,"aM",@progbits,8
+.LCPI28_11:
+	.byte	0                               # 0x0
 	.byte	1                               # 0x1
 	.byte	2                               # 0x2
 	.byte	3                               # 0x3
@@ -6876,6 +5212,7 @@ apply_sequence_filtration:              # @apply_sequence_filtration
 	.byte	5                               # 0x5
 	.byte	6                               # 0x6
 	.byte	7                               # 0x7
+.LCPI28_12:
 	.byte	8                               # 0x8
 	.byte	9                               # 0x9
 	.byte	10                              # 0xa
@@ -6884,6 +5221,7 @@ apply_sequence_filtration:              # @apply_sequence_filtration
 	.byte	13                              # 0xd
 	.byte	14                              # 0xe
 	.byte	15                              # 0xf
+.LCPI28_13:
 	.byte	16                              # 0x10
 	.byte	17                              # 0x11
 	.byte	18                              # 0x12
@@ -6892,6 +5230,7 @@ apply_sequence_filtration:              # @apply_sequence_filtration
 	.byte	21                              # 0x15
 	.byte	22                              # 0x16
 	.byte	23                              # 0x17
+.LCPI28_14:
 	.byte	24                              # 0x18
 	.byte	25                              # 0x19
 	.byte	26                              # 0x1a
@@ -6900,12 +5239,1329 @@ apply_sequence_filtration:              # @apply_sequence_filtration
 	.byte	29                              # 0x1d
 	.byte	30                              # 0x1e
 	.byte	31                              # 0x1f
-	.byte	32                              # 0x20
-.LCPI35_1:
-	.zero	32,48
-.LCPI35_2:
-	.zero	32,32
-.LCPI35_6:
+	.text
+	.globl	edge_clue_initialization
+	.p2align	4, 0x90
+	.type	edge_clue_initialization,@function
+edge_clue_initialization:               # @edge_clue_initialization
+	.cfi_startproc
+# %bb.0:
+	push	rbp
+	.cfi_def_cfa_offset 16
+	push	r15
+	.cfi_def_cfa_offset 24
+	push	r14
+	.cfi_def_cfa_offset 32
+	push	r13
+	.cfi_def_cfa_offset 40
+	push	r12
+	.cfi_def_cfa_offset 48
+	push	rbx
+	.cfi_def_cfa_offset 56
+	sub	rsp, 24
+	.cfi_def_cfa_offset 80
+	.cfi_offset rbx, -56
+	.cfi_offset r12, -48
+	.cfi_offset r13, -40
+	.cfi_offset r14, -32
+	.cfi_offset r15, -24
+	.cfi_offset rbp, -16
+	movsxd	rcx, dword ptr [rip + length]
+	test	rcx, rcx
+	jle	.LBB28_17
+# %bb.1:
+	lea	eax, [rcx + 48]
+	mov	edx, ecx
+	and	edx, 2147483632
+	mov	qword ptr [rsp + 8], rdx        # 8-byte Spill
+	mov	r10d, ecx
+	and	r10d, 2147483640
+	mov	dword ptr [rsp + 20], eax       # 4-byte Spill
+	vmovd	xmm0, eax
+	vpbroadcastd	ymm0, xmm0
+	mov	r11d, ecx
+	and	r11d, 2147483616
+	mov	ebx, ecx
+	shr	ebx, 4
+	and	ebx, 134217727
+	shl	rbx, 7
+	lea	r14, [rip + con+120]
+	lea	r15, [rip + con+32]
+	lea	r12, [rip + con]
+	xor	r13d, r13d
+	mov	ebp, 1
+	vpmovsxbd	ymm1, qword ptr [rip + .LCPI28_11] # ymm1 = [0,1,2,3,4,5,6,7]
+	vpbroadcastd	ymm2, dword ptr [rip + .LCPI28_2] # ymm2 = [822083584,822083584,822083584,822083584,822083584,822083584,822083584,822083584]
+	vpbroadcastd	ymm3, dword ptr [rip + .LCPI28_3] # ymm3 = [4294967247,4294967247,4294967247,4294967247,4294967247,4294967247,4294967247,4294967247]
+	vpbroadcastd	ymm4, dword ptr [rip + .LCPI28_4] # ymm4 = [1,1,1,1,1,1,1,1]
+	vpbroadcastd	ymm5, dword ptr [rip + .LCPI28_6] # ymm5 = [8,8,8,8,8,8,8,8]
+	vpmovsxbd	ymm6, qword ptr [rip + .LCPI28_12] # ymm6 = [8,9,10,11,12,13,14,15]
+	mov	rax, r12
+	jmp	.LBB28_2
+	.p2align	4, 0x90
+.LBB28_72:                              #   in Loop: Header=BB28_2 Depth=1
+	inc	r13
+	inc	r14
+	inc	r15
+	inc	rax
+	add	r12, 8
+	cmp	r13, rcx
+	je	.LBB28_5
+.LBB28_2:                               # =>This Loop Header: Depth=1
+                                        #     Child Loop BB28_23 Depth 2
+                                        #     Child Loop BB28_27 Depth 2
+                                        #     Child Loop BB28_30 Depth 2
+                                        #     Child Loop BB28_36 Depth 2
+                                        #     Child Loop BB28_40 Depth 2
+                                        #     Child Loop BB28_43 Depth 2
+                                        #     Child Loop BB28_50 Depth 2
+                                        #     Child Loop BB28_54 Depth 2
+                                        #     Child Loop BB28_57 Depth 2
+                                        #     Child Loop BB28_64 Depth 2
+                                        #     Child Loop BB28_68 Depth 2
+                                        #     Child Loop BB28_71 Depth 2
+	lea	rdx, [rip + top_key]
+	cmp	dword ptr [rdx + 4*r13], ecx
+	jne	.LBB28_31
+# %bb.3:                                #   in Loop: Header=BB28_2 Depth=1
+	cmp	ecx, 8
+	jae	.LBB28_21
+# %bb.4:                                #   in Loop: Header=BB28_2 Depth=1
+	xor	r8d, r8d
+	jmp	.LBB28_29
+	.p2align	4, 0x90
+.LBB28_21:                              #   in Loop: Header=BB28_2 Depth=1
+	xor	edx, edx
+	cmp	ecx, 16
+	jae	.LBB28_22
+.LBB28_26:                              #   in Loop: Header=BB28_2 Depth=1
+	vmovd	xmm9, edx
+	vpbroadcastd	ymm9, xmm9
+	vpor	ymm9, ymm9, ymm1
+	.p2align	4, 0x90
+.LBB28_27:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	vpslld	ymm10, ymm9, 24
+	vpaddd	ymm10, ymm10, ymm2
+	vpsrad	ymm10, ymm10, 24
+	vpaddd	ymm10, ymm10, ymm3
+	vpsllvd	ymm10, ymm4, ymm10
+	vextracti128	xmm11, ymm10, 1
+	vpextrb	byte ptr [r15 + 8*rdx - 32], xmm10, 0
+	vpextrb	byte ptr [r15 + 8*rdx - 24], xmm10, 4
+	vpextrb	byte ptr [r15 + 8*rdx - 16], xmm10, 8
+	vpextrb	byte ptr [r15 + 8*rdx - 8], xmm10, 12
+	vpextrb	byte ptr [r15 + 8*rdx], xmm11, 0
+	vpextrb	byte ptr [r15 + 8*rdx + 8], xmm11, 4
+	vpextrb	byte ptr [r15 + 8*rdx + 16], xmm11, 8
+	vpextrb	byte ptr [r15 + 8*rdx + 24], xmm11, 12
+	add	rdx, 8
+	vpaddd	ymm9, ymm9, ymm5
+	cmp	r10, rdx
+	jne	.LBB28_27
+# %bb.28:                               #   in Loop: Header=BB28_2 Depth=1
+	mov	r8, r10
+	cmp	r10, rcx
+	jne	.LBB28_29
+	jmp	.LBB28_31
+.LBB28_22:                              #   in Loop: Header=BB28_2 Depth=1
+	vmovdqa	ymm9, ymm1
+	vmovdqa	ymm10, ymm6
+	.p2align	4, 0x90
+.LBB28_23:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	vpslld	ymm11, ymm9, 24
+	vpslld	ymm12, ymm10, 24
+	vpaddd	ymm12, ymm12, ymm2
+	vpaddd	ymm11, ymm11, ymm2
+	vpsrad	ymm11, ymm11, 24
+	vpsrad	ymm12, ymm12, 24
+	vpaddd	ymm12, ymm12, ymm3
+	vpaddd	ymm11, ymm11, ymm3
+	vpsllvd	ymm11, ymm4, ymm11
+	vpsllvd	ymm12, ymm4, ymm12
+	vextracti128	xmm13, ymm12, 1
+	vextracti128	xmm14, ymm11, 1
+	vpextrb	byte ptr [r14 + rdx - 120], xmm11, 0
+	vpextrb	byte ptr [r14 + rdx - 112], xmm11, 4
+	vpextrb	byte ptr [r14 + rdx - 104], xmm11, 8
+	vpextrb	byte ptr [r14 + rdx - 96], xmm11, 12
+	vpextrb	byte ptr [r14 + rdx - 88], xmm14, 0
+	vpextrb	byte ptr [r14 + rdx - 80], xmm14, 4
+	vpextrb	byte ptr [r14 + rdx - 72], xmm14, 8
+	vpextrb	byte ptr [r14 + rdx - 64], xmm14, 12
+	vpextrb	byte ptr [r14 + rdx - 56], xmm12, 0
+	vpextrb	byte ptr [r14 + rdx - 48], xmm12, 4
+	vpextrb	byte ptr [r14 + rdx - 40], xmm12, 8
+	vpextrb	byte ptr [r14 + rdx - 32], xmm12, 12
+	vpextrb	byte ptr [r14 + rdx - 24], xmm13, 0
+	vpextrb	byte ptr [r14 + rdx - 16], xmm13, 4
+	vpextrb	byte ptr [r14 + rdx - 8], xmm13, 8
+	vpextrb	byte ptr [r14 + rdx], xmm13, 12
+	vpbroadcastd	ymm11, dword ptr [rip + .LCPI28_5] # ymm11 = [16,16,16,16,16,16,16,16]
+	vpaddd	ymm9, ymm9, ymm11
+	vpaddd	ymm10, ymm10, ymm11
+	sub	rdx, -128
+	cmp	rbx, rdx
+	jne	.LBB28_23
+# %bb.24:                               #   in Loop: Header=BB28_2 Depth=1
+	cmp	qword ptr [rsp + 8], rcx        # 8-byte Folded Reload
+	je	.LBB28_31
+# %bb.25:                               #   in Loop: Header=BB28_2 Depth=1
+	mov	r8, qword ptr [rsp + 8]         # 8-byte Reload
+	mov	rdx, r8
+	test	cl, 8
+	jne	.LBB28_26
+	.p2align	4, 0x90
+.LBB28_29:                              #   in Loop: Header=BB28_2 Depth=1
+	mov	esi, r8d
+	shl	esi, 24
+	add	esi, 822083584
+	lea	rdi, [rax + 8*r8]
+	mov	r9, rcx
+	sub	r9, r8
+	xor	r8d, r8d
+	.p2align	4, 0x90
+.LBB28_30:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	mov	edx, esi
+	shr	edx, 24
+	add	dl, -49
+	shlx	edx, ebp, edx
+	mov	byte ptr [rdi + 8*r8], dl
+	add	esi, 16777216
+	inc	r8
+	cmp	r9, r8
+	jne	.LBB28_30
+.LBB28_31:                              #   in Loop: Header=BB28_2 Depth=1
+	lea	rdx, [rip + bottom_key]
+	cmp	dword ptr [rdx + 4*r13], ecx
+	jne	.LBB28_44
+# %bb.32:                               #   in Loop: Header=BB28_2 Depth=1
+	cmp	ecx, 8
+	jae	.LBB28_34
+# %bb.33:                               #   in Loop: Header=BB28_2 Depth=1
+	xor	r8d, r8d
+	jmp	.LBB28_42
+	.p2align	4, 0x90
+.LBB28_34:                              #   in Loop: Header=BB28_2 Depth=1
+	xor	edx, edx
+	cmp	ecx, 16
+	jae	.LBB28_35
+.LBB28_39:                              #   in Loop: Header=BB28_2 Depth=1
+	vmovd	xmm9, edx
+	vpbroadcastd	ymm9, xmm9
+	vpor	ymm9, ymm9, ymm1
+	.p2align	4, 0x90
+.LBB28_40:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	vpsubd	ymm10, ymm0, ymm9
+	vpslld	ymm10, ymm10, 24
+	vpsrad	ymm10, ymm10, 24
+	vpaddd	ymm10, ymm10, ymm3
+	vpsllvd	ymm10, ymm4, ymm10
+	vextracti128	xmm11, ymm10, 1
+	vpextrb	byte ptr [r15 + 8*rdx - 32], xmm10, 0
+	vpextrb	byte ptr [r15 + 8*rdx - 24], xmm10, 4
+	vpextrb	byte ptr [r15 + 8*rdx - 16], xmm10, 8
+	vpextrb	byte ptr [r15 + 8*rdx - 8], xmm10, 12
+	vpextrb	byte ptr [r15 + 8*rdx], xmm11, 0
+	vpextrb	byte ptr [r15 + 8*rdx + 8], xmm11, 4
+	vpextrb	byte ptr [r15 + 8*rdx + 16], xmm11, 8
+	vpextrb	byte ptr [r15 + 8*rdx + 24], xmm11, 12
+	add	rdx, 8
+	vpaddd	ymm9, ymm9, ymm5
+	cmp	r10, rdx
+	jne	.LBB28_40
+# %bb.41:                               #   in Loop: Header=BB28_2 Depth=1
+	mov	r8, r10
+	cmp	r10, rcx
+	jne	.LBB28_42
+	jmp	.LBB28_44
+.LBB28_35:                              #   in Loop: Header=BB28_2 Depth=1
+	vmovdqa	ymm9, ymm1
+	vmovdqa	ymm10, ymm6
+	.p2align	4, 0x90
+.LBB28_36:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	vpsubd	ymm11, ymm0, ymm10
+	vpsubd	ymm12, ymm0, ymm9
+	vpslld	ymm12, ymm12, 24
+	vpsrad	ymm12, ymm12, 24
+	vpslld	ymm11, ymm11, 24
+	vpsrad	ymm11, ymm11, 24
+	vpaddd	ymm11, ymm11, ymm3
+	vpaddd	ymm12, ymm12, ymm3
+	vpsllvd	ymm12, ymm4, ymm12
+	vpsllvd	ymm11, ymm4, ymm11
+	vextracti128	xmm13, ymm11, 1
+	vextracti128	xmm14, ymm12, 1
+	vpextrb	byte ptr [r14 + rdx - 120], xmm12, 0
+	vpextrb	byte ptr [r14 + rdx - 112], xmm12, 4
+	vpextrb	byte ptr [r14 + rdx - 104], xmm12, 8
+	vpextrb	byte ptr [r14 + rdx - 96], xmm12, 12
+	vpextrb	byte ptr [r14 + rdx - 88], xmm14, 0
+	vpextrb	byte ptr [r14 + rdx - 80], xmm14, 4
+	vpextrb	byte ptr [r14 + rdx - 72], xmm14, 8
+	vpextrb	byte ptr [r14 + rdx - 64], xmm14, 12
+	vpextrb	byte ptr [r14 + rdx - 56], xmm11, 0
+	vpextrb	byte ptr [r14 + rdx - 48], xmm11, 4
+	vpextrb	byte ptr [r14 + rdx - 40], xmm11, 8
+	vpextrb	byte ptr [r14 + rdx - 32], xmm11, 12
+	vpextrb	byte ptr [r14 + rdx - 24], xmm13, 0
+	vpextrb	byte ptr [r14 + rdx - 16], xmm13, 4
+	vpextrb	byte ptr [r14 + rdx - 8], xmm13, 8
+	vpextrb	byte ptr [r14 + rdx], xmm13, 12
+	vpbroadcastd	ymm11, dword ptr [rip + .LCPI28_5] # ymm11 = [16,16,16,16,16,16,16,16]
+	vpaddd	ymm9, ymm9, ymm11
+	vpaddd	ymm10, ymm10, ymm11
+	sub	rdx, -128
+	cmp	rbx, rdx
+	jne	.LBB28_36
+# %bb.37:                               #   in Loop: Header=BB28_2 Depth=1
+	cmp	qword ptr [rsp + 8], rcx        # 8-byte Folded Reload
+	je	.LBB28_44
+# %bb.38:                               #   in Loop: Header=BB28_2 Depth=1
+	mov	r8, qword ptr [rsp + 8]         # 8-byte Reload
+	mov	rdx, r8
+	test	cl, 8
+	jne	.LBB28_39
+	.p2align	4, 0x90
+.LBB28_42:                              #   in Loop: Header=BB28_2 Depth=1
+	mov	edx, dword ptr [rsp + 20]       # 4-byte Reload
+	sub	edx, r8d
+	shl	edx, 24
+	lea	rdi, [rax + 8*r8]
+	mov	r9, rcx
+	sub	r9, r8
+	xor	r8d, r8d
+	.p2align	4, 0x90
+.LBB28_43:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	mov	esi, edx
+	shr	esi, 24
+	add	sil, -49
+	shlx	esi, ebp, esi
+	mov	byte ptr [rdi + 8*r8], sil
+	add	edx, -16777216
+	inc	r8
+	cmp	r9, r8
+	jne	.LBB28_43
+.LBB28_44:                              #   in Loop: Header=BB28_2 Depth=1
+	lea	rdx, [rip + left_key]
+	cmp	dword ptr [rdx + 4*r13], ecx
+	jne	.LBB28_58
+# %bb.45:                               #   in Loop: Header=BB28_2 Depth=1
+	cmp	ecx, 16
+	jae	.LBB28_47
+# %bb.46:                               #   in Loop: Header=BB28_2 Depth=1
+	xor	r8d, r8d
+	jmp	.LBB28_56
+	.p2align	4, 0x90
+.LBB28_47:                              #   in Loop: Header=BB28_2 Depth=1
+	cmp	ecx, 32
+	jae	.LBB28_49
+# %bb.48:                               #   in Loop: Header=BB28_2 Depth=1
+	xor	edi, edi
+.LBB28_53:                              #   in Loop: Header=BB28_2 Depth=1
+	vmovd	xmm7, edi
+	vpbroadcastd	ymm7, xmm7
+	vpor	ymm9, ymm7, ymm6
+	vpor	ymm10, ymm7, ymm1
+	lea	rdx, [r12 + rdi]
+	mov	r9, qword ptr [rsp + 8]         # 8-byte Reload
+	sub	r9, rdi
+	xor	edi, edi
+	.p2align	4, 0x90
+.LBB28_54:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	vpslld	ymm7, ymm9, 24
+	vpslld	ymm8, ymm10, 24
+	vpaddd	ymm8, ymm8, ymm2
+	vpaddd	ymm7, ymm7, ymm2
+	vpsrad	ymm7, ymm7, 24
+	vpsrad	ymm8, ymm8, 24
+	vpaddd	ymm8, ymm8, ymm3
+	vpaddd	ymm7, ymm7, ymm3
+	vpsllvd	ymm7, ymm4, ymm7
+	vpsllvd	ymm8, ymm4, ymm8
+	vpbroadcastd	ymm11, dword ptr [rip + .LCPI28_9] # ymm11 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
+	vpand	ymm8, ymm8, ymm11
+	vpand	ymm7, ymm11, ymm7
+	vpackusdw	ymm7, ymm8, ymm7
+	vextracti128	xmm8, ymm7, 1
+	vpackuswb	xmm7, xmm7, xmm8
+	vpshufd	xmm7, xmm7, 216                 # xmm7 = xmm7[0,2,1,3]
+	vmovdqu	xmmword ptr [rdx + rdi], xmm7
+	vpbroadcastd	ymm7, dword ptr [rip + .LCPI28_5] # ymm7 = [16,16,16,16,16,16,16,16]
+	vpaddd	ymm10, ymm10, ymm7
+	vpaddd	ymm9, ymm9, ymm7
+	add	rdi, 16
+	cmp	r9, rdi
+	jne	.LBB28_54
+# %bb.55:                               #   in Loop: Header=BB28_2 Depth=1
+	mov	rdx, qword ptr [rsp + 8]        # 8-byte Reload
+	mov	r8, rdx
+	cmp	rdx, rcx
+	jne	.LBB28_56
+	jmp	.LBB28_58
+.LBB28_49:                              #   in Loop: Header=BB28_2 Depth=1
+	xor	edx, edx
+	vmovdqa	ymm9, ymm1
+	vmovdqa	ymm10, ymm6
+	vpmovsxbd	ymm11, qword ptr [rip + .LCPI28_13] # ymm11 = [16,17,18,19,20,21,22,23]
+	vpmovsxbd	ymm12, qword ptr [rip + .LCPI28_14] # ymm12 = [24,25,26,27,28,29,30,31]
+	.p2align	4, 0x90
+.LBB28_50:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	vpslld	ymm13, ymm12, 24
+	vpslld	ymm14, ymm11, 24
+	vpslld	ymm15, ymm10, 24
+	vpslld	ymm7, ymm9, 24
+	vpaddd	ymm7, ymm7, ymm2
+	vpaddd	ymm15, ymm15, ymm2
+	vpaddd	ymm14, ymm14, ymm2
+	vpaddd	ymm13, ymm13, ymm2
+	vpsrad	ymm13, ymm13, 24
+	vpsrad	ymm14, ymm14, 24
+	vpsrad	ymm15, ymm15, 24
+	vpsrad	ymm7, ymm7, 24
+	vpaddd	ymm7, ymm7, ymm3
+	vpaddd	ymm15, ymm15, ymm3
+	vpaddd	ymm14, ymm14, ymm3
+	vpaddd	ymm13, ymm13, ymm3
+	vpsllvd	ymm13, ymm4, ymm13
+	vpsllvd	ymm14, ymm4, ymm14
+	vpsllvd	ymm15, ymm4, ymm15
+	vpsllvd	ymm7, ymm4, ymm7
+	vpbroadcastd	ymm8, dword ptr [rip + .LCPI28_9] # ymm8 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
+	vpand	ymm7, ymm8, ymm7
+	vpand	ymm15, ymm15, ymm8
+	vpackusdw	ymm7, ymm7, ymm15
+	vpermq	ymm7, ymm7, 216                 # ymm7 = ymm7[0,2,1,3]
+	vpand	ymm14, ymm14, ymm8
+	vpand	ymm8, ymm13, ymm8
+	vpackusdw	ymm8, ymm14, ymm8
+	vpermq	ymm8, ymm8, 216                 # ymm8 = ymm8[0,2,1,3]
+	vpackuswb	ymm7, ymm7, ymm8
+	vpermq	ymm7, ymm7, 216                 # ymm7 = ymm7[0,2,1,3]
+	vmovdqu	ymmword ptr [r12 + rdx], ymm7
+	add	rdx, 32
+	vpbroadcastd	ymm7, dword ptr [rip + .LCPI28_10] # ymm7 = [32,32,32,32,32,32,32,32]
+	vpaddd	ymm9, ymm9, ymm7
+	vpaddd	ymm10, ymm10, ymm7
+	vpaddd	ymm11, ymm11, ymm7
+	vpaddd	ymm12, ymm12, ymm7
+	cmp	r11, rdx
+	jne	.LBB28_50
+# %bb.51:                               #   in Loop: Header=BB28_2 Depth=1
+	cmp	r11, rcx
+	je	.LBB28_58
+# %bb.52:                               #   in Loop: Header=BB28_2 Depth=1
+	mov	rdi, r11
+	mov	r8, r11
+	test	cl, 16
+	jne	.LBB28_53
+	.p2align	4, 0x90
+.LBB28_56:                              #   in Loop: Header=BB28_2 Depth=1
+	mov	edx, r8d
+	shl	edx, 24
+	add	edx, 822083584
+	lea	rdi, [r12 + r8]
+	mov	r9, rcx
+	sub	r9, r8
+	xor	r8d, r8d
+	.p2align	4, 0x90
+.LBB28_57:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	mov	esi, edx
+	shr	esi, 24
+	add	sil, -49
+	shlx	esi, ebp, esi
+	mov	byte ptr [rdi + r8], sil
+	add	edx, 16777216
+	inc	r8
+	cmp	r9, r8
+	jne	.LBB28_57
+.LBB28_58:                              #   in Loop: Header=BB28_2 Depth=1
+	lea	rdx, [rip + right_key]
+	cmp	dword ptr [rdx + 4*r13], ecx
+	jne	.LBB28_72
+# %bb.59:                               #   in Loop: Header=BB28_2 Depth=1
+	cmp	ecx, 16
+	jae	.LBB28_61
+# %bb.60:                               #   in Loop: Header=BB28_2 Depth=1
+	xor	r8d, r8d
+	jmp	.LBB28_70
+	.p2align	4, 0x90
+.LBB28_61:                              #   in Loop: Header=BB28_2 Depth=1
+	cmp	ecx, 32
+	jae	.LBB28_63
+# %bb.62:                               #   in Loop: Header=BB28_2 Depth=1
+	xor	edi, edi
+.LBB28_67:                              #   in Loop: Header=BB28_2 Depth=1
+	vmovd	xmm7, edi
+	vpbroadcastd	ymm7, xmm7
+	vpor	ymm9, ymm7, ymm6
+	vpor	ymm10, ymm7, ymm1
+	lea	rdx, [r12 + rdi]
+	mov	r9, qword ptr [rsp + 8]         # 8-byte Reload
+	sub	r9, rdi
+	xor	edi, edi
+	.p2align	4, 0x90
+.LBB28_68:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	vpsubd	ymm7, ymm0, ymm10
+	vpsubd	ymm8, ymm0, ymm9
+	vpslld	ymm8, ymm8, 24
+	vpsrad	ymm8, ymm8, 24
+	vpslld	ymm7, ymm7, 24
+	vpsrad	ymm7, ymm7, 24
+	vpaddd	ymm7, ymm7, ymm3
+	vpaddd	ymm8, ymm8, ymm3
+	vpsllvd	ymm8, ymm4, ymm8
+	vpsllvd	ymm7, ymm4, ymm7
+	vpbroadcastd	ymm11, dword ptr [rip + .LCPI28_9] # ymm11 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
+	vpand	ymm7, ymm11, ymm7
+	vpand	ymm8, ymm8, ymm11
+	vpackusdw	ymm7, ymm7, ymm8
+	vextracti128	xmm8, ymm7, 1
+	vpackuswb	xmm7, xmm7, xmm8
+	vpshufd	xmm7, xmm7, 216                 # xmm7 = xmm7[0,2,1,3]
+	vmovdqu	xmmword ptr [rdx + rdi], xmm7
+	vpbroadcastd	ymm7, dword ptr [rip + .LCPI28_5] # ymm7 = [16,16,16,16,16,16,16,16]
+	vpaddd	ymm10, ymm10, ymm7
+	vpaddd	ymm9, ymm9, ymm7
+	add	rdi, 16
+	cmp	r9, rdi
+	jne	.LBB28_68
+# %bb.69:                               #   in Loop: Header=BB28_2 Depth=1
+	mov	rdx, qword ptr [rsp + 8]        # 8-byte Reload
+	mov	r8, rdx
+	cmp	rdx, rcx
+	je	.LBB28_72
+	jmp	.LBB28_70
+.LBB28_63:                              #   in Loop: Header=BB28_2 Depth=1
+	xor	edx, edx
+	vmovdqa	ymm9, ymm1
+	vmovdqa	ymm10, ymm6
+	vpmovsxbd	ymm11, qword ptr [rip + .LCPI28_13] # ymm11 = [16,17,18,19,20,21,22,23]
+	vpmovsxbd	ymm12, qword ptr [rip + .LCPI28_14] # ymm12 = [24,25,26,27,28,29,30,31]
+	.p2align	4, 0x90
+.LBB28_64:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	vpsubd	ymm7, ymm0, ymm9
+	vpsubd	ymm8, ymm0, ymm10
+	vpsubd	ymm13, ymm0, ymm11
+	vpsubd	ymm14, ymm0, ymm12
+	vpslld	ymm14, ymm14, 24
+	vpsrad	ymm14, ymm14, 24
+	vpslld	ymm13, ymm13, 24
+	vpsrad	ymm13, ymm13, 24
+	vpslld	ymm8, ymm8, 24
+	vpsrad	ymm8, ymm8, 24
+	vpslld	ymm7, ymm7, 24
+	vpsrad	ymm7, ymm7, 24
+	vpaddd	ymm7, ymm7, ymm3
+	vpaddd	ymm8, ymm8, ymm3
+	vpaddd	ymm13, ymm13, ymm3
+	vpaddd	ymm14, ymm14, ymm3
+	vpsllvd	ymm14, ymm4, ymm14
+	vpsllvd	ymm13, ymm4, ymm13
+	vpsllvd	ymm8, ymm4, ymm8
+	vpsllvd	ymm7, ymm4, ymm7
+	vpbroadcastd	ymm15, dword ptr [rip + .LCPI28_9] # ymm15 = [255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0,255,0,0,0]
+	vpand	ymm7, ymm15, ymm7
+	vpand	ymm8, ymm8, ymm15
+	vpackusdw	ymm7, ymm7, ymm8
+	vpermq	ymm7, ymm7, 216                 # ymm7 = ymm7[0,2,1,3]
+	vpand	ymm8, ymm13, ymm15
+	vpand	ymm13, ymm14, ymm15
+	vpackusdw	ymm8, ymm8, ymm13
+	vpermq	ymm8, ymm8, 216                 # ymm8 = ymm8[0,2,1,3]
+	vpackuswb	ymm7, ymm7, ymm8
+	vpermq	ymm7, ymm7, 216                 # ymm7 = ymm7[0,2,1,3]
+	vmovdqu	ymmword ptr [r12 + rdx], ymm7
+	add	rdx, 32
+	vpbroadcastd	ymm7, dword ptr [rip + .LCPI28_10] # ymm7 = [32,32,32,32,32,32,32,32]
+	vpaddd	ymm9, ymm9, ymm7
+	vpaddd	ymm10, ymm10, ymm7
+	vpaddd	ymm11, ymm11, ymm7
+	vpaddd	ymm12, ymm12, ymm7
+	cmp	r11, rdx
+	jne	.LBB28_64
+# %bb.65:                               #   in Loop: Header=BB28_2 Depth=1
+	cmp	r11, rcx
+	je	.LBB28_72
+# %bb.66:                               #   in Loop: Header=BB28_2 Depth=1
+	mov	rdi, r11
+	mov	r8, r11
+	test	cl, 16
+	jne	.LBB28_67
+	.p2align	4, 0x90
+.LBB28_70:                              #   in Loop: Header=BB28_2 Depth=1
+	mov	edx, dword ptr [rsp + 20]       # 4-byte Reload
+	sub	edx, r8d
+	shl	edx, 24
+	lea	rdi, [r12 + r8]
+	mov	r9, rcx
+	sub	r9, r8
+	xor	r8d, r8d
+	.p2align	4, 0x90
+.LBB28_71:                              #   Parent Loop BB28_2 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	mov	esi, edx
+	shr	esi, 24
+	add	sil, -49
+	shlx	esi, ebp, esi
+	mov	byte ptr [rdi + r8], sil
+	add	edx, -16777216
+	inc	r8
+	cmp	r9, r8
+	jne	.LBB28_71
+	jmp	.LBB28_72
+.LBB28_5:
+	test	ecx, ecx
+	jle	.LBB28_17
+# %bb.6:
+	mov	eax, ecx
+	shl	eax, 24
+	add	eax, 805306368
+	shr	eax, 24
+	add	al, -49
+	mov	edx, 1
+	shlx	eax, edx, eax
+	lea	r8d, [rcx - 1]
+	cmp	ecx, 1
+	jne	.LBB28_73
+# %bb.7:
+	xor	r9d, r9d
+.LBB28_8:
+	test	cl, 1
+	je	.LBB28_17
+# %bb.9:
+	lea	rdx, [rip + top_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	je	.LBB28_10
+# %bb.11:
+	lea	rdx, [rip + bottom_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	je	.LBB28_12
+.LBB28_13:
+	lea	rdx, [rip + left_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	je	.LBB28_14
+.LBB28_15:
+	lea	rdx, [rip + right_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	jne	.LBB28_17
+.LBB28_16:
+	lea	rdx, [rip + con]
+	lea	rdx, [rdx + 8*r9]
+	mov	byte ptr [r8 + rdx], al
+.LBB28_17:
+	test	ecx, ecx
+	je	.LBB28_92
+# %bb.18:
+	mov	r13, qword ptr [rip + stderr@GOTPCREL]
+	xor	ebp, ebp
+	.p2align	4, 0x90
+.LBB28_19:                              # =>This Inner Loop Header: Depth=1
+	mov	eax, ebp
+	cdq
+	idiv	ecx
+	mov	ebx, edx
+	mov	r14d, eax
+	shl	r14d, 4
+	or	r14d, edx
+	shr	r14d, 4
+	and	r14d, 15
+	and	ebx, 7
+	lea	edx, [4*rbx]
+	lea	eax, [4*r14]
+	lea	esi, [rcx + 1]
+	lea	rdi, [rip + top_key]
+	sub	esi, dword ptr [rdx + rdi]
+	add	esi, r14d
+	mov	r9d, -1
+	shlx	esi, r9d, esi
+	lea	edi, [rcx + rcx]
+	lea	r8, [rip + bottom_key]
+	mov	edx, dword ptr [rdx + r8]
+	add	edx, r14d
+	mov	r8d, edi
+	sub	r8d, edx
+	shlx	edx, r9d, r8d
+	or	edx, esi
+	add	ecx, ebx
+	inc	ecx
+	lea	rsi, [rip + left_key]
+	sub	ecx, dword ptr [rax + rsi]
+	shlx	ecx, r9d, ecx
+	or	ecx, edx
+	lea	rdx, [rip + right_key]
+	mov	eax, dword ptr [rax + rdx]
+	add	eax, ebx
+	sub	edi, eax
+	shlx	r15d, r9d, edi
+	or	r15d, ecx
+	cmp	r15b, -1
+	je	.LBB28_20
+# %bb.91:                               #   in Loop: Header=BB28_19 Depth=1
+	not	r15b
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 437
+	xor	eax, eax
+	vzeroupper
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r13]
+	movzx	r15d, r15b
+	lea	rax, [rip + con]
+	lea	r12, [rax + 8*r14]
+	movzx	r9d, byte ptr [rbx + r12]
+	lea	rsi, [rip + .L.str.63]
+	mov	edx, r14d
+	mov	ecx, ebx
+	mov	r8d, r15d
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rsi, qword ptr [r13]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r13]
+	call	fflush@PLT
+	and	byte ptr [rbx + r12], r15b
+	inc	ebp
+	mov	ecx, dword ptr [rip + length]
+	mov	eax, ecx
+	imul	eax, ecx
+	cmp	ebp, eax
+	jb	.LBB28_19
+.LBB28_92:
+	mov	rbx, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rbx]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 442
+	xor	eax, eax
+	vzeroupper
+	call	fprintf@PLT
+	mov	rcx, qword ptr [rbx]
+	lea	rdi, [rip + .L.str.66]
+	mov	esi, 24
+	mov	edx, 1
+	call	fwrite@PLT
+	mov	rsi, qword ptr [rbx]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbx]
+	call	fflush@PLT
+	add	rsp, 24
+	.cfi_def_cfa_offset 56
+	pop	rbx
+	.cfi_def_cfa_offset 48
+	pop	r12
+	.cfi_def_cfa_offset 40
+	pop	r13
+	.cfi_def_cfa_offset 32
+	pop	r14
+	.cfi_def_cfa_offset 24
+	pop	r15
+	.cfi_def_cfa_offset 16
+	pop	rbp
+	.cfi_def_cfa_offset 8
+	jmp	place_singles                   # TAILCALL
+.LBB28_73:
+	.cfi_def_cfa_offset 80
+	mov	r10d, ecx
+	and	r10d, 2147483646
+	lea	r11, [rip + con]
+	lea	rbx, [r11 + 8*r8]
+	inc	rbx
+	lea	r14, [r8 + r11]
+	add	r14, 8
+	xor	r9d, r9d
+	jmp	.LBB28_74
+	.p2align	4, 0x90
+.LBB28_90:                              #   in Loop: Header=BB28_74 Depth=1
+	add	r9, 2
+	cmp	r10, r9
+	je	.LBB28_8
+.LBB28_74:                              # =>This Inner Loop Header: Depth=1
+	lea	rdx, [rip + top_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	je	.LBB28_75
+# %bb.76:                               #   in Loop: Header=BB28_74 Depth=1
+	lea	rdx, [rip + bottom_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	je	.LBB28_77
+.LBB28_78:                              #   in Loop: Header=BB28_74 Depth=1
+	lea	rdx, [rip + left_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	je	.LBB28_79
+.LBB28_80:                              #   in Loop: Header=BB28_74 Depth=1
+	lea	rdx, [rip + right_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	je	.LBB28_81
+.LBB28_82:                              #   in Loop: Header=BB28_74 Depth=1
+	lea	rdx, [rip + top_key]
+	cmp	dword ptr [rdx + 4*r9 + 4], 1
+	je	.LBB28_83
+.LBB28_84:                              #   in Loop: Header=BB28_74 Depth=1
+	lea	rdx, [rip + bottom_key]
+	cmp	dword ptr [rdx + 4*r9 + 4], 1
+	je	.LBB28_85
+.LBB28_86:                              #   in Loop: Header=BB28_74 Depth=1
+	lea	rdx, [rip + left_key]
+	cmp	dword ptr [rdx + 4*r9 + 4], 1
+	je	.LBB28_87
+.LBB28_88:                              #   in Loop: Header=BB28_74 Depth=1
+	lea	rdx, [rip + right_key]
+	cmp	dword ptr [rdx + 4*r9 + 4], 1
+	jne	.LBB28_90
+	jmp	.LBB28_89
+	.p2align	4, 0x90
+.LBB28_75:                              #   in Loop: Header=BB28_74 Depth=1
+	mov	byte ptr [r9 + r11], al
+	lea	rdx, [rip + bottom_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	jne	.LBB28_78
+.LBB28_77:                              #   in Loop: Header=BB28_74 Depth=1
+	mov	byte ptr [rbx + r9 - 1], al
+	lea	rdx, [rip + left_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	jne	.LBB28_80
+.LBB28_79:                              #   in Loop: Header=BB28_74 Depth=1
+	mov	byte ptr [r11 + 8*r9], al
+	lea	rdx, [rip + right_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	jne	.LBB28_82
+.LBB28_81:                              #   in Loop: Header=BB28_74 Depth=1
+	mov	byte ptr [r14 + 8*r9 - 8], al
+	lea	rdx, [rip + top_key]
+	cmp	dword ptr [rdx + 4*r9 + 4], 1
+	jne	.LBB28_84
+.LBB28_83:                              #   in Loop: Header=BB28_74 Depth=1
+	mov	byte ptr [r9 + r11 + 1], al
+	lea	rdx, [rip + bottom_key]
+	cmp	dword ptr [rdx + 4*r9 + 4], 1
+	jne	.LBB28_86
+.LBB28_85:                              #   in Loop: Header=BB28_74 Depth=1
+	mov	byte ptr [rbx + r9], al
+	lea	rdx, [rip + left_key]
+	cmp	dword ptr [rdx + 4*r9 + 4], 1
+	jne	.LBB28_88
+.LBB28_87:                              #   in Loop: Header=BB28_74 Depth=1
+	mov	byte ptr [r11 + 8*r9 + 8], al
+	lea	rdx, [rip + right_key]
+	cmp	dword ptr [rdx + 4*r9 + 4], 1
+	jne	.LBB28_90
+.LBB28_89:                              #   in Loop: Header=BB28_74 Depth=1
+	mov	byte ptr [r14 + 8*r9], al
+	jmp	.LBB28_90
+.LBB28_10:
+	lea	rdx, [rip + con]
+	mov	byte ptr [r9 + rdx], al
+	lea	rdx, [rip + bottom_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	jne	.LBB28_13
+.LBB28_12:
+	lea	rdx, [rip + con]
+	lea	rdx, [rdx + 8*r8]
+	mov	byte ptr [r9 + rdx], al
+	lea	rdx, [rip + left_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	jne	.LBB28_15
+.LBB28_14:
+	lea	rdx, [rip + con]
+	mov	byte ptr [rdx + 8*r9], al
+	lea	rdx, [rip + right_key]
+	cmp	dword ptr [rdx + 4*r9], 1
+	je	.LBB28_16
+	jmp	.LBB28_17
+.LBB28_20:
+	lea	rdi, [rip + .L.str.60]
+	lea	rsi, [rip + .L.str.1]
+	lea	rcx, [rip + .L__PRETTY_FUNCTION__.edge_constraint]
+	mov	edx, 386
+	vzeroupper
+	call	__assert_fail@PLT
+.Lfunc_end28:
+	.size	edge_clue_initialization, .Lfunc_end28-edge_clue_initialization
+	.cfi_endproc
+                                        # -- End function
+	.globl	unique_bits                     # -- Begin function unique_bits
+	.p2align	4, 0x90
+	.type	unique_bits,@function
+unique_bits:                            # @unique_bits
+	.cfi_startproc
+# %bb.0:
+	test	edi, edi
+	jle	.LBB29_1
+# %bb.2:
+	mov	r8d, edi
+	mov	ecx, r8d
+	and	ecx, 7
+	cmp	edi, 8
+	jae	.LBB29_9
+# %bb.3:
+	xor	edi, edi
+	xor	edx, edx
+	xor	eax, eax
+	jmp	.LBB29_4
+.LBB29_1:
+	xor	eax, eax
+                                        # kill: def $al killed $al killed $eax
+	ret
+.LBB29_9:
+	and	r8d, 2147483640
+	xor	edi, edi
+	xor	r9d, r9d
+	xor	eax, eax
+	.p2align	4, 0x90
+.LBB29_10:                              # =>This Inner Loop Header: Depth=1
+	movzx	edx, byte ptr [rsi + rdi]
+	movzx	r10d, byte ptr [rsi + rdi + 1]
+	mov	r11d, edx
+	and	r11b, r9b
+	or	r11b, al
+	or	dl, r9b
+	mov	eax, r10d
+	and	al, dl
+	or	al, r11b
+	or	dl, r10b
+	movzx	r9d, byte ptr [rsi + rdi + 2]
+	mov	r10d, r9d
+	and	r10b, dl
+	or	r10b, al
+	or	dl, r9b
+	movzx	eax, byte ptr [rsi + rdi + 3]
+	mov	r9d, eax
+	and	r9b, dl
+	or	r9b, r10b
+	or	dl, al
+	movzx	eax, byte ptr [rsi + rdi + 4]
+	mov	r10d, eax
+	and	r10b, dl
+	or	r10b, r9b
+	or	dl, al
+	movzx	eax, byte ptr [rsi + rdi + 5]
+	mov	r9d, eax
+	and	r9b, dl
+	or	r9b, r10b
+	or	dl, al
+	movzx	eax, byte ptr [rsi + rdi + 6]
+	mov	r10d, eax
+	and	r10b, dl
+	or	r10b, r9b
+	movzx	r9d, byte ptr [rsi + rdi + 7]
+	or	dl, al
+	mov	eax, r9d
+	and	al, dl
+	or	al, r10b
+	or	dl, r9b
+	add	rdi, 8
+	mov	r9d, edx
+	cmp	r8, rdi
+	jne	.LBB29_10
+.LBB29_4:
+	test	rcx, rcx
+	je	.LBB29_7
+# %bb.5:
+	add	rsi, rdi
+	xor	edi, edi
+	.p2align	4, 0x90
+.LBB29_6:                               # =>This Inner Loop Header: Depth=1
+	movzx	r8d, byte ptr [rsi + rdi]
+	mov	r9d, r8d
+	and	r9b, dl
+	or	al, r9b
+	or	dl, r8b
+	inc	rdi
+	cmp	rcx, rdi
+	jne	.LBB29_6
+.LBB29_7:
+	not	al
+	and	al, dl
+                                        # kill: def $al killed $al killed $eax
+	ret
+.Lfunc_end29:
+	.size	unique_bits, .Lfunc_end29-unique_bits
+	.cfi_endproc
+                                        # -- End function
+	.globl	pp_constraints                  # -- Begin function pp_constraints
+	.p2align	4, 0x90
+	.type	pp_constraints,@function
+pp_constraints:                         # @pp_constraints
+	.cfi_startproc
+# %bb.0:
+	push	rbp
+	.cfi_def_cfa_offset 16
+	push	r15
+	.cfi_def_cfa_offset 24
+	push	r14
+	.cfi_def_cfa_offset 32
+	push	r13
+	.cfi_def_cfa_offset 40
+	push	r12
+	.cfi_def_cfa_offset 48
+	push	rbx
+	.cfi_def_cfa_offset 56
+	push	rax
+	.cfi_def_cfa_offset 64
+	.cfi_offset rbx, -56
+	.cfi_offset r12, -48
+	.cfi_offset r13, -40
+	.cfi_offset r14, -32
+	.cfi_offset r15, -24
+	.cfi_offset rbp, -16
+	mov	rbp, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [rbp]
+	lea	r15, [rip + .L.str.21]
+	lea	r12, [rip + .L.str.22]
+	lea	r13, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	rsi, r15
+	mov	rdx, r12
+	mov	rcx, r13
+	mov	r9d, 503
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbp]
+	movzx	edx, byte ptr [rip + con]
+	movzx	ecx, byte ptr [rip + con+1]
+	movzx	r8d, byte ptr [rip + con+2]
+	movzx	r9d, byte ptr [rip + con+3]
+	movzx	r10d, byte ptr [rip + con+4]
+	movzx	r11d, byte ptr [rip + con+5]
+	movzx	ebx, byte ptr [rip + con+6]
+	movzx	r14d, byte ptr [rip + con+7]
+	lea	rsi, [rip + .L.str.78]
+	xor	eax, eax
+	push	r14
+	.cfi_adjust_cfa_offset 8
+	push	rbx
+	.cfi_adjust_cfa_offset 8
+	push	r11
+	.cfi_adjust_cfa_offset 8
+	push	r10
+	.cfi_adjust_cfa_offset 8
+	call	fprintf@PLT
+	add	rsp, 32
+	.cfi_adjust_cfa_offset -32
+	mov	rsi, qword ptr [rbp]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbp]
+	call	fflush@PLT
+	mov	rdi, qword ptr [rbp]
+	mov	rsi, r15
+	mov	rdx, r12
+	mov	rcx, r13
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 503
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbp]
+	movzx	edx, byte ptr [rip + con+8]
+	movzx	ecx, byte ptr [rip + con+9]
+	movzx	r8d, byte ptr [rip + con+10]
+	movzx	r9d, byte ptr [rip + con+11]
+	movzx	r10d, byte ptr [rip + con+12]
+	movzx	r11d, byte ptr [rip + con+13]
+	movzx	ebx, byte ptr [rip + con+14]
+	movzx	r14d, byte ptr [rip + con+15]
+	lea	rsi, [rip + .L.str.78]
+	xor	eax, eax
+	push	r14
+	.cfi_adjust_cfa_offset 8
+	push	rbx
+	.cfi_adjust_cfa_offset 8
+	push	r11
+	.cfi_adjust_cfa_offset 8
+	push	r10
+	.cfi_adjust_cfa_offset 8
+	call	fprintf@PLT
+	add	rsp, 32
+	.cfi_adjust_cfa_offset -32
+	mov	rsi, qword ptr [rbp]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbp]
+	call	fflush@PLT
+	mov	rdi, qword ptr [rbp]
+	mov	rsi, r15
+	mov	rdx, r12
+	mov	rcx, r13
+	lea	r8, [rip + .L.str.1]
+	mov	r15, r8
+	mov	r9d, 503
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbp]
+	movzx	edx, byte ptr [rip + con+16]
+	movzx	ecx, byte ptr [rip + con+17]
+	movzx	r8d, byte ptr [rip + con+18]
+	movzx	r9d, byte ptr [rip + con+19]
+	movzx	r10d, byte ptr [rip + con+20]
+	movzx	r11d, byte ptr [rip + con+21]
+	movzx	ebx, byte ptr [rip + con+22]
+	movzx	r14d, byte ptr [rip + con+23]
+	lea	rsi, [rip + .L.str.78]
+	xor	eax, eax
+	push	r14
+	.cfi_adjust_cfa_offset 8
+	push	rbx
+	.cfi_adjust_cfa_offset 8
+	push	r11
+	.cfi_adjust_cfa_offset 8
+	push	r10
+	.cfi_adjust_cfa_offset 8
+	call	fprintf@PLT
+	add	rsp, 32
+	.cfi_adjust_cfa_offset -32
+	mov	rsi, qword ptr [rbp]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbp]
+	call	fflush@PLT
+	mov	rdi, qword ptr [rbp]
+	lea	rsi, [rip + .L.str.21]
+	mov	rdx, r12
+	mov	rcx, r13
+	mov	r8, r15
+	mov	r9d, 503
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbp]
+	movzx	edx, byte ptr [rip + con+24]
+	movzx	ecx, byte ptr [rip + con+25]
+	movzx	r8d, byte ptr [rip + con+26]
+	movzx	r9d, byte ptr [rip + con+27]
+	movzx	r10d, byte ptr [rip + con+28]
+	movzx	r11d, byte ptr [rip + con+29]
+	movzx	ebx, byte ptr [rip + con+30]
+	movzx	r14d, byte ptr [rip + con+31]
+	lea	rsi, [rip + .L.str.78]
+	xor	eax, eax
+	push	r14
+	.cfi_adjust_cfa_offset 8
+	push	rbx
+	.cfi_adjust_cfa_offset 8
+	push	r11
+	.cfi_adjust_cfa_offset 8
+	push	r10
+	.cfi_adjust_cfa_offset 8
+	call	fprintf@PLT
+	add	rsp, 32
+	.cfi_adjust_cfa_offset -32
+	mov	rsi, qword ptr [rbp]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbp]
+	call	fflush@PLT
+	mov	rdi, qword ptr [rbp]
+	lea	rsi, [rip + .L.str.21]
+	mov	rdx, r12
+	mov	rcx, r13
+	mov	r8, r15
+	mov	r9d, 503
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbp]
+	movzx	edx, byte ptr [rip + con+32]
+	movzx	ecx, byte ptr [rip + con+33]
+	movzx	r8d, byte ptr [rip + con+34]
+	movzx	r9d, byte ptr [rip + con+35]
+	movzx	r10d, byte ptr [rip + con+36]
+	movzx	r11d, byte ptr [rip + con+37]
+	movzx	ebx, byte ptr [rip + con+38]
+	movzx	r14d, byte ptr [rip + con+39]
+	lea	rsi, [rip + .L.str.78]
+	xor	eax, eax
+	push	r14
+	.cfi_adjust_cfa_offset 8
+	push	rbx
+	.cfi_adjust_cfa_offset 8
+	push	r11
+	.cfi_adjust_cfa_offset 8
+	push	r10
+	.cfi_adjust_cfa_offset 8
+	call	fprintf@PLT
+	add	rsp, 32
+	.cfi_adjust_cfa_offset -32
+	mov	rsi, qword ptr [rbp]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbp]
+	call	fflush@PLT
+	mov	rdi, qword ptr [rbp]
+	lea	rsi, [rip + .L.str.21]
+	mov	rdx, r12
+	mov	rcx, r13
+	mov	r8, r15
+	mov	r9d, 503
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbp]
+	movzx	edx, byte ptr [rip + con+40]
+	movzx	ecx, byte ptr [rip + con+41]
+	movzx	r8d, byte ptr [rip + con+42]
+	movzx	r9d, byte ptr [rip + con+43]
+	movzx	r10d, byte ptr [rip + con+44]
+	movzx	r11d, byte ptr [rip + con+45]
+	movzx	ebx, byte ptr [rip + con+46]
+	movzx	r14d, byte ptr [rip + con+47]
+	lea	rsi, [rip + .L.str.78]
+	xor	eax, eax
+	push	r14
+	.cfi_adjust_cfa_offset 8
+	push	rbx
+	.cfi_adjust_cfa_offset 8
+	push	r11
+	.cfi_adjust_cfa_offset 8
+	push	r10
+	.cfi_adjust_cfa_offset 8
+	call	fprintf@PLT
+	add	rsp, 32
+	.cfi_adjust_cfa_offset -32
+	mov	rsi, qword ptr [rbp]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbp]
+	call	fflush@PLT
+	mov	rdi, qword ptr [rbp]
+	lea	rsi, [rip + .L.str.21]
+	mov	rdx, r12
+	mov	rcx, r13
+	mov	r8, r15
+	mov	r9d, 503
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbp]
+	movzx	edx, byte ptr [rip + con+48]
+	movzx	ecx, byte ptr [rip + con+49]
+	movzx	r8d, byte ptr [rip + con+50]
+	movzx	r9d, byte ptr [rip + con+51]
+	movzx	r10d, byte ptr [rip + con+52]
+	movzx	r11d, byte ptr [rip + con+53]
+	movzx	ebx, byte ptr [rip + con+54]
+	movzx	r14d, byte ptr [rip + con+55]
+	lea	rsi, [rip + .L.str.78]
+	xor	eax, eax
+	push	r14
+	.cfi_adjust_cfa_offset 8
+	push	rbx
+	.cfi_adjust_cfa_offset 8
+	push	r11
+	.cfi_adjust_cfa_offset 8
+	push	r10
+	.cfi_adjust_cfa_offset 8
+	call	fprintf@PLT
+	add	rsp, 32
+	.cfi_adjust_cfa_offset -32
+	mov	rsi, qword ptr [rbp]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbp]
+	call	fflush@PLT
+	mov	rdi, qword ptr [rbp]
+	lea	rsi, [rip + .L.str.21]
+	mov	rdx, r12
+	mov	rcx, r13
+	mov	r8, r15
+	mov	r9d, 503
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbp]
+	movzx	edx, byte ptr [rip + con+56]
+	movzx	ecx, byte ptr [rip + con+57]
+	movzx	r8d, byte ptr [rip + con+58]
+	movzx	r9d, byte ptr [rip + con+59]
+	movzx	r10d, byte ptr [rip + con+60]
+	movzx	r11d, byte ptr [rip + con+61]
+	movzx	ebx, byte ptr [rip + con+62]
+	movzx	r14d, byte ptr [rip + con+63]
+	lea	rsi, [rip + .L.str.78]
+	xor	eax, eax
+	push	r14
+	.cfi_adjust_cfa_offset 8
+	push	rbx
+	.cfi_adjust_cfa_offset 8
+	push	r11
+	.cfi_adjust_cfa_offset 8
+	push	r10
+	.cfi_adjust_cfa_offset 8
+	call	fprintf@PLT
+	add	rsp, 32
+	.cfi_adjust_cfa_offset -32
+	mov	rsi, qword ptr [rbp]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbp]
+	call	fflush@PLT
+	mov	rdi, qword ptr [rbp]
+	lea	rsi, [rip + .L.str.21]
+	mov	rdx, r12
+	mov	rcx, r13
+	mov	r8, r15
+	mov	r9d, 505
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [rbp]
+	movzx	edx, byte ptr [rip + con+64]
+	movzx	ecx, byte ptr [rip + con+65]
+	movzx	r8d, byte ptr [rip + con+66]
+	movzx	r9d, byte ptr [rip + con+67]
+	movzx	r10d, byte ptr [rip + con+68]
+	movzx	r11d, byte ptr [rip + con+69]
+	movzx	ebx, byte ptr [rip + con+70]
+	movzx	r14d, byte ptr [rip + con+71]
+	lea	rsi, [rip + .L.str.81]
+	xor	eax, eax
+	push	r14
+	.cfi_adjust_cfa_offset 8
+	push	rbx
+	.cfi_adjust_cfa_offset 8
+	push	r11
+	.cfi_adjust_cfa_offset 8
+	push	r10
+	.cfi_adjust_cfa_offset 8
+	call	fprintf@PLT
+	add	rsp, 32
+	.cfi_adjust_cfa_offset -32
+	mov	rsi, qword ptr [rbp]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [rbp]
+	add	rsp, 8
+	.cfi_def_cfa_offset 56
+	pop	rbx
+	.cfi_def_cfa_offset 48
+	pop	r12
+	.cfi_def_cfa_offset 40
+	pop	r13
+	.cfi_def_cfa_offset 32
+	pop	r14
+	.cfi_def_cfa_offset 24
+	pop	r15
+	.cfi_def_cfa_offset 16
+	pop	rbp
+	.cfi_def_cfa_offset 8
+	jmp	fflush@PLT                      # TAILCALL
+.Lfunc_end30:
+	.size	pp_constraints, .Lfunc_end30-pp_constraints
+	.cfi_endproc
+                                        # -- End function
+	.section	.rodata.cst32,"aM",@progbits,32
+	.p2align	5, 0x0                          # -- Begin function solver_win
+.LCPI31_0:
 	.zero	1
 	.byte	255                             # 0xff
 	.byte	255                             # 0xff
@@ -6940,28 +6596,7 @@ apply_sequence_filtration:              # @apply_sequence_filtration
 	.byte	255                             # 0xff
 	.section	.rodata.cst16,"aM",@progbits,16
 	.p2align	4, 0x0
-.LCPI35_3:
-	.byte	0                               # 0x0
-	.byte	1                               # 0x1
-	.byte	2                               # 0x2
-	.byte	3                               # 0x3
-	.byte	4                               # 0x4
-	.byte	5                               # 0x5
-	.byte	6                               # 0x6
-	.byte	7                               # 0x7
-	.byte	8                               # 0x8
-	.byte	9                               # 0x9
-	.byte	10                              # 0xa
-	.byte	11                              # 0xb
-	.byte	12                              # 0xc
-	.byte	13                              # 0xd
-	.byte	14                              # 0xe
-	.byte	15                              # 0xf
-.LCPI35_4:
-	.zero	16,48
-.LCPI35_5:
-	.zero	16,16
-.LCPI35_7:
+.LCPI31_1:
 	.zero	1
 	.byte	255                             # 0xff
 	.byte	255                             # 0xff
@@ -6979,14 +6614,1239 @@ apply_sequence_filtration:              # @apply_sequence_filtration
 	.byte	255                             # 0xff
 	.byte	255                             # 0xff
 	.section	.rodata,"a",@progbits
-.LCPI35_8:
-	.byte	48                              # 0x30
-.LCPI35_9:
-	.byte	16                              # 0x10
-.LCPI35_10:
-	.byte	32                              # 0x20
-.LCPI35_11:
+.LCPI31_2:
 	.byte	255                             # 0xff
+	.text
+	.globl	solver_win
+	.p2align	4, 0x90
+	.type	solver_win,@function
+solver_win:                             # @solver_win
+	.cfi_startproc
+# %bb.0:
+	movsxd	rcx, dword ptr [rip + length]
+	mov	eax, -1
+	shlx	eax, eax, ecx
+	not	al
+	mov	esi, eax
+	test	rcx, rcx
+	jle	.LBB31_8
+# %bb.1:
+	cmp	ecx, 16
+	jae	.LBB31_3
+# %bb.2:
+	xor	edx, edx
+	mov	esi, eax
+	jmp	.LBB31_13
+.LBB31_3:
+	cmp	ecx, 128
+	jae	.LBB31_9
+# %bb.4:
+	xor	edx, edx
+	mov	esi, eax
+	jmp	.LBB31_5
+.LBB31_9:
+	mov	edx, ecx
+	and	edx, 2147483520
+	vpbroadcastb	ymm0, byte ptr [rip + .LCPI31_2] # ymm0 = [255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255]
+	vpinsrb	xmm1, xmm0, eax, 0
+	vpblendd	ymm0, ymm0, ymm1, 15            # ymm0 = ymm1[0,1,2,3],ymm0[4,5,6,7]
+	vpcmpeqd	ymm1, ymm1, ymm1
+	xor	esi, esi
+	lea	rdi, [rip + con]
+	vpcmpeqd	ymm2, ymm2, ymm2
+	vpcmpeqd	ymm3, ymm3, ymm3
+	.p2align	4, 0x90
+.LBB31_10:                              # =>This Inner Loop Header: Depth=1
+	vpand	ymm0, ymm0, ymmword ptr [rsi + rdi + 64]
+	vpand	ymm1, ymm1, ymmword ptr [rsi + rdi + 96]
+	vpand	ymm2, ymm2, ymmword ptr [rsi + rdi + 128]
+	vpand	ymm3, ymm3, ymmword ptr [rsi + rdi + 160]
+	sub	rsi, -128
+	cmp	rdx, rsi
+	jne	.LBB31_10
+# %bb.11:
+	vpand	ymm0, ymm1, ymm0
+	vpand	ymm1, ymm3, ymm2
+	vpand	ymm0, ymm1, ymm0
+	vextracti128	xmm1, ymm0, 1
+	vpand	xmm0, xmm0, xmm1
+	vpshufd	xmm1, xmm0, 238                 # xmm1 = xmm0[2,3,2,3]
+	vpand	xmm0, xmm0, xmm1
+	vpshufd	xmm1, xmm0, 85                  # xmm1 = xmm0[1,1,1,1]
+	vpand	xmm0, xmm0, xmm1
+	vpsrld	xmm1, xmm0, 16
+	vpand	xmm0, xmm0, xmm1
+	vpsrlw	xmm1, xmm0, 8
+	vpand	xmm0, xmm0, xmm1
+	vmovd	esi, xmm0
+	cmp	rdx, rcx
+	je	.LBB31_8
+# %bb.12:
+	test	cl, 112
+	je	.LBB31_13
+.LBB31_5:
+	mov	rdi, rdx
+	mov	edx, ecx
+	and	edx, 2147483632
+	vpbroadcastb	xmm0, byte ptr [rip + .LCPI31_2] # xmm0 = [255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255]
+	vpinsrb	xmm0, xmm0, esi, 0
+	lea	rsi, [rip + con]
+	.p2align	4, 0x90
+.LBB31_6:                               # =>This Inner Loop Header: Depth=1
+	vpand	xmm0, xmm0, xmmword ptr [rdi + rsi + 64]
+	add	rdi, 16
+	cmp	rdx, rdi
+	jne	.LBB31_6
+# %bb.7:
+	vpshufd	xmm1, xmm0, 238                 # xmm1 = xmm0[2,3,2,3]
+	vpand	xmm0, xmm0, xmm1
+	vpshufd	xmm1, xmm0, 85                  # xmm1 = xmm0[1,1,1,1]
+	vpand	xmm0, xmm0, xmm1
+	vpsrld	xmm1, xmm0, 16
+	vpand	xmm0, xmm0, xmm1
+	vpsrlw	xmm1, xmm0, 8
+	vpand	xmm0, xmm0, xmm1
+	vmovd	esi, xmm0
+	cmp	rdx, rcx
+	je	.LBB31_8
+.LBB31_13:
+	lea	rdi, [rip + con]
+	.p2align	4, 0x90
+.LBB31_14:                              # =>This Inner Loop Header: Depth=1
+	and	sil, byte ptr [rdx + rdi + 64]
+	inc	rdx
+	cmp	rcx, rdx
+	jne	.LBB31_14
+.LBB31_8:
+	cmp	sil, al
+	sete	al
+	vzeroupper
+	ret
+.Lfunc_end31:
+	.size	solver_win, .Lfunc_end31-solver_win
+	.cfi_endproc
+                                        # -- End function
+	.globl	swap                            # -- Begin function swap
+	.p2align	4, 0x90
+	.type	swap,@function
+swap:                                   # @swap
+	.cfi_startproc
+# %bb.0:
+	movzx	eax, byte ptr [rdi]
+	movzx	ecx, byte ptr [rsi]
+	mov	byte ptr [rdi], cl
+	mov	byte ptr [rsi], al
+	ret
+.Lfunc_end32:
+	.size	swap, .Lfunc_end32-swap
+	.cfi_endproc
+                                        # -- End function
+	.globl	permutations                    # -- Begin function permutations
+	.p2align	4, 0x90
+	.type	permutations,@function
+permutations:                           # @permutations
+	.cfi_startproc
+# %bb.0:
+	push	rbp
+	.cfi_def_cfa_offset 16
+	push	r15
+	.cfi_def_cfa_offset 24
+	push	r14
+	.cfi_def_cfa_offset 32
+	push	r13
+	.cfi_def_cfa_offset 40
+	push	r12
+	.cfi_def_cfa_offset 48
+	push	rbx
+	.cfi_def_cfa_offset 56
+	push	rax
+	.cfi_def_cfa_offset 64
+	.cfi_offset rbx, -56
+	.cfi_offset r12, -48
+	.cfi_offset r13, -40
+	.cfi_offset r14, -32
+	.cfi_offset r15, -24
+	.cfi_offset rbp, -16
+	mov	rbx, rdx
+	mov	ebp, esi
+	mov	r14, rdi
+	cmp	ecx, 1
+	jne	.LBB33_1
+# %bb.6:
+	movsxd	rax, dword ptr [rip + sequence_pos]
+	lea	rdi, [r14 + 8*rax]
+	movsxd	rdx, ebp
+	mov	rsi, rbx
+	call	memcpy@PLT
+	inc	dword ptr [rip + sequence_pos]
+	jmp	.LBB33_7
+.LBB33_1:
+	jl	.LBB33_7
+# %bb.2:
+	mov	r12d, ecx
+	lea	r15d, [r12 - 1]
+	test	r12b, 1
+	jne	.LBB33_5
+# %bb.3:
+	mov	r12d, r12d
+	xor	r13d, r13d
+	.p2align	4, 0x90
+.LBB33_4:                               # =>This Inner Loop Header: Depth=1
+	mov	rdi, r14
+	mov	esi, ebp
+	mov	rdx, rbx
+	mov	ecx, r15d
+	call	permutations
+	movzx	eax, byte ptr [rbx + r13]
+	movzx	ecx, byte ptr [rbx + r15]
+	mov	byte ptr [rbx + r13], cl
+	mov	byte ptr [rbx + r15], al
+	inc	r13
+	cmp	r12, r13
+	jne	.LBB33_4
+	jmp	.LBB33_7
+	.p2align	4, 0x90
+.LBB33_5:                               # =>This Inner Loop Header: Depth=1
+	mov	rdi, r14
+	mov	esi, ebp
+	mov	rdx, rbx
+	mov	ecx, r15d
+	call	permutations
+	movzx	eax, byte ptr [rbx]
+	movzx	ecx, byte ptr [rbx + r15]
+	mov	byte ptr [rbx], cl
+	mov	byte ptr [rbx + r15], al
+	dec	r12d
+	jne	.LBB33_5
+.LBB33_7:
+	add	rsp, 8
+	.cfi_def_cfa_offset 56
+	pop	rbx
+	.cfi_def_cfa_offset 48
+	pop	r12
+	.cfi_def_cfa_offset 40
+	pop	r13
+	.cfi_def_cfa_offset 32
+	pop	r14
+	.cfi_def_cfa_offset 24
+	pop	r15
+	.cfi_def_cfa_offset 16
+	pop	rbp
+	.cfi_def_cfa_offset 8
+	ret
+.Lfunc_end33:
+	.size	permutations, .Lfunc_end33-permutations
+	.cfi_endproc
+                                        # -- End function
+	.section	.rodata.cst16,"aM",@progbits,16
+	.p2align	4, 0x0                          # -- Begin function generate_valid_sequences
+.LCPI34_0:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	8                               # 0x8
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI34_1:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	8                               # 0x8
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI34_2:
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	8                               # 0x8
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+.LCPI34_3:
+	.byte	0                               # 0x0
+	.byte	8                               # 0x8
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.section	.rodata.cst32,"aM",@progbits,32
+	.p2align	5, 0x0
+.LCPI34_4:
+	.long	0                               # 0x0
+	.long	2                               # 0x2
+	.long	2                               # 0x2
+	.long	3                               # 0x3
+	.long	0                               # 0x0
+	.long	2                               # 0x2
+	.long	4                               # 0x4
+	.long	6                               # 0x6
+.LCPI34_5:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+.LCPI34_6:
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.zero	1
+	.section	.rodata,"a",@progbits
+	.p2align	1, 0x0
+.LCPI34_7:
+	.byte	0                               # 0x0
+	.byte	8                               # 0x8
+	.section	.rodata.cst8,"aM",@progbits,8
+.LCPI34_8:
+	.byte	0                               # 0x0
+	.byte	2                               # 0x2
+	.byte	2                               # 0x2
+	.byte	3                               # 0x3
+	.byte	0                               # 0x0
+	.byte	2                               # 0x2
+	.byte	4                               # 0x4
+	.byte	6                               # 0x6
+	.section	.rodata.cst4,"aM",@progbits,4
+	.p2align	2, 0x0
+.LCPI34_9:
+	.byte	0                               # 0x0
+	.byte	4                               # 0x4
+	.byte	8                               # 0x8
+	.byte	12                              # 0xc
+	.text
+	.globl	generate_valid_sequences
+	.p2align	4, 0x90
+	.type	generate_valid_sequences,@function
+generate_valid_sequences:               # @generate_valid_sequences
+	.cfi_startproc
+# %bb.0:
+	push	rbp
+	.cfi_def_cfa_offset 16
+	push	r15
+	.cfi_def_cfa_offset 24
+	push	r14
+	.cfi_def_cfa_offset 32
+	push	r12
+	.cfi_def_cfa_offset 40
+	push	rbx
+	.cfi_def_cfa_offset 48
+	sub	rsp, 16
+	.cfi_def_cfa_offset 64
+	.cfi_offset rbx, -48
+	.cfi_offset r12, -40
+	.cfi_offset r14, -32
+	.cfi_offset r15, -24
+	.cfi_offset rbp, -16
+	mov	rax, qword ptr fs:[40]
+	mov	qword ptr [rsp + 8], rax
+	test	esi, esi
+	je	.LBB34_1
+# %bb.25:
+	movsxd	rax, edi
+	lea	rcx, [rip + con]
+	lea	rsi, [rcx + 8*rax]
+	mov	ebx, dword ptr [rip + length]
+	movsxd	rdx, ebx
+	mov	rdi, rsp
+	call	memcpy@PLT
+	jmp	.LBB34_13
+.LBB34_1:
+	movsxd	rax, dword ptr [rip + length]
+	mov	ebx, eax
+	test	rax, rax
+	jle	.LBB34_13
+# %bb.2:
+	movsxd	rcx, edi
+	cmp	ebx, 17
+	jae	.LBB34_4
+# %bb.3:
+	xor	edx, edx
+	jmp	.LBB34_11
+.LBB34_4:
+	cmp	ebx, 33
+	jae	.LBB34_8
+# %bb.5:
+	xor	edx, edx
+	jmp	.LBB34_6
+.LBB34_8:
+	mov	edx, eax
+	and	edx, 31
+	mov	esi, 32
+	cmovne	rsi, rdx
+	mov	rdx, rax
+	sub	rdx, rsi
+	xor	edi, edi
+	lea	r8, [rip + con]
+	vpbroadcastw	xmm0, word ptr [rip + .LCPI34_7] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm1, word ptr [rip + .LCPI34_7] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm2, word ptr [rip + .LCPI34_7] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm3, word ptr [rip + .LCPI34_7] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpmovsxbd	ymm4, qword ptr [rip + .LCPI34_8] # ymm4 = [0,2,2,3,0,2,4,6]
+	vpbroadcastd	ymm5, dword ptr [rip + .LCPI34_9] # ymm5 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
+	vpbroadcastd	ymm6, dword ptr [rip + .LCPI34_9] # ymm6 = [0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12,0,4,8,12]
+	.p2align	4, 0x90
+.LBB34_9:                               # =>This Inner Loop Header: Depth=1
+	lea	r9, [rcx + 8*rdi]
+	vmovdqu	xmm7, xmmword ptr [r8 + r9 + 112]
+	vpshufb	xmm7, xmm7, xmm0
+	vmovdqu	xmm8, xmmword ptr [r8 + r9 + 96]
+	vpshufb	xmm8, xmm8, xmm0
+	vpunpcklwd	xmm7, xmm8, xmm7        # xmm7 = xmm8[0],xmm7[0],xmm8[1],xmm7[1],xmm8[2],xmm7[2],xmm8[3],xmm7[3]
+	vmovdqu	xmm8, xmmword ptr [r8 + r9 + 80]
+	vpshufb	xmm8, xmm8, xmm1
+	vmovdqu	xmm9, xmmword ptr [r8 + r9 + 64]
+	vpshufb	xmm9, xmm9, xmm1
+	vpunpcklwd	xmm8, xmm9, xmm8        # xmm8 = xmm9[0],xmm8[0],xmm9[1],xmm8[1],xmm9[2],xmm8[2],xmm9[3],xmm8[3]
+	vpblendd	xmm7, xmm8, xmm7, 8             # xmm7 = xmm8[0,1,2],xmm7[3]
+	vmovdqu	xmm8, xmmword ptr [r8 + r9]
+	vmovdqu	xmm9, xmmword ptr [r8 + r9 + 16]
+	vmovdqu	xmm10, xmmword ptr [r8 + r9 + 32]
+	vmovdqu	xmm11, xmmword ptr [r8 + r9 + 48]
+	vpshufb	xmm11, xmm11, xmm2
+	vpshufb	xmm10, xmm10, xmm2
+	vpunpcklwd	xmm10, xmm10, xmm11     # xmm10 = xmm10[0],xmm11[0],xmm10[1],xmm11[1],xmm10[2],xmm11[2],xmm10[3],xmm11[3]
+	vpshufb	xmm9, xmm9, xmm3
+	vpshufb	xmm8, xmm8, xmm3
+	vpunpcklwd	xmm8, xmm8, xmm9        # xmm8 = xmm8[0],xmm9[0],xmm8[1],xmm9[1],xmm8[2],xmm9[2],xmm8[3],xmm9[3]
+	vpblendd	xmm8, xmm8, xmm10, 2            # xmm8 = xmm8[0],xmm10[1],xmm8[2,3]
+	vpblendd	xmm7, xmm8, xmm7, 12            # xmm7 = xmm8[0,1],xmm7[2,3]
+	vxorps	xmm8, xmm8, xmm8
+	vpermd	ymm8, ymm4, ymmword ptr [r8 + r9 + 224]
+	vpshufb	ymm8, ymm8, ymm5
+	vxorps	xmm9, xmm9, xmm9
+	vpermd	ymm9, ymm4, ymmword ptr [r8 + r9 + 192]
+	vpshufb	ymm9, ymm9, ymm5
+	vxorps	xmm10, xmm10, xmm10
+	vpermd	ymm10, ymm4, ymmword ptr [r8 + r9 + 160]
+	vpblendd	ymm8, ymm9, ymm8, 128           # ymm8 = ymm9[0,1,2,3,4,5,6],ymm8[7]
+	vpshufb	ymm9, ymm10, ymm6
+	vxorps	xmm10, xmm10, xmm10
+	vpermd	ymm10, ymm4, ymmword ptr [r8 + r9 + 128]
+	vpshufb	ymm10, ymm10, ymm6
+	vpblendd	ymm9, ymm10, ymm9, 32           # ymm9 = ymm10[0,1,2,3,4],ymm9[5],ymm10[6,7]
+	vpblendd	ymm8, ymm9, ymm8, 192           # ymm8 = ymm9[0,1,2,3,4,5],ymm8[6,7]
+	vpblendd	ymm7, ymm8, ymm7, 15            # ymm7 = ymm7[0,1,2,3],ymm8[4,5,6,7]
+	vmovdqu	ymmword ptr [rsp + rdi], ymm7
+	add	rdi, 32
+	cmp	rdx, rdi
+	jne	.LBB34_9
+# %bb.10:
+	cmp	esi, 16
+	jbe	.LBB34_11
+.LBB34_6:
+	mov	r9, rdx
+	mov	edx, eax
+	and	edx, 15
+	mov	esi, 16
+	cmovne	rsi, rdx
+	mov	rdx, rax
+	sub	rdx, rsi
+	lea	rdi, [rcx + 8*r9]
+	lea	rsi, [rip + con]
+	add	rsi, rdi
+	lea	rdi, [rsp + r9]
+	mov	r8, rdx
+	sub	r8, r9
+	xor	r9d, r9d
+	vpbroadcastw	xmm0, word ptr [rip + .LCPI34_7] # xmm0 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm1, word ptr [rip + .LCPI34_7] # xmm1 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm2, word ptr [rip + .LCPI34_7] # xmm2 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	vpbroadcastw	xmm3, word ptr [rip + .LCPI34_7] # xmm3 = [0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8]
+	.p2align	4, 0x90
+.LBB34_7:                               # =>This Inner Loop Header: Depth=1
+	vmovdqu	xmm4, xmmword ptr [rsi + 8*r9 + 112]
+	vpshufb	xmm4, xmm4, xmm0
+	vmovdqu	xmm5, xmmword ptr [rsi + 8*r9 + 96]
+	vpshufb	xmm5, xmm5, xmm0
+	vpunpcklwd	xmm4, xmm5, xmm4        # xmm4 = xmm5[0],xmm4[0],xmm5[1],xmm4[1],xmm5[2],xmm4[2],xmm5[3],xmm4[3]
+	vmovdqu	xmm5, xmmword ptr [rsi + 8*r9 + 80]
+	vpshufb	xmm5, xmm5, xmm1
+	vmovdqu	xmm6, xmmword ptr [rsi + 8*r9 + 64]
+	vpshufb	xmm6, xmm6, xmm1
+	vpunpcklwd	xmm5, xmm6, xmm5        # xmm5 = xmm6[0],xmm5[0],xmm6[1],xmm5[1],xmm6[2],xmm5[2],xmm6[3],xmm5[3]
+	vpblendd	xmm4, xmm5, xmm4, 8             # xmm4 = xmm5[0,1,2],xmm4[3]
+	vmovdqu	xmm5, xmmword ptr [rsi + 8*r9]
+	vmovdqu	xmm6, xmmword ptr [rsi + 8*r9 + 16]
+	vmovdqu	xmm7, xmmword ptr [rsi + 8*r9 + 32]
+	vmovdqu	xmm8, xmmword ptr [rsi + 8*r9 + 48]
+	vpshufb	xmm8, xmm8, xmm2
+	vpshufb	xmm7, xmm7, xmm2
+	vpunpcklwd	xmm7, xmm7, xmm8        # xmm7 = xmm7[0],xmm8[0],xmm7[1],xmm8[1],xmm7[2],xmm8[2],xmm7[3],xmm8[3]
+	vpshufb	xmm6, xmm6, xmm3
+	vpshufb	xmm5, xmm5, xmm3
+	vpunpcklwd	xmm5, xmm5, xmm6        # xmm5 = xmm5[0],xmm6[0],xmm5[1],xmm6[1],xmm5[2],xmm6[2],xmm5[3],xmm6[3]
+	vpblendd	xmm5, xmm5, xmm7, 2             # xmm5 = xmm5[0],xmm7[1],xmm5[2,3]
+	vpblendd	xmm4, xmm5, xmm4, 12            # xmm4 = xmm5[0,1],xmm4[2,3]
+	vmovdqu	xmmword ptr [rdi + r9], xmm4
+	add	r9, 16
+	cmp	r8, r9
+	jne	.LBB34_7
+.LBB34_11:
+	lea	rsi, [rsp + rdx]
+	lea	rdi, [rcx + 8*rdx]
+	lea	rcx, [rip + con]
+	add	rcx, rdi
+	sub	rax, rdx
+	xor	edx, edx
+	.p2align	4, 0x90
+.LBB34_12:                              # =>This Inner Loop Header: Depth=1
+	movzx	edi, byte ptr [rcx + 8*rdx]
+	mov	byte ptr [rsi + rdx], dil
+	inc	rdx
+	cmp	rax, rdx
+	jne	.LBB34_12
+.LBB34_13:
+	movsxd	rdx, ebx
+	xor	r14d, r14d
+	mov	rax, qword ptr [rip + all_sequences]
+	mov	ebp, 1
+	lea	r12, [rip + .Lconstinit.96]
+	xor	r15d, r15d
+	jmp	.LBB34_14
+	.p2align	4, 0x90
+.LBB34_19:                              #   in Loop: Header=BB34_14 Depth=1
+	movsxd	r15, r15d
+	lea	rdi, [8*r15]
+	add	rdi, qword ptr [rip + valid_sequences]
+	lea	rsi, [rax + 8*r14]
+	vzeroupper
+	call	memcpy@PLT
+	inc	r15d
+	mov	ebx, dword ptr [rip + length]
+	mov	rax, qword ptr [rip + all_sequences]
+.LBB34_23:                              #   in Loop: Header=BB34_14 Depth=1
+	inc	r14
+	movsxd	rdx, ebx
+	mov	ecx, dword ptr [r12 + 4*rdx]
+	cmp	r14, rcx
+	jae	.LBB34_20
+.LBB34_14:                              # =>This Loop Header: Depth=1
+                                        #     Child Loop BB34_16 Depth 2
+	test	ebx, ebx
+	jle	.LBB34_19
+# %bb.15:                               #   in Loop: Header=BB34_14 Depth=1
+	mov	ecx, ebx
+	mov	r8b, 1
+	lea	rsi, [rax + 8*r14]
+	xor	edi, edi
+	jmp	.LBB34_16
+	.p2align	4, 0x90
+.LBB34_22:                              #   in Loop: Header=BB34_16 Depth=2
+	inc	rdi
+	xor	r8d, r8d
+	cmp	rdi, rcx
+	je	.LBB34_23
+.LBB34_16:                              #   Parent Loop BB34_14 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	test	r8b, 1
+	je	.LBB34_22
+# %bb.17:                               #   in Loop: Header=BB34_16 Depth=2
+	movzx	r8d, byte ptr [rdi + rsi]
+	add	r8b, -49
+	shlx	r9d, ebp, r8d
+	and	r9b, byte ptr [rsp + rdi]
+	setne	r8b
+	inc	rdi
+	cmp	rdi, rcx
+	jne	.LBB34_16
+# %bb.18:                               #   in Loop: Header=BB34_14 Depth=1
+	test	r9b, r9b
+	jne	.LBB34_19
+	jmp	.LBB34_23
+.LBB34_20:
+	mov	rax, qword ptr fs:[40]
+	cmp	rax, qword ptr [rsp + 8]
+	jne	.LBB34_24
+# %bb.21:
+	movsxd	rax, r15d
+	add	rsp, 16
+	.cfi_def_cfa_offset 48
+	pop	rbx
+	.cfi_def_cfa_offset 40
+	pop	r12
+	.cfi_def_cfa_offset 32
+	pop	r14
+	.cfi_def_cfa_offset 24
+	pop	r15
+	.cfi_def_cfa_offset 16
+	pop	rbp
+	.cfi_def_cfa_offset 8
+	vzeroupper
+	ret
+.LBB34_24:
+	.cfi_def_cfa_offset 64
+	vzeroupper
+	call	__stack_chk_fail@PLT
+.Lfunc_end34:
+	.size	generate_valid_sequences, .Lfunc_end34-generate_valid_sequences
+	.cfi_endproc
+                                        # -- End function
+	.globl	generate_filtered_sequences     # -- Begin function generate_filtered_sequences
+	.p2align	4, 0x90
+	.type	generate_filtered_sequences,@function
+generate_filtered_sequences:            # @generate_filtered_sequences
+	.cfi_startproc
+# %bb.0:
+	push	rbp
+	.cfi_def_cfa_offset 16
+	push	r15
+	.cfi_def_cfa_offset 24
+	push	r14
+	.cfi_def_cfa_offset 32
+	push	r13
+	.cfi_def_cfa_offset 40
+	push	r12
+	.cfi_def_cfa_offset 48
+	push	rbx
+	.cfi_def_cfa_offset 56
+	sub	rsp, 104
+	.cfi_def_cfa_offset 160
+	.cfi_offset rbx, -56
+	.cfi_offset r12, -48
+	.cfi_offset r13, -40
+	.cfi_offset r14, -32
+	.cfi_offset r15, -24
+	.cfi_offset rbp, -16
+	mov	qword ptr [rsp + 96], rdi       # 8-byte Spill
+	test	rdi, rdi
+	je	.LBB35_1
+# %bb.2:
+	movsxd	rax, esi
+	mov	qword ptr [rsp + 88], rax       # 8-byte Spill
+	mov	r9d, dword ptr [rip + length]
+	mov	r14, qword ptr [rip + valid_sequences]
+	mov	r15d, 3
+	mov	r12, -1
+	xor	r13d, r13d
+	test	dl, dl
+	je	.LBB35_3
+# %bb.6:
+	mov	qword ptr [rsp + 16], 0         # 8-byte Folded Spill
+	xor	ebp, ebp
+	jmp	.LBB35_7
+	.p2align	4, 0x90
+.LBB35_22:                              #   in Loop: Header=BB35_7 Depth=1
+	inc	rbp
+	add	r15, 8
+	add	r12, 8
+	add	r13, 8
+	cmp	rbp, qword ptr [rsp + 96]       # 8-byte Folded Reload
+	je	.LBB35_23
+.LBB35_7:                               # =>This Loop Header: Depth=1
+                                        #     Child Loop BB35_12 Depth 2
+                                        #     Child Loop BB35_17 Depth 2
+	lea	rsi, [r14 + 8*rbp]
+	test	r9d, r9d
+	jle	.LBB35_8
+# %bb.9:                                #   in Loop: Header=BB35_7 Depth=1
+	mov	qword ptr [rsp + 40], rbp       # 8-byte Spill
+	mov	qword ptr [rsp + 48], r13       # 8-byte Spill
+	mov	edx, r9d
+	mov	dword ptr [rsp + 28], r9d       # 4-byte Spill
+	cmp	r9d, 4
+	mov	qword ptr [rsp + 72], r14       # 8-byte Spill
+	mov	qword ptr [rsp + 64], r15       # 8-byte Spill
+	mov	qword ptr [rsp + 56], r12       # 8-byte Spill
+	mov	qword ptr [rsp + 32], rsi       # 8-byte Spill
+	jae	.LBB35_11
+# %bb.10:                               #   in Loop: Header=BB35_7 Depth=1
+	mov	bpl, 48
+	xor	edi, edi
+	mov	r10b, 48
+	xor	r9d, r9d
+	xor	r8d, r8d
+.LBB35_15:                              #   in Loop: Header=BB35_7 Depth=1
+	mov	eax, edx
+	and	eax, 3
+	mov	r14, qword ptr [rsp + 72]       # 8-byte Reload
+	mov	r12, qword ptr [rsp + 56]       # 8-byte Reload
+	mov	r13, qword ptr [rsp + 48]       # 8-byte Reload
+	je	.LBB35_18
+# %bb.16:                               #   in Loop: Header=BB35_7 Depth=1
+	add	rdx, r12
+	sub	rdx, rdi
+	add	rdx, r14
+	add	rdi, r13
+	add	rdi, r14
+	xor	ecx, ecx
+	.p2align	4, 0x90
+.LBB35_17:                              #   Parent Loop BB35_7 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	movzx	esi, byte ptr [rdi + rcx]
+	movzx	r11d, byte ptr [rdx]
+	cmp	sil, bpl
+	setg	bl
+	movzx	ebp, bpl
+	cmovg	ebp, esi
+	add	r8b, bl
+	cmp	r11b, r10b
+	setg	sil
+	movzx	r10d, r10b
+	cmovg	r10d, r11d
+	add	r9b, sil
+	inc	rcx
+	dec	rdx
+	cmp	rax, rcx
+	jne	.LBB35_17
+.LBB35_18:                              #   in Loop: Header=BB35_7 Depth=1
+	shl	r8b, 4
+	or	r8b, r9b
+	mov	r9d, dword ptr [rsp + 28]       # 4-byte Reload
+	mov	r15, qword ptr [rsp + 64]       # 8-byte Reload
+	mov	rbp, qword ptr [rsp + 40]       # 8-byte Reload
+	mov	rsi, qword ptr [rsp + 32]       # 8-byte Reload
+	jmp	.LBB35_19
+	.p2align	4, 0x90
+.LBB35_8:                               #   in Loop: Header=BB35_7 Depth=1
+	xor	r8d, r8d
+.LBB35_19:                              #   in Loop: Header=BB35_7 Depth=1
+	movzx	ecx, r8b
+	mov	eax, ecx
+	shr	eax, 4
+	and	ecx, 7
+	mov	rdi, qword ptr [rsp + 88]       # 8-byte Reload
+	lea	rdx, [rip + left_key]
+	mov	edx, dword ptr [rdx + 4*rdi]
+	test	edx, edx
+	sete	r8b
+	cmp	eax, edx
+	sete	dl
+	or	dl, r8b
+	lea	rax, [rip + right_key]
+	mov	edi, dword ptr [rax + 4*rdi]
+	test	edi, edi
+	sete	al
+	cmp	ecx, edi
+	sete	cl
+	cmp	dl, 1
+	jne	.LBB35_22
+# %bb.20:                               #   in Loop: Header=BB35_7 Depth=1
+	or	al, cl
+	je	.LBB35_22
+# %bb.21:                               #   in Loop: Header=BB35_7 Depth=1
+	mov	rbx, qword ptr [rsp + 16]       # 8-byte Reload
+	lea	rdi, [8*rbx]
+	add	rdi, qword ptr [rip + filtered_sequences]
+	movsxd	rdx, r9d
+	call	memcpy@PLT
+	inc	rbx
+	mov	qword ptr [rsp + 16], rbx       # 8-byte Spill
+	mov	r9d, dword ptr [rip + length]
+	mov	r14, qword ptr [rip + valid_sequences]
+	jmp	.LBB35_22
+	.p2align	4, 0x90
+.LBB35_11:                              #   in Loop: Header=BB35_7 Depth=1
+	lea	rax, [rsi + rdx]
+	mov	ecx, edx
+	and	ecx, 2147483644
+	mov	qword ptr [rsp + 80], rcx       # 8-byte Spill
+	lea	rcx, [r14 + r15]
+	mov	r15, rax
+	lea	rsi, [r12 + rdx]
+	add	rsi, r14
+	mov	bpl, 48
+	xor	edi, edi
+	mov	r10b, 48
+	xor	r9d, r9d
+	xor	r8d, r8d
+	jmp	.LBB35_12
+	.p2align	4, 0x90
+.LBB35_14:                              #   in Loop: Header=BB35_12 Depth=2
+	add	r8b, byte ptr [rsp + 14]        # 1-byte Folded Reload
+	add	r8b, bl
+	add	r8b, r14b
+	add	r8b, al
+	add	r9b, byte ptr [rsp + 15]        # 1-byte Folded Reload
+	add	r9b, r13b
+	add	r9b, r15b
+	mov	rax, rdi
+	xor	rax, -4
+	mov	r15, r12
+	movzx	eax, byte ptr [r12 + rax]
+	cmp	al, r10b
+	setg	r11b
+	cmovg	r10d, eax
+	add	r9b, r11b
+	add	rdi, 4
+	add	rsi, -4
+	cmp	qword ptr [rsp + 80], rdi       # 8-byte Folded Reload
+	je	.LBB35_15
+.LBB35_12:                              #   Parent Loop BB35_7 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	movzx	eax, byte ptr [rcx + rdi - 3]
+	cmp	al, bpl
+	setg	byte ptr [rsp + 14]             # 1-byte Folded Spill
+	movzx	ebx, byte ptr [rsi]
+	movzx	r11d, bpl
+	cmovg	r11d, eax
+	cmp	bl, r10b
+	setg	byte ptr [rsp + 15]             # 1-byte Folded Spill
+	movzx	r10d, r10b
+	cmovg	r10d, ebx
+	movzx	eax, byte ptr [rcx + rdi - 2]
+	mov	rbx, rdi
+	xor	rbx, -2
+	movzx	ebp, byte ptr [r15 + rbx]
+	cmp	al, r11b
+	setg	bl
+	cmovg	r11d, eax
+	cmp	bpl, r10b
+	setg	r13b
+	cmovg	r10d, ebp
+	movzx	eax, byte ptr [rcx + rdi - 1]
+	mov	r14, rdi
+	xor	r14, -3
+	mov	r12, r15
+	movzx	ebp, byte ptr [r15 + r14]
+	cmp	al, r11b
+	setg	r14b
+	cmovg	r11d, eax
+	cmp	bpl, r10b
+	setg	r15b
+	cmovg	r10d, ebp
+	movzx	ebp, byte ptr [rcx + rdi]
+	cmp	bpl, r11b
+	setg	al
+	jg	.LBB35_14
+# %bb.13:                               #   in Loop: Header=BB35_12 Depth=2
+	mov	ebp, r11d
+	jmp	.LBB35_14
+.LBB35_1:
+	mov	qword ptr [rsp + 16], 0         # 8-byte Folded Spill
+.LBB35_23:
+	mov	rax, qword ptr [rsp + 16]       # 8-byte Reload
+	add	rsp, 104
+	.cfi_def_cfa_offset 56
+	pop	rbx
+	.cfi_def_cfa_offset 48
+	pop	r12
+	.cfi_def_cfa_offset 40
+	pop	r13
+	.cfi_def_cfa_offset 32
+	pop	r14
+	.cfi_def_cfa_offset 24
+	pop	r15
+	.cfi_def_cfa_offset 16
+	pop	rbp
+	.cfi_def_cfa_offset 8
+	ret
+.LBB35_3:
+	.cfi_def_cfa_offset 160
+	mov	qword ptr [rsp + 16], 0         # 8-byte Folded Spill
+	xor	ebp, ebp
+	jmp	.LBB35_4
+	.p2align	4, 0x90
+.LBB35_33:                              #   in Loop: Header=BB35_4 Depth=1
+	inc	rbp
+	add	r15, 8
+	add	r12, 8
+	add	r13, 8
+	cmp	rbp, qword ptr [rsp + 96]       # 8-byte Folded Reload
+	je	.LBB35_23
+.LBB35_4:                               # =>This Loop Header: Depth=1
+                                        #     Child Loop BB35_35 Depth 2
+                                        #     Child Loop BB35_28 Depth 2
+	lea	rsi, [r14 + 8*rbp]
+	test	r9d, r9d
+	jle	.LBB35_5
+# %bb.24:                               #   in Loop: Header=BB35_4 Depth=1
+	mov	qword ptr [rsp + 40], rbp       # 8-byte Spill
+	mov	qword ptr [rsp + 48], r13       # 8-byte Spill
+	mov	edx, r9d
+	mov	dword ptr [rsp + 28], r9d       # 4-byte Spill
+	cmp	r9d, 4
+	mov	qword ptr [rsp + 72], r14       # 8-byte Spill
+	mov	qword ptr [rsp + 64], r15       # 8-byte Spill
+	mov	qword ptr [rsp + 56], r12       # 8-byte Spill
+	mov	qword ptr [rsp + 32], rsi       # 8-byte Spill
+	jae	.LBB35_34
+# %bb.25:                               #   in Loop: Header=BB35_4 Depth=1
+	mov	bpl, 48
+	xor	edi, edi
+	mov	r9b, 48
+	xor	eax, eax
+	xor	r8d, r8d
+.LBB35_26:                              #   in Loop: Header=BB35_4 Depth=1
+	mov	ecx, edx
+	and	ecx, 3
+	mov	r14, qword ptr [rsp + 72]       # 8-byte Reload
+	mov	r12, qword ptr [rsp + 56]       # 8-byte Reload
+	mov	r13, qword ptr [rsp + 48]       # 8-byte Reload
+	je	.LBB35_29
+# %bb.27:                               #   in Loop: Header=BB35_4 Depth=1
+	add	rdx, r12
+	sub	rdx, rdi
+	add	rdx, r14
+	add	rdi, r13
+	add	rdi, r14
+	xor	esi, esi
+	.p2align	4, 0x90
+.LBB35_28:                              #   Parent Loop BB35_4 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	movzx	r10d, byte ptr [rdi + rsi]
+	movzx	r11d, byte ptr [rdx]
+	cmp	r10b, bpl
+	setg	bl
+	movzx	ebp, bpl
+	cmovg	ebp, r10d
+	add	r8b, bl
+	cmp	r11b, r9b
+	setg	r10b
+	movzx	r9d, r9b
+	cmovg	r9d, r11d
+	add	al, r10b
+	inc	rsi
+	dec	rdx
+	cmp	rcx, rsi
+	jne	.LBB35_28
+.LBB35_29:                              #   in Loop: Header=BB35_4 Depth=1
+	shl	r8b, 4
+	or	r8b, al
+	mov	r9d, dword ptr [rsp + 28]       # 4-byte Reload
+	mov	r15, qword ptr [rsp + 64]       # 8-byte Reload
+	mov	rbp, qword ptr [rsp + 40]       # 8-byte Reload
+	mov	rsi, qword ptr [rsp + 32]       # 8-byte Reload
+	jmp	.LBB35_30
+	.p2align	4, 0x90
+.LBB35_5:                               #   in Loop: Header=BB35_4 Depth=1
+	xor	r8d, r8d
+.LBB35_30:                              #   in Loop: Header=BB35_4 Depth=1
+	movzx	ecx, r8b
+	mov	eax, ecx
+	shr	eax, 4
+	and	ecx, 7
+	mov	rdi, qword ptr [rsp + 88]       # 8-byte Reload
+	lea	rdx, [rip + top_key]
+	mov	edx, dword ptr [rdx + 4*rdi]
+	test	edx, edx
+	sete	r8b
+	cmp	eax, edx
+	sete	dl
+	or	dl, r8b
+	lea	rax, [rip + bottom_key]
+	mov	edi, dword ptr [rax + 4*rdi]
+	test	edi, edi
+	sete	al
+	cmp	ecx, edi
+	sete	cl
+	cmp	dl, 1
+	jne	.LBB35_33
+# %bb.31:                               #   in Loop: Header=BB35_4 Depth=1
+	or	al, cl
+	je	.LBB35_33
+# %bb.32:                               #   in Loop: Header=BB35_4 Depth=1
+	mov	rbx, qword ptr [rsp + 16]       # 8-byte Reload
+	lea	rdi, [8*rbx]
+	add	rdi, qword ptr [rip + filtered_sequences]
+	movsxd	rdx, r9d
+	call	memcpy@PLT
+	inc	rbx
+	mov	qword ptr [rsp + 16], rbx       # 8-byte Spill
+	mov	r9d, dword ptr [rip + length]
+	mov	r14, qword ptr [rip + valid_sequences]
+	jmp	.LBB35_33
+	.p2align	4, 0x90
+.LBB35_34:                              #   in Loop: Header=BB35_4 Depth=1
+	lea	rax, [rsi + rdx]
+	mov	ecx, edx
+	and	ecx, 2147483644
+	mov	qword ptr [rsp + 80], rcx       # 8-byte Spill
+	add	r15, r14
+	lea	rcx, [r12 + rdx]
+	add	rcx, r14
+	mov	r14, rax
+	mov	bpl, 48
+	xor	edi, edi
+	mov	r9b, 48
+	xor	esi, esi
+	xor	r8d, r8d
+	jmp	.LBB35_35
+	.p2align	4, 0x90
+.LBB35_37:                              #   in Loop: Header=BB35_35 Depth=2
+	add	r8b, byte ptr [rsp + 14]        # 1-byte Folded Reload
+	add	r8b, bl
+	add	r8b, r11b
+	add	r8b, al
+	add	sil, byte ptr [rsp + 15]        # 1-byte Folded Reload
+	add	sil, r13b
+	add	sil, r14b
+	mov	rax, rdi
+	xor	rax, -4
+	mov	r14, r12
+	movzx	r10d, byte ptr [r12 + rax]
+	cmp	r10b, r9b
+	setg	al
+	cmovg	r9d, r10d
+	add	al, sil
+	add	rdi, 4
+	add	rcx, -4
+	mov	esi, eax
+	cmp	qword ptr [rsp + 80], rdi       # 8-byte Folded Reload
+	je	.LBB35_26
+.LBB35_35:                              #   Parent Loop BB35_4 Depth=1
+                                        # =>  This Inner Loop Header: Depth=2
+	movzx	eax, byte ptr [r15 + rdi - 3]
+	cmp	al, bpl
+	setg	byte ptr [rsp + 14]             # 1-byte Folded Spill
+	movzx	r11d, byte ptr [rcx]
+	movzx	r10d, bpl
+	cmovg	r10d, eax
+	cmp	r11b, r9b
+	setg	byte ptr [rsp + 15]             # 1-byte Folded Spill
+	movzx	r9d, r9b
+	cmovg	r9d, r11d
+	movzx	eax, byte ptr [r15 + rdi - 2]
+	mov	r11, rdi
+	xor	r11, -2
+	movzx	r11d, byte ptr [r14 + r11]
+	cmp	al, r10b
+	setg	bl
+	cmovg	r10d, eax
+	cmp	r11b, r9b
+	setg	r13b
+	cmovg	r9d, r11d
+	movzx	eax, byte ptr [r15 + rdi - 1]
+	mov	r11, rdi
+	xor	r11, -3
+	mov	r12, r14
+	movzx	ebp, byte ptr [r14 + r11]
+	cmp	al, r10b
+	setg	r11b
+	cmovg	r10d, eax
+	cmp	bpl, r9b
+	setg	r14b
+	cmovg	r9d, ebp
+	movzx	ebp, byte ptr [r15 + rdi]
+	cmp	bpl, r10b
+	setg	al
+	jg	.LBB35_37
+# %bb.36:                               #   in Loop: Header=BB35_35 Depth=2
+	mov	ebp, r10d
+	jmp	.LBB35_37
+.Lfunc_end35:
+	.size	generate_filtered_sequences, .Lfunc_end35-generate_filtered_sequences
+	.cfi_endproc
+                                        # -- End function
+	.globl	apply_sequence_filtration       # -- Begin function apply_sequence_filtration
+	.p2align	4, 0x90
+	.type	apply_sequence_filtration,@function
+apply_sequence_filtration:              # @apply_sequence_filtration
+	.cfi_startproc
+# %bb.0:
+	push	rbp
+	.cfi_def_cfa_offset 16
+	push	rbx
+	.cfi_def_cfa_offset 24
+	push	rax
+	.cfi_def_cfa_offset 32
+	.cfi_offset rbx, -24
+	.cfi_offset rbp, -16
+	xor	ebx, ebx
+	cmp	dword ptr [rip + length], 0
+	jle	.LBB36_1
+# %bb.3:
+	xor	ebp, ebp
+	jmp	.LBB36_4
+	.p2align	4, 0x90
+.LBB36_7:                               #   in Loop: Header=BB36_4 Depth=1
+	inc	ebx
+	cmp	ebx, dword ptr [rip + length]
+	jge	.LBB36_2
+.LBB36_4:                               # =>This Inner Loop Header: Depth=1
+	mov	eax, ebp
+	mov	bpl, 1
+	test	al, 1
+	jne	.LBB36_7
+# %bb.5:                                #   in Loop: Header=BB36_4 Depth=1
+	mov	edi, ebx
+	mov	esi, 1
+	call	sequence_filtration
+	test	al, al
+	jne	.LBB36_7
+# %bb.6:                                #   in Loop: Header=BB36_4 Depth=1
+	mov	edi, ebx
+	xor	esi, esi
+	call	sequence_filtration
+	mov	ebp, eax
+	jmp	.LBB36_7
+.LBB36_1:
+	xor	ebp, ebp
+.LBB36_2:
+	mov	eax, ebp
+	add	rsp, 8
+	.cfi_def_cfa_offset 24
+	pop	rbx
+	.cfi_def_cfa_offset 16
+	pop	rbp
+	.cfi_def_cfa_offset 8
+	ret
+.Lfunc_end36:
+	.size	apply_sequence_filtration, .Lfunc_end36-apply_sequence_filtration
+	.cfi_endproc
+                                        # -- End function
+	.section	.rodata.cst32,"aM",@progbits,32
+	.p2align	5, 0x0                          # -- Begin function solve
+.LCPI37_0:
+	.byte	1                               # 0x1
+	.byte	2                               # 0x2
+	.byte	3                               # 0x3
+	.byte	4                               # 0x4
+	.byte	5                               # 0x5
+	.byte	6                               # 0x6
+	.byte	7                               # 0x7
+	.byte	8                               # 0x8
+	.byte	9                               # 0x9
+	.byte	10                              # 0xa
+	.byte	11                              # 0xb
+	.byte	12                              # 0xc
+	.byte	13                              # 0xd
+	.byte	14                              # 0xe
+	.byte	15                              # 0xf
+	.byte	16                              # 0x10
+	.byte	17                              # 0x11
+	.byte	18                              # 0x12
+	.byte	19                              # 0x13
+	.byte	20                              # 0x14
+	.byte	21                              # 0x15
+	.byte	22                              # 0x16
+	.byte	23                              # 0x17
+	.byte	24                              # 0x18
+	.byte	25                              # 0x19
+	.byte	26                              # 0x1a
+	.byte	27                              # 0x1b
+	.byte	28                              # 0x1c
+	.byte	29                              # 0x1d
+	.byte	30                              # 0x1e
+	.byte	31                              # 0x1f
+	.byte	32                              # 0x20
+.LCPI37_1:
+	.zero	32,48
+.LCPI37_2:
+	.zero	32,32
+	.section	.rodata.cst16,"aM",@progbits,16
+	.p2align	4, 0x0
+.LCPI37_3:
+	.byte	0                               # 0x0
+	.byte	1                               # 0x1
+	.byte	2                               # 0x2
+	.byte	3                               # 0x3
+	.byte	4                               # 0x4
+	.byte	5                               # 0x5
+	.byte	6                               # 0x6
+	.byte	7                               # 0x7
+	.byte	8                               # 0x8
+	.byte	9                               # 0x9
+	.byte	10                              # 0xa
+	.byte	11                              # 0xb
+	.byte	12                              # 0xc
+	.byte	13                              # 0xd
+	.byte	14                              # 0xe
+	.byte	15                              # 0xf
+.LCPI37_4:
+	.zero	16,48
+.LCPI37_5:
+	.zero	16,16
+	.section	.rodata,"a",@progbits
+.LCPI37_6:
+	.byte	48                              # 0x30
+.LCPI37_7:
+	.byte	16                              # 0x10
+.LCPI37_8:
+	.byte	32                              # 0x20
 	.text
 	.globl	solve
 	.p2align	4, 0x90
@@ -7004,7 +7864,7 @@ solve:                                  # @solve
 	push	r13
 	push	r12
 	push	rbx
-	sub	rsp, 24
+	push	rax
 	.cfi_offset rbx, -56
 	.cfi_offset r12, -48
 	.cfi_offset r13, -40
@@ -7015,359 +7875,15 @@ solve:                                  # @solve
 	mov	rax, qword ptr fs:[40]
 	mov	qword ptr [rbp - 48], rax
 	call	initialize_board
-	test	eax, eax
-	je	.LBB35_1
-# %bb.2:
-	mov	r15d, dword ptr [rip + length]
-	test	ebx, ebx
-	je	.LBB35_7
-# %bb.3:
-	mov	edi, ebx
-	imul	edi, edi
-	mov	eax, -1
-	shlx	esi, eax, ebx
-	not	sil
-	mov	r8d, 1
-	cmp	edi, 2
-	cmovb	edi, r8d
-	jae	.LBB35_31
-# %bb.4:
-	xor	ecx, ecx
-	jmp	.LBB35_5
-.LBB35_1:
+	mov	ecx, eax
 	xor	eax, eax
-	jmp	.LBB35_46
-.LBB35_31:
-	mov	r9d, edi
-	and	r9d, -4
-	xor	ecx, ecx
-	movzx	r10d, sil
-	lea	r11, [rip + con]
-	.p2align	4, 0x90
-.LBB35_32:                              # =>This Inner Loop Header: Depth=1
-	mov	eax, ecx
-	cdq
-	idiv	r15d
-                                        # kill: def $edx killed $edx def $rdx
-                                        # kill: def $eax killed $eax def $rax
-	shl	eax, 4
-	or	eax, edx
-	shr	eax, 4
-	and	eax, 15
-	and	edx, 7
-	movzx	r12d, byte ptr [r14 + rcx]
-	lea	r13d, [r12 - 49]
-	cmp	r12b, 45
-	shlx	r12d, r8d, r13d
-	cmove	r12d, r10d
-	lea	r13, [r11 + 8*rax]
-	mov	byte ptr [rdx + r13], r12b
-	mov	byte ptr [rax + r11 + 64], 0
-	lea	eax, [rcx + 1]
-	cdq
-	idiv	r15d
-                                        # kill: def $edx killed $edx def $rdx
-                                        # kill: def $eax killed $eax def $rax
-	shl	eax, 4
-	or	eax, edx
-	shr	eax, 4
-	and	eax, 15
-	movzx	r12d, byte ptr [r14 + rcx + 1]
-	and	edx, 7
-	lea	r13d, [r12 - 49]
-	cmp	r12b, 45
-	shlx	r12d, r8d, r13d
-	cmove	r12d, r10d
-	lea	r13, [r11 + 8*rax]
-	mov	byte ptr [rdx + r13], r12b
-	mov	byte ptr [rax + r11 + 64], 0
-	add	rcx, 2
-	cmp	rcx, r9
-	jne	.LBB35_32
-.LBB35_5:
-	test	dil, 1
-	je	.LBB35_7
-# %bb.6:
-	mov	eax, ecx
-	cdq
-	idiv	r15d
-                                        # kill: def $edx killed $edx def $rdx
-                                        # kill: def $eax killed $eax def $rax
-	shl	eax, 4
-	or	eax, edx
-	shr	eax, 4
-	and	eax, 15
-	and	edx, 7
-	movzx	ecx, byte ptr [r14 + rcx]
-	lea	edi, [rcx - 49]
-	cmp	cl, 45
-	mov	ecx, 1
-	shlx	ecx, ecx, edi
-	movzx	esi, sil
-	cmovne	esi, ecx
-	lea	rcx, [rip + con]
-	lea	rdi, [rcx + 8*rax]
-	mov	byte ptr [rdx + rdi], sil
-	mov	byte ptr [rax + rcx + 64], 0
-.LBB35_7:
-	movsxd	rbx, ebx
-	lea	r14, [rip + .Lconstinit.24]
-	mov	edi, dword ptr [r14 + 4*rbx]
-	shl	rdi, 3
-	call	malloc@PLT
-	mov	qword ptr [rbp - 56], rsp       # 8-byte Spill
-	mov	qword ptr [rip + all_sequences], rax
-	mov	rdx, rsp
-	add	r15, 15
-	and	r15, -16
-	sub	rdx, r15
-	mov	rsp, rdx
-	mov	ecx, dword ptr [rip + length]
 	test	ecx, ecx
-	jle	.LBB35_14
-# %bb.8:
-	mov	esi, 1
-	cmp	ecx, 16
-	jb	.LBB35_29
-# %bb.9:
-	cmp	ecx, 32
-	jae	.LBB35_24
-# %bb.10:
-	mov	edi, 1
-	xor	eax, eax
-.LBB35_11:
-	mov	r8d, ecx
-	and	r8d, 2147483632
-	lea	rsi, [r8 + 1]
-	vmovd	xmm0, edi
-	vpbroadcastb	xmm0, xmm0
-	vpaddb	xmm0, xmm0, xmmword ptr [rip + .LCPI35_3]
-	vpbroadcastb	xmm1, byte ptr [rip + .LCPI35_8] # xmm1 = [48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48]
-	vpbroadcastb	xmm2, byte ptr [rip + .LCPI35_9] # xmm2 = [16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16]
-	.p2align	4, 0x90
-.LBB35_12:                              # =>This Inner Loop Header: Depth=1
-	vpaddb	xmm3, xmm0, xmm1
-	vmovdqa	xmmword ptr [rdx + rax], xmm3
-	add	rax, 16
-	vpaddb	xmm0, xmm0, xmm2
-	cmp	r8, rax
-	jne	.LBB35_12
+	jne	.LBB37_1
 # %bb.13:
-	cmp	r8d, ecx
-	jne	.LBB35_29
-	jmp	.LBB35_14
-.LBB35_24:
-	mov	eax, ecx
-	and	eax, 2147483616
-	lea	rdi, [rax + 1]
-	vmovdqa	ymm0, ymmword ptr [rip + .LCPI35_0] # ymm0 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]
-	xor	esi, esi
-	vpbroadcastb	ymm1, byte ptr [rip + .LCPI35_8] # ymm1 = [48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48]
-	vpbroadcastb	ymm2, byte ptr [rip + .LCPI35_10] # ymm2 = [32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]
-	.p2align	4, 0x90
-.LBB35_25:                              # =>This Inner Loop Header: Depth=1
-	vpaddb	ymm3, ymm0, ymm1
-	vmovdqu	ymmword ptr [rdx + rsi], ymm3
-	add	rsi, 32
-	vpaddb	ymm0, ymm0, ymm2
-	cmp	rax, rsi
-	jne	.LBB35_25
-# %bb.26:
-	cmp	eax, ecx
-	je	.LBB35_14
-# %bb.27:
-	test	cl, 16
-	jne	.LBB35_11
-# %bb.28:
-	or	rax, 1
-	mov	rsi, rax
-.LBB35_29:
-	lea	rax, [rcx + 1]
-	.p2align	4, 0x90
-.LBB35_30:                              # =>This Inner Loop Header: Depth=1
-	lea	edi, [rsi + 48]
-	mov	byte ptr [rdx + rsi - 1], dil
-	inc	rsi
-	cmp	rax, rsi
-	jne	.LBB35_30
-.LBB35_14:
-	mov	dword ptr [rip + sequence_pos], 0
-	mov	rdi, qword ptr [rip + all_sequences]
-	mov	esi, ecx
-                                        # kill: def $ecx killed $ecx killed $rcx
-	vzeroupper
-	call	permutations
-	mov	ebx, dword ptr [r14 + 4*rbx]
-	shl	rbx, 3
-	mov	rdi, rbx
-	call	malloc@PLT
-	mov	qword ptr [rip + valid_sequences], rax
-	mov	rdi, rbx
-	call	malloc@PLT
-	mov	qword ptr [rip + filtered_sequences], rax
-	call	edge_clue_initialization
-	call	print_board
-	xor	r12d, r12d
-	mov	eax, dword ptr [rip + length]
-	mov	r13d, -1
-	lea	r15, [rip + con]
-	.p2align	4, 0x90
-.LBB35_15:                              # =>This Loop Header: Depth=1
-                                        #     Child Loop BB35_17 Depth 2
-                                        #     Child Loop BB35_36 Depth 2
-                                        #     Child Loop BB35_40 Depth 2
-                                        #     Child Loop BB35_42 Depth 2
-	test	eax, eax
-	jle	.LBB35_21
-# %bb.16:                               #   in Loop: Header=BB35_15 Depth=1
-	xor	ebx, ebx
-	xor	r14d, r14d
-	jmp	.LBB35_17
-	.p2align	4, 0x90
-.LBB35_20:                              #   in Loop: Header=BB35_17 Depth=2
-	inc	ebx
-	cmp	ebx, dword ptr [rip + length]
-	jge	.LBB35_21
-.LBB35_17:                              #   Parent Loop BB35_15 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	mov	eax, r14d
-	mov	r14b, 1
-	test	al, 1
-	jne	.LBB35_20
-# %bb.18:                               #   in Loop: Header=BB35_17 Depth=2
-	mov	edi, ebx
-	mov	esi, 1
-	vzeroupper
-	call	sequence_filtration
-	test	al, al
-	jne	.LBB35_20
-# %bb.19:                               #   in Loop: Header=BB35_17 Depth=2
-	mov	edi, ebx
-	xor	esi, esi
-	call	sequence_filtration
-	mov	r14d, eax
-	jmp	.LBB35_20
-	.p2align	4, 0x90
-.LBB35_21:                              #   in Loop: Header=BB35_15 Depth=1
-	vzeroupper
-	call	place_singles
-	movsxd	rax, dword ptr [rip + length]
-	test	rax, rax
-	jle	.LBB35_45
-# %bb.22:                               #   in Loop: Header=BB35_15 Depth=1
-	shlx	ecx, r13d, eax
-	not	cl
-	cmp	eax, 16
-	jae	.LBB35_33
-# %bb.23:                               #   in Loop: Header=BB35_15 Depth=1
-	xor	edx, edx
-	mov	esi, ecx
-	jmp	.LBB35_42
-	.p2align	4, 0x90
-.LBB35_33:                              #   in Loop: Header=BB35_15 Depth=1
-	cmp	eax, 128
-	jae	.LBB35_35
-# %bb.34:                               #   in Loop: Header=BB35_15 Depth=1
-	mov	esi, ecx
-	xor	edx, edx
-	jmp	.LBB35_39
-	.p2align	4, 0x90
-.LBB35_35:                              #   in Loop: Header=BB35_15 Depth=1
-	mov	edx, eax
-	vpbroadcastb	ymm1, byte ptr [rip + .LCPI35_11] # ymm1 = [255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255]
-	vpinsrb	xmm0, xmm1, ecx, 0
-	and	edx, 2147483520
-	vpblendd	ymm0, ymm1, ymm0, 15            # ymm0 = ymm0[0,1,2,3],ymm1[4,5,6,7]
-	vpcmpeqd	ymm1, ymm1, ymm1
-	xor	esi, esi
-	vpcmpeqd	ymm2, ymm2, ymm2
-	vpcmpeqd	ymm3, ymm3, ymm3
-	.p2align	4, 0x90
-.LBB35_36:                              #   Parent Loop BB35_15 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpand	ymm0, ymm0, ymmword ptr [rsi + r15 + 64]
-	vpand	ymm1, ymm1, ymmword ptr [rsi + r15 + 96]
-	vpand	ymm2, ymm2, ymmword ptr [rsi + r15 + 128]
-	vpand	ymm3, ymm3, ymmword ptr [rsi + r15 + 160]
-	sub	rsi, -128
-	cmp	rdx, rsi
-	jne	.LBB35_36
-# %bb.37:                               #   in Loop: Header=BB35_15 Depth=1
-	vpand	ymm0, ymm1, ymm0
-	vpand	ymm1, ymm3, ymm2
-	vpand	ymm0, ymm1, ymm0
-	vextracti128	xmm1, ymm0, 1
-	vpand	xmm0, xmm0, xmm1
-	vpshufd	xmm1, xmm0, 238                 # xmm1 = xmm0[2,3,2,3]
-	vpand	xmm0, xmm0, xmm1
-	vpshufd	xmm1, xmm0, 85                  # xmm1 = xmm0[1,1,1,1]
-	vpand	xmm0, xmm0, xmm1
-	vpsrld	xmm1, xmm0, 16
-	vpand	xmm0, xmm0, xmm1
-	vpsrlw	xmm1, xmm0, 8
-	vpand	xmm0, xmm0, xmm1
-	vmovd	esi, xmm0
-	cmp	rdx, rax
-	je	.LBB35_43
-# %bb.38:                               #   in Loop: Header=BB35_15 Depth=1
-	test	al, 112
-	je	.LBB35_42
-.LBB35_39:                              #   in Loop: Header=BB35_15 Depth=1
-	mov	rdi, rdx
-	mov	edx, eax
-	and	edx, 2147483632
-	vpbroadcastb	xmm0, byte ptr [rip + .LCPI35_11] # xmm0 = [255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255]
-	vpinsrb	xmm0, xmm0, esi, 0
-	.p2align	4, 0x90
-.LBB35_40:                              #   Parent Loop BB35_15 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	vpand	xmm0, xmm0, xmmword ptr [rdi + r15 + 64]
-	add	rdi, 16
-	cmp	rdx, rdi
-	jne	.LBB35_40
-# %bb.41:                               #   in Loop: Header=BB35_15 Depth=1
-	vpshufd	xmm1, xmm0, 238                 # xmm1 = xmm0[2,3,2,3]
-	vpand	xmm0, xmm0, xmm1
-	vpshufd	xmm1, xmm0, 85                  # xmm1 = xmm0[1,1,1,1]
-	vpand	xmm0, xmm0, xmm1
-	vpsrld	xmm1, xmm0, 16
-	vpand	xmm0, xmm0, xmm1
-	vpsrlw	xmm1, xmm0, 8
-	vpand	xmm0, xmm0, xmm1
-	vmovd	esi, xmm0
-	cmp	rdx, rax
-	je	.LBB35_43
-	.p2align	4, 0x90
-.LBB35_42:                              #   Parent Loop BB35_15 Depth=1
-                                        # =>  This Inner Loop Header: Depth=2
-	and	sil, byte ptr [rdx + r15 + 64]
-	inc	rdx
-	cmp	rax, rdx
-	jne	.LBB35_42
-.LBB35_43:                              #   in Loop: Header=BB35_15 Depth=1
-	cmp	sil, cl
-	je	.LBB35_45
-# %bb.44:                               #   in Loop: Header=BB35_15 Depth=1
-	lea	ecx, [r12 + 1]
-	cmp	r12d, 50
-	mov	r12d, ecx
-	jb	.LBB35_15
-.LBB35_45:
-	vzeroupper
-	call	print_board
-	mov	rdi, qword ptr [rip + all_sequences]
-	call	free@PLT
-	mov	rdi, qword ptr [rip + valid_sequences]
-	call	free@PLT
-	mov	rdi, qword ptr [rip + filtered_sequences]
-	call	free@PLT
-	mov	eax, 1
-	mov	rsp, qword ptr [rbp - 56]       # 8-byte Reload
-.LBB35_46:
 	mov	rcx, qword ptr fs:[40]
 	cmp	rcx, qword ptr [rbp - 48]
-	jne	.LBB35_48
-# %bb.47:
+	jne	.LBB37_22
+.LBB37_14:
 	lea	rsp, [rbp - 40]
 	pop	rbx
 	pop	r12
@@ -7377,11 +7893,191 @@ solve:                                  # @solve
 	pop	rbp
 	.cfi_def_cfa rsp, 8
 	ret
-.LBB35_48:
+.LBB37_1:
 	.cfi_def_cfa rbp, 16
+	mov	r13d, dword ptr [rip + length]
+	test	ebx, ebx
+	je	.LBB37_5
+# %bb.2:
+	mov	esi, ebx
+	imul	esi, esi
+	mov	edi, r13d
+	imul	edi, edi
+	mov	eax, -1
+	shlx	eax, eax, ebx
+	not	al
+	cmp	esi, 1
+	adc	esi, 0
+	xor	ecx, ecx
+	mov	r8d, 1
+	movzx	r9d, al
+	lea	r10, [rip + con]
+	.p2align	4, 0x90
+.LBB37_3:                               # =>This Inner Loop Header: Depth=1
+	cmp	rdi, rcx
+	je	.LBB37_23
+# %bb.4:                                #   in Loop: Header=BB37_3 Depth=1
+	mov	eax, ecx
+	cdq
+	idiv	r13d
+                                        # kill: def $edx killed $edx def $rdx
+                                        # kill: def $eax killed $eax def $rax
+	shl	eax, 4
+	or	eax, edx
+	shr	eax, 4
+	and	eax, 15
+	and	edx, 7
+	movzx	r11d, byte ptr [r14 + rcx]
+	lea	r15d, [r11 - 49]
+	cmp	r11b, 45
+	shlx	r11d, r8d, r15d
+	cmove	r11d, r9d
+	lea	r15, [r10 + 8*rax]
+	mov	byte ptr [rdx + r15], r11b
+	mov	byte ptr [rax + r10 + 64], 0
+	inc	rcx
+	cmp	rsi, rcx
+	jne	.LBB37_3
+.LBB37_5:
+	movsxd	r15, ebx
+	lea	r12, [rip + .Lconstinit.96]
+	mov	edi, dword ptr [r12 + 4*r15]
+	shl	rdi, 3
+	call	malloc@PLT
+	mov	r14, rsp
+	mov	qword ptr [rip + all_sequences], rax
+	mov	rdx, rsp
+	add	r13, 15
+	and	r13, -16
+	sub	rdx, r13
+	mov	rsp, rdx
+	mov	ecx, dword ptr [rip + length]
+	test	ecx, ecx
+	jle	.LBB37_12
+# %bb.6:
+	mov	esi, 1
+	cmp	ecx, 16
+	jb	.LBB37_20
+# %bb.7:
+	cmp	ecx, 32
+	jae	.LBB37_15
+# %bb.8:
+	mov	edi, 1
+	xor	eax, eax
+.LBB37_9:
+	mov	r8d, ecx
+	and	r8d, 2147483632
+	lea	rsi, [r8 + 1]
+	vmovd	xmm0, edi
+	vpbroadcastb	xmm0, xmm0
+	vpaddb	xmm0, xmm0, xmmword ptr [rip + .LCPI37_3]
+	vpbroadcastb	xmm1, byte ptr [rip + .LCPI37_6] # xmm1 = [48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48]
+	vpbroadcastb	xmm2, byte ptr [rip + .LCPI37_7] # xmm2 = [16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16]
+	.p2align	4, 0x90
+.LBB37_10:                              # =>This Inner Loop Header: Depth=1
+	vpaddb	xmm3, xmm0, xmm1
+	vmovdqa	xmmword ptr [rdx + rax], xmm3
+	add	rax, 16
+	vpaddb	xmm0, xmm0, xmm2
+	cmp	r8, rax
+	jne	.LBB37_10
+# %bb.11:
+	cmp	r8d, ecx
+	jne	.LBB37_20
+	jmp	.LBB37_12
+.LBB37_15:
+	mov	eax, ecx
+	and	eax, 2147483616
+	lea	rdi, [rax + 1]
+	vmovdqa	ymm0, ymmword ptr [rip + .LCPI37_0] # ymm0 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]
+	xor	esi, esi
+	vpbroadcastb	ymm1, byte ptr [rip + .LCPI37_6] # ymm1 = [48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48]
+	vpbroadcastb	ymm2, byte ptr [rip + .LCPI37_8] # ymm2 = [32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]
+	.p2align	4, 0x90
+.LBB37_16:                              # =>This Inner Loop Header: Depth=1
+	vpaddb	ymm3, ymm0, ymm1
+	vmovdqu	ymmword ptr [rdx + rsi], ymm3
+	add	rsi, 32
+	vpaddb	ymm0, ymm0, ymm2
+	cmp	rax, rsi
+	jne	.LBB37_16
+# %bb.17:
+	cmp	eax, ecx
+	je	.LBB37_12
+# %bb.18:
+	test	cl, 16
+	jne	.LBB37_9
+# %bb.19:
+	or	rax, 1
+	mov	rsi, rax
+.LBB37_20:
+	lea	rax, [rcx + 1]
+	.p2align	4, 0x90
+.LBB37_21:                              # =>This Inner Loop Header: Depth=1
+	lea	edi, [rsi + 48]
+	mov	byte ptr [rdx + rsi - 1], dil
+	inc	rsi
+	cmp	rax, rsi
+	jne	.LBB37_21
+.LBB37_12:
+	mov	dword ptr [rip + sequence_pos], 0
+	mov	rdi, qword ptr [rip + all_sequences]
+	mov	esi, ecx
+                                        # kill: def $ecx killed $ecx killed $rcx
+	vzeroupper
+	call	permutations
+	mov	r13, qword ptr [rip + stderr@GOTPCREL]
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.21]
+	lea	rdx, [rip + .L.str.22]
+	lea	rcx, [rip + .L.str.23]
+	lea	r8, [rip + .L.str.1]
+	mov	r9d, 721
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rdi, qword ptr [r13]
+	lea	rsi, [rip + .L.str.94]
+	mov	edx, ebx
+	xor	eax, eax
+	call	fprintf@PLT
+	mov	rsi, qword ptr [r13]
+	mov	edi, 10
+	call	fputc@PLT
+	mov	rdi, qword ptr [r13]
+	call	fflush@PLT
+	mov	ebx, dword ptr [r12 + 4*r15]
+	shl	rbx, 3
+	mov	rdi, rbx
+	call	malloc@PLT
+	mov	qword ptr [rip + valid_sequences], rax
+	mov	rdi, rbx
+	call	malloc@PLT
+	mov	qword ptr [rip + filtered_sequences], rax
+	call	pp_constraints
+	call	edge_clue_initialization
+	call	pp_constraints
+	call	print_board
+	mov	rdi, qword ptr [rip + all_sequences]
+	call	free@PLT
+	mov	rdi, qword ptr [rip + valid_sequences]
+	call	free@PLT
+	mov	rdi, qword ptr [rip + filtered_sequences]
+	call	free@PLT
+	mov	eax, 1
+	mov	rsp, r14
+	mov	rcx, qword ptr fs:[40]
+	cmp	rcx, qword ptr [rbp - 48]
+	je	.LBB37_14
+.LBB37_22:
 	call	__stack_chk_fail@PLT
-.Lfunc_end35:
-	.size	solve, .Lfunc_end35-solve
+.LBB37_23:
+	lea	rdi, [rip + .L.str]
+	lea	rsi, [rip + .L.str.1]
+	lea	rcx, [rip + .L__PRETTY_FUNCTION__.itopos]
+	mov	edx, 25
+	call	__assert_fail@PLT
+.Lfunc_end37:
+	.size	solve, .Lfunc_end37-solve
 	.cfi_endproc
                                         # -- End function
 	.type	top_key,@object                 # @top_key
@@ -7439,78 +8135,168 @@ remaining:
 	.type	.L.str,@object                  # @.str
 	.section	.rodata.str1.1,"aMS",@progbits,1
 .L.str:
-	.asciz	"   "
-	.size	.L.str, 4
+	.asciz	"n < cols * cols"
+	.size	.L.str, 16
 
 	.type	.L.str.1,@object                # @.str.1
 .L.str.1:
-	.asciz	" %d"
-	.size	.L.str.1, 4
+	.asciz	"src/hw1.c"
+	.size	.L.str.1, 10
+
+	.type	.L__PRETTY_FUNCTION__.itopos,@object # @__PRETTY_FUNCTION__.itopos
+.L__PRETTY_FUNCTION__.itopos:
+	.asciz	"uint_fast8_t itopos(const int, const int)"
+	.size	.L__PRETTY_FUNCTION__.itopos, 42
 
 	.type	.L.str.2,@object                # @.str.2
 .L.str.2:
-	.asciz	"\n   "
-	.size	.L.str.2, 5
+	.asciz	"   "
+	.size	.L.str.2, 4
 
 	.type	.L.str.3,@object                # @.str.3
 .L.str.3:
-	.asciz	" v"
-	.size	.L.str.3, 3
+	.asciz	" %d"
+	.size	.L.str.3, 4
 
 	.type	.L.str.4,@object                # @.str.4
 .L.str.4:
-	.asciz	"\n%d >"
-	.size	.L.str.4, 6
+	.asciz	"\n   "
+	.size	.L.str.4, 5
 
 	.type	.L.str.5,@object                # @.str.5
 .L.str.5:
-	.asciz	" %c"
-	.size	.L.str.5, 4
+	.asciz	" v"
+	.size	.L.str.5, 3
 
 	.type	.L.str.6,@object                # @.str.6
 .L.str.6:
-	.asciz	" < %d"
+	.asciz	"\n%d >"
 	.size	.L.str.6, 6
 
 	.type	.L.str.7,@object                # @.str.7
 .L.str.7:
-	.asciz	" ^"
-	.size	.L.str.7, 3
+	.asciz	" %c"
+	.size	.L.str.7, 4
+
+	.type	.L.str.8,@object                # @.str.8
+.L.str.8:
+	.asciz	" < %d"
+	.size	.L.str.8, 6
 
 	.type	.L.str.9,@object                # @.str.9
 .L.str.9:
-	.asciz	" %8s%n"
-	.size	.L.str.9, 7
-
-	.type	.L.str.10,@object               # @.str.10
-.L.str.10:
-	.asciz	"Choose a piece (1-%d) or q to quit: "
-	.size	.L.str.10, 37
+	.asciz	" ^"
+	.size	.L.str.9, 3
 
 	.type	.L.str.11,@object               # @.str.11
 .L.str.11:
-	.asciz	" %8s"
-	.size	.L.str.11, 5
+	.asciz	" %8s%n"
+	.size	.L.str.11, 7
 
 	.type	.L.str.12,@object               # @.str.12
 .L.str.12:
-	.asciz	"q"
-	.size	.L.str.12, 2
+	.asciz	"Choose a piece (1-%d) or q to quit: "
+	.size	.L.str.12, 37
 
 	.type	.L.str.13,@object               # @.str.13
 .L.str.13:
-	.asciz	"Invalid choice. "
-	.size	.L.str.13, 17
+	.asciz	" %8s"
+	.size	.L.str.13, 5
 
 	.type	.L.str.14,@object               # @.str.14
 .L.str.14:
-	.asciz	"Choose a row (0-%d): "
-	.size	.L.str.14, 22
+	.asciz	"q"
+	.size	.L.str.14, 2
 
 	.type	.L.str.15,@object               # @.str.15
 .L.str.15:
+	.asciz	"Invalid choice. "
+	.size	.L.str.15, 17
+
+	.type	.L.str.16,@object               # @.str.16
+.L.str.16:
+	.asciz	"Choose a row (0-%d): "
+	.size	.L.str.16, 22
+
+	.type	.L.str.17,@object               # @.str.17
+.L.str.17:
 	.asciz	"Choose a column (0-%d): "
-	.size	.L.str.15, 25
+	.size	.L.str.17, 25
+
+	.type	.L.str.21,@object               # @.str.21
+.L.str.21:
+	.asciz	"[ %s%-5s ] %s:%d: "
+	.size	.L.str.21, 19
+
+	.type	.L.str.22,@object               # @.str.22
+.L.str.22:
+	.zero	1
+	.size	.L.str.22, 1
+
+	.type	.L.str.23,@object               # @.str.23
+.L.str.23:
+	.asciz	"DEBUG"
+	.size	.L.str.23, 6
+
+	.type	.L.str.28,@object               # @.str.28
+.L.str.28:
+	.asciz	"key error r=%d: expected %d/%d, got %d/%d"
+	.size	.L.str.28, 42
+
+	.type	.L.str.31,@object               # @.str.31
+.L.str.31:
+	.asciz	"key success r=%d"
+	.size	.L.str.31, 17
+
+	.type	.L.str.34,@object               # @.str.34
+.L.str.34:
+	.asciz	"key error c=%d: expected %d/%d, got %d/%d"
+	.size	.L.str.34, 42
+
+	.type	.L.str.37,@object               # @.str.37
+.L.str.37:
+	.asciz	"key success c=%d"
+	.size	.L.str.37, 17
+
+	.type	.L.str.40,@object               # @.str.40
+.L.str.40:
+	.asciz	"size=%d"
+	.size	.L.str.40, 8
+
+	.type	.L.str.43,@object               # @.str.43
+.L.str.43:
+	.asciz	"initial_state=\"%s\""
+	.size	.L.str.43, 19
+
+	.type	.L.str.46,@object               # @.str.46
+.L.str.46:
+	.asciz	"keys=\"%s\""
+	.size	.L.str.46, 10
+
+	.type	.L.str.47,@object               # @.str.47
+.L.str.47:
+	.asciz	"size <= 8"
+	.size	.L.str.47, 10
+
+	.type	.L__PRETTY_FUNCTION__.initialize_board,@object # @__PRETTY_FUNCTION__.initialize_board
+.L__PRETTY_FUNCTION__.initialize_board:
+	.asciz	"int initialize_board(const char *, const char *, int)"
+	.size	.L__PRETTY_FUNCTION__.initialize_board, 54
+
+	.type	.L.str.48,@object               # @.str.48
+.L.str.48:
+	.asciz	"0 < size"
+	.size	.L.str.48, 9
+
+	.type	.L.str.51,@object               # @.str.51
+.L.str.51:
+	.asciz	"invalid state (must have >= %d chars): %s"
+	.size	.L.str.51, 42
+
+	.type	.L.str.55,@object               # @.str.55
+.L.str.55:
+	.asciz	"invalid keys (must have >= %d chars): %s"
+	.size	.L.str.55, 41
 
 	.type	con,@object                     # @con
 	.bss
@@ -7519,21 +8305,66 @@ con:
 	.zero	72
 	.size	con, 72
 
-	.type	.L.str.20,@object               # @.str.20
+	.type	.L.str.56,@object               # @.str.56
 	.section	.rodata.str1.1,"aMS",@progbits,1
-.L.str.20:
+.L.str.56:
 	.asciz	"single(bit)"
-	.size	.L.str.20, 12
-
-	.type	.L.str.21,@object               # @.str.21
-.L.str.21:
-	.asciz	"src/hw1.c"
-	.size	.L.str.21, 10
+	.size	.L.str.56, 12
 
 	.type	.L__PRETTY_FUNCTION__.bit_to_piece,@object # @__PRETTY_FUNCTION__.bit_to_piece
 .L__PRETTY_FUNCTION__.bit_to_piece:
 	.asciz	"char bit_to_piece(uint_fast8_t)"
 	.size	.L__PRETTY_FUNCTION__.bit_to_piece, 32
+
+	.type	.L.str.59,@object               # @.str.59
+.L.str.59:
+	.asciz	"placing '%c' at %d:%d"
+	.size	.L.str.59, 22
+
+	.type	.L.str.60,@object               # @.str.60
+.L.str.60:
+	.asciz	"min_bound > 0"
+	.size	.L.str.60, 14
+
+	.type	.L__PRETTY_FUNCTION__.edge_constraint,@object # @__PRETTY_FUNCTION__.edge_constraint
+.L__PRETTY_FUNCTION__.edge_constraint:
+	.asciz	"uint_fast8_t edge_constraint(int, int)"
+	.size	.L__PRETTY_FUNCTION__.edge_constraint, 39
+
+	.type	.L.str.63,@object               # @.str.63
+.L.str.63:
+	.asciz	"constraining %d:%d to %02X (from %02X)"
+	.size	.L.str.63, 39
+
+	.type	.L.str.66,@object               # @.str.66
+.L.str.66:
+	.asciz	"placing edge constraints"
+	.size	.L.str.66, 25
+
+	.type	.L.str.69,@object               # @.str.69
+.L.str.69:
+	.asciz	"propagating '%c' at %d:%d yielded new singles"
+	.size	.L.str.69, 46
+
+	.type	.L.str.72,@object               # @.str.72
+.L.str.72:
+	.asciz	"constrained %d:%d to %02X by row elimination (from %02X)"
+	.size	.L.str.72, 57
+
+	.type	.L.str.75,@object               # @.str.75
+.L.str.75:
+	.asciz	"constrained %d:%d to %02X by col elimination (from %02X)"
+	.size	.L.str.75, 57
+
+	.type	.L.str.78,@object               # @.str.78
+.L.str.78:
+	.asciz	"con.bv=[%02X %02X %02X %02X %02X %02X %02X %02X]"
+	.size	.L.str.78, 49
+
+	.type	.L.str.81,@object               # @.str.81
+.L.str.81:
+	.asciz	"con.pv=[%02X %02X %02X %02X %02X %02X %02X %02X]"
+	.size	.L.str.81, 49
 
 	.type	sequence_pos,@object            # @sequence_pos
 	.bss
@@ -7564,10 +8395,36 @@ filtered_sequences:
 	.quad	0
 	.size	filtered_sequences, 8
 
-	.type	.Lconstinit.24,@object          # @constinit.24
+	.type	.L.str.85,@object               # @.str.85
+	.section	.rodata.str1.1,"aMS",@progbits,1
+.L.str.85:
+	.asciz	"%ld valid seq for %s %d"
+	.size	.L.str.85, 24
+
+	.type	.L.str.86,@object               # @.str.86
+.L.str.86:
+	.asciz	"row"
+	.size	.L.str.86, 4
+
+	.type	.L.str.87,@object               # @.str.87
+.L.str.87:
+	.asciz	"col"
+	.size	.L.str.87, 4
+
+	.type	.L.str.90,@object               # @.str.90
+.L.str.90:
+	.asciz	"%ld filtered seq for %s %d"
+	.size	.L.str.90, 27
+
+	.type	.L.str.94,@object               # @.str.94
+.L.str.94:
+	.asciz	"permutations done for n=%d"
+	.size	.L.str.94, 27
+
+	.type	.Lconstinit.96,@object          # @constinit.96
 	.section	.rodata,"a",@progbits
 	.p2align	2, 0x0
-.Lconstinit.24:
+.Lconstinit.96:
 	.long	1                               # 0x1
 	.long	1                               # 0x1
 	.long	2                               # 0x2
@@ -7577,7 +8434,7 @@ filtered_sequences:
 	.long	720                             # 0x2d0
 	.long	5040                            # 0x13b0
 	.long	40320                           # 0x9d80
-	.size	.Lconstinit.24, 36
+	.size	.Lconstinit.96, 36
 
 	.type	.Lstr,@object                   # @str
 	.section	.rodata.str1.1,"aMS",@progbits,1
@@ -7585,20 +8442,20 @@ filtered_sequences:
 	.asciz	"Invalid choice. You violate one of the key requirements."
 	.size	.Lstr, 57
 
-	.type	.Lstr.25,@object                # @str.25
-.Lstr.25:
+	.type	.Lstr.97,@object                # @str.97
+.Lstr.97:
 	.asciz	"Invalid choice. There is already a building with that height in that row or column."
-	.size	.Lstr.25, 84
+	.size	.Lstr.97, 84
 
-	.type	.Lstr.26,@object                # @str.26
-.Lstr.26:
+	.type	.Lstr.98,@object                # @str.98
+.Lstr.98:
 	.asciz	"Invalid choice. That space is already occupied."
-	.size	.Lstr.26, 48
+	.size	.Lstr.98, 48
 
-	.type	.Lstr.29,@object                # @str.29
-.Lstr.29:
+	.type	.Lstr.101,@object               # @str.101
+.Lstr.101:
 	.asciz	"Invalid initial board state."
-	.size	.Lstr.29, 29
+	.size	.Lstr.101, 29
 
 	.ident	"clang version 19.1.7"
 	.section	".note.GNU-stack","",@progbits
