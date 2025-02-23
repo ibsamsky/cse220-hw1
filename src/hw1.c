@@ -648,6 +648,15 @@ bool sequence_filtration(int index, bool is_row) {
 
 // apply filtration to one row and col (for now)
 bool apply_sequence_filtration(int min_empty) {
+  bool changed = false;
+  if (length <= 6) {
+    for (int i = 0; i < length; i++) {
+      changed = changed || sequence_filtration(i, true) ||
+                sequence_filtration(i, false);
+    }
+    return changed;
+  }
+
   int max_row = 0, idx_row = -1;
 
   for (int i = 0; i < length; i++) {
@@ -664,7 +673,8 @@ bool apply_sequence_filtration(int min_empty) {
   l_debug("applying sequence filtration to row %d with %d empty", idx_row,
           length - max_row);
 
-  bool changed = sequence_filtration(idx_row, true) || sequence_filtration(idx_row, false);
+  changed =
+      sequence_filtration(idx_row, true) || sequence_filtration(idx_row, false);
 
   if (changed)
     place_singles();
@@ -707,9 +717,10 @@ int solve(const char *initial_state, const char *keys, int size) {
 
   int iter = 0;
   do {
-    for (int min = 0; false == apply_sequence_filtration(min); min++)
-      place_singles();
-  } while (!solver_win() && iter++ < 10);
+    for (int min = 0; false == apply_sequence_filtration(min) && min <= length; min++)
+      ;
+    place_singles();
+  } while (!solver_win() && iter++ < 20);
 
   pp_constraints();
   print_board();
