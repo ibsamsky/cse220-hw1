@@ -451,25 +451,25 @@ void apply_process_of_elimination(int row, int col) {
     colseq[i] = con.bv[i][col];
   }
 
-  uint_fast8_t row_uniq = unique_bit(length, con.bv[row]);
-  uint_fast8_t col_uniq = unique_bit(length, colseq);
+  uint_fast8_t row_uniq = unique_bits(length, con.bv[row]);
+  uint_fast8_t col_uniq = unique_bits(length, colseq);
 
   if (row_uniq != 0xFFU) {
     for (int c = 0; c < length; c++) {
-      if ((con.bv[row][c] & row_uniq) > 0 && !single(con.bv[row][c])) {
+      if (single(con.bv[row][c] & row_uniq) && !single(con.bv[row][c])) {
         l_debug("constrained %d:%d to %02X by row elimination (from %02X)", row,
                 c, (unsigned int)row_uniq, (unsigned int)con.bv[row][c]);
-        con.bv[row][c] = row_uniq;
+        con.bv[row][c] &= row_uniq;
         break;
       }
     }
   }
   if (col_uniq != 0xFFU) {
     for (int r = 0; r < length; r++) {
-      if ((con.bv[r][col] & col_uniq) > 0 && !single(con.bv[r][col])) {
+      if (single(con.bv[r][col] & col_uniq) && !single(con.bv[r][col])) {
         l_debug("constrained %d:%d to %02X by col elimination (from %02X)", r,
                 col, (unsigned int)col_uniq, (unsigned int)con.bv[r][col]);
-        con.bv[r][col] = col_uniq;
+        con.bv[r][col] &= col_uniq;
         break;
       }
     }
@@ -487,7 +487,7 @@ void pp_constraints() {
 #undef seven
 }
 
-uint_fast8_t unique_bit(int n, uint_fast8_t seq[]) {
+uint_fast8_t unique_bits(int n, uint_fast8_t seq[]) {
   uint_fast8_t count1 = 0, count2 = 0;
 
   for (int i = 0; i < n; i++) {
@@ -496,9 +496,16 @@ uint_fast8_t unique_bit(int n, uint_fast8_t seq[]) {
   }
 
   uint_fast8_t uniques = count1 & ~count2;
-  if (!single(uniques))
-    return -1;
   return uniques;
+}
+
+bool solver_win() {
+  uint_fast8_t placements = bitmask(length);
+  for (int i = 0; i < length; i++) {
+    placements &= con.pv[i];
+  }
+
+  return (placements == bitmask(length));
 }
 
 int solve(const char *initial_state, const char *keys, int size) {
@@ -519,10 +526,6 @@ int solve(const char *initial_state, const char *keys, int size) {
 
   pp_constraints();
   print_board();
-
-  // p < size - key + p_idx + 2
-  // for key=1 p_idx=0 -> p<size+1 ; p=size
-  // for key=size p_idx=0 p<2 ; p=1
 
   return 1;
 }

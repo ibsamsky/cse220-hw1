@@ -103,11 +103,12 @@ typedef struct board_constraints {
   uint_fast8_t pv[MAX_LENGTH];
 } constraints;
 
+bool solver_win();
 uint_fast8_t piece_to_bit(char piece);
 char bit_to_piece(uint_fast8_t bit);
 bool single(uint_fast8_t val);
 uint_fast8_t edge_constraint(int row, int col);
-uint_fast8_t unique_bit(int n, uint_fast8_t seq[]);
+uint_fast8_t unique_bits(int n, uint_fast8_t seq[]);
 void place_singles();
 void pp_constraints();
 void edge_clue_initialization();
@@ -115,39 +116,20 @@ bool apply_constraint_propagation(int row, int col, char piece);
 void apply_process_of_elimination(int row, int col);
 
 
-/* Hints from our solution (feel free to use or ignore):
+// void generate_valid_sequences(int valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index);
 
-Part 1
+// void generate_valid_sequences_helper(int valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index, int sequence[MAX_LENGTH], int starts_at);
 
-void print_board();
-int get_move();
-int check_dupes_col(int col);
-int check_dupes_row(int row);
-int check_row(int row);
-int check_col(int col);
-int try_move(char choice, int row, int col);
+// void generate_filtered_sequences(int filtered_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index);
 
-Part 2
+// bool sequence_filtration(bool is_horizontal, int index);
 
-void edge_clue_initialization(void);
-void apply_edge_constraint_rule(void);
-bool apply_constraint_propagation(int row, int column, int piece);
-void apply_process_of_elimination(int row, int column, int piece);
+// bool apply_sequence_filtration(void);
 
-Part 3
 
-void generate_valid_sequences(int valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH],
-bool is_horizontal, int index); void generate_valid_sequences_helper(int
-valid_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int index,
-int sequence[MAX_LENGTH], int starts_at); void generate_filtered_sequences(int
-filtered_sequences[MAX_SEQUENCE_CAP][MAX_LENGTH], bool is_horizontal, int
-index); bool sequence_filtration(bool is_horizontal, int index); bool
-apply_sequence_filtration(void);
+// Testing functions
 
-Testing functions
-
-void print_possible_pieces_state(void);
-void print_possible_pieces_at_cell(int row, int column);
-*/
+// void print_possible_pieces_state(void);
+// void print_possible_pieces_at_cell(int row, int column);
 
 #endif // HW1_H
